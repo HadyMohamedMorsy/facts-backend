@@ -16,15 +16,13 @@ export class ConsultancyAccordion {
 
   @Column({
     type: "varchar",
-    length: 512,
-    nullable: false,
+    length: 256,
   })
   accordion_title: string;
 
   @Column({
     type: "varchar",
-    length: 512,
-    nullable: false,
+    length: 256,
   })
   description: string;
 

@@ -1,45 +1,22 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Base } from "src/shared/common/base/base.entity";
+import { Column, Entity, OneToMany, Unique } from "typeorm";
 import { ConsultancyAccordion } from "./consultancy-accordion.entity";
 
 @Entity()
-export class Consultancy {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    unique: true,
-  })
-  order: number;
-
-  @Column({
-    type: "varchar",
-    length: 512,
-  })
+@Unique(["order", "language"])
+export class Consultancy extends Base {
+  @Column({ length: 256 })
   title: string;
 
-  @Column({
-    type: "varchar",
-    length: 256,
-    unique: true,
-  })
+  @Column({ length: 512 })
   slug: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
+  @Column({ type: "varchar", length: 1024, nullable: true })
+  featuredImage: string;
+
+  @Column({ type: "text", nullable: true })
   short_description?: string;
 
-  @Column({
-    type: "varchar",
-    length: 1024,
-    nullable: true,
-  })
-  featuredImage?: string;
-
-  @OneToMany(() => ConsultancyAccordion, accordion => accordion.consultancy, {
-    cascade: true,
-    eager: true,
-  })
-  consultancyAccordion?: ConsultancyAccordion[];
+  @OneToMany(() => ConsultancyAccordion, consultancyAccordion => consultancyAccordion.consultancy)
+  consultancyAccordion: ConsultancyAccordion[];
 }

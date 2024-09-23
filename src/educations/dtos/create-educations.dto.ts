@@ -70,10 +70,6 @@ export class CreateEducationsDto {
 
   @IsOptional()
   @IsString()
-  language: string;
-
-  @IsOptional()
-  @IsString()
   quizzes: string;
 
   @IsOptional()
@@ -92,8 +88,6 @@ export class CreateEducationsDto {
   @IsString()
   instructor: string;
 
-  @IsNotEmpty()
   @IsInt()
-  @Type(() => Number)
-  lang: number;
+  language_id: number;
 }

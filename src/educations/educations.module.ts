@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/common/filter/filter-date.module";
+import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
 import { EducationAccordion } from "./education-accordion.entity";
 import { EducationController } from "./education.controller";
 import { Education } from "./education.entity";

@@ -1,20 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Base } from "src/shared/common/base/base.entity";
+import { Column, Entity, OneToMany, Unique } from "typeorm";
 import { EducationAccordion } from "./education-accordion.entity";
 
 @Entity()
-export class Education {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    unique: true,
-  })
-  order: number;
-
-  @Column({
-    type: "varchar",
-    length: 512,
-  })
+@Unique(["order", "language"])
+export class Education extends Base {
+  @Column({ length: 256 })
   title: string;
 
   @Column({
@@ -24,18 +15,11 @@ export class Education {
   })
   slug: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
+  @Column({ type: "text", nullable: true })
   short_description?: string;
 
-  @Column({
-    type: "varchar",
-    length: 1024,
-    nullable: true,
-  })
-  featuredImage?: string;
+  @Column({ length: 1024, nullable: true })
+  featuredImage: string;
 
   @OneToMany(() => EducationAccordion, education => education.education, {
     cascade: true,
@@ -43,63 +27,30 @@ export class Education {
   })
   educationAccordion?: EducationAccordion[];
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  duration?: string;
+  @Column({ nullable: true })
+  duration: string;
 
-  @Column({
-    type: "inet",
-    nullable: true,
-  })
-  students_number?: number;
+  @Column({ type: "int", nullable: true })
+  students_number: number;
 
-  @Column({
-    type: "inet",
-    nullable: true,
-  })
-  lessons_number?: number;
+  @Column({ type: "int", nullable: true })
+  lessons_number: number;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  skill_level?: string;
+  @Column({ nullable: true })
+  skill_level: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  language?: string;
+  @Column({ nullable: true })
+  quizzes: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  quizzes?: string;
+  @Column({ nullable: true })
+  certifications: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  certifications?: string;
+  @Column({ nullable: true })
+  percentage: string;
 
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  percentage?: string;
+  @Column({ type: "date", nullable: true })
+  deadline: Date;
 
-  @Column({
-    type: "date",
-    nullable: true,
-  })
-  deadline?: Date;
-
-  @Column({
-    type: "text",
-    nullable: true,
-  })
-  instructor?: string;
+  @Column({ nullable: true })
+  instructor: string;
 }

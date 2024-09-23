@@ -13,8 +13,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { ConsultancyDetailDto } from "./consultancy.dto";
-
+import { ConsultancyAccordienDto } from "./consultancy-accordien.dto";
 export class CreateConsultancyDto {
   @IsNumber()
   @IsNotEmpty()
@@ -46,11 +45,9 @@ export class CreateConsultancyDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ConsultancyDetailDto)
-  consultancy: ConsultancyDetailDto;
+  @Type(() => ConsultancyAccordienDto)
+  consultancy: ConsultancyAccordienDto;
 
-  @IsNotEmpty()
   @IsInt()
-  @Type(() => Number)
-  lang: number;
+  language_id: number;
 }

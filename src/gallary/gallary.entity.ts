@@ -1,24 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Base } from "src/shared/common/base/base.entity";
+import { Column, Entity, Unique } from "typeorm";
 
 @Entity()
-export class Gallary {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    unique: true,
-  })
+@Unique(["order", "language"])
+export class Gallary extends Base {
+  @Column({ type: "int" })
   order: number;
 
-  @Column({
-    type: "varchar",
-    length: 512,
-    nullable: false,
-  })
+  @Column({ type: "varchar", length: 256 })
   accordion_title: string;
 
-  @Column({
-    array: true,
-  })
-  featuredImage?: string[];
+  @Column("text", { array: true })
+  featuredImages: string[];
 }

@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { FilterQueryDto } from "../common/filter/dtos/filter.dto";
+import { FilterQueryDto } from "../shared/common/filter/dtos/filter.dto";
 import { CreateConsultancyDto } from "./dtos/create-consultancy.dto";
 import { ConsultancyService } from "./providers/consultancy.service";
 

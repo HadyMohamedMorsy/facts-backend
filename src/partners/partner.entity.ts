@@ -1,19 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { Base } from "src/shared/common/base/base.entity";
+import { Column, Entity, Unique } from "typeorm";
 
 @Entity()
-export class Partner {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  @Column({
-    type: "int",
-    unique: true,
-  })
-  order: number;
-
+@Unique(["order", "language"])
+export class Partner extends Base {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()

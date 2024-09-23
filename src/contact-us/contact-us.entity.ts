@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class Contact {
@@ -37,4 +43,10 @@ export class Contact {
     unique: true,
   })
   message: string;
+
+  @CreateDateColumn()
+  createDate: Date;
+
+  @UpdateDateColumn()
+  updateDate: Date;
 }

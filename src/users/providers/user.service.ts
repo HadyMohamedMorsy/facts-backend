@@ -3,25 +3,25 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { Repository } from "typeorm";
-import { CreateGallarysDto } from "../dtos/create-gallary.dto";
-import { Gallary } from "../gallary.entity";
+import { CreateUserDto } from "../dtos/create-user.dto";
+import { User } from "../user.entity";
 
 @Injectable()
-export class GallaryService {
+export class UserService {
   constructor(
-    @InjectRepository(Gallary)
-    private readonly repository: Repository<Gallary>,
-    private readonly filterData: FilterDataProvider<Gallary>,
+    @InjectRepository(User)
+    private readonly repository: Repository<User>,
+    private readonly filterData: FilterDataProvider<User>,
   ) {}
 
-  public async create(create: CreateGallarysDto) {
-    const education = this.repository.create({ ...create });
-    return await this.repository.save(education);
+  public async create(create: CreateUserDto) {
+    const user = this.repository.create({ ...create });
+    return await this.repository.save(user);
   }
 
   public async findAll(filter: FilterQueryDto) {
     const entity = await this.filterData
-      .initRepositry("gallary", this.repository, filter)
+      .initRepositry("user", this.repository, filter)
       .filter()
       .provideFields()
       .sort()

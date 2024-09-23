@@ -1,42 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Base } from "src/shared/common/base/base.entity";
+import { Column, Entity, Unique } from "typeorm";
 
 @Entity()
-export class Team {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    unique: true,
-  })
-  order: number;
-
-  @Column({
-    type: "varchar",
-    length: 512,
-  })
+@Unique(["order", "language"])
+export class Team extends Base {
+  @Column({ type: "varchar", length: 256 })
   name: string;
 
-  @Column({
-    array: true,
-  })
+  @Column("inet", { array: true }) // Stores data as JSON string
   phone_number: number[];
 
-  @Column({
-    type: "varchar",
-    length: 512,
-    nullable: false,
-  })
+  @Column("text")
   description: string;
 
-  @Column({
-    array: true,
-  })
-  social_links: string[];
+  @Column("simple-array", { nullable: true })
+  social_links?: string[];
 
-  @Column({
-    type: "varchar",
-    length: 1024,
-    nullable: true,
-  })
-  featuredImage?: string;
+  @Column({ type: "varchar", length: 1024, nullable: true })
+  featuredImage: string;
 }

@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { Type } from "class-transformer";
 import {
   IsArray,
   IsInt,
@@ -37,8 +36,6 @@ export class CreateTeamDto {
   @MaxLength(1024)
   featuredImage: string;
 
-  @IsNotEmpty()
   @IsInt()
-  @Type(() => Number)
-  lang: number;
+  language_id: number;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FilterQueryDto } from "src/common/filter/dtos/filter.dto";
-import { FilterDataProvider } from "src/common/filter/providers/filter-data.provider";
+import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
+import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { Repository } from "typeorm";
 import { CreatePartnersDto } from "../dtos/create-partners.dto";
 import { Partner } from "../partner.entity";

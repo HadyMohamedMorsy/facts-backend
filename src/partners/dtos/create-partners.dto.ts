@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreatePartnersDto {
@@ -20,8 +19,6 @@ export class CreatePartnersDto {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
   @IsInt()
-  @Type(() => Number)
-  lang: number;
+  language_id: number;
 }

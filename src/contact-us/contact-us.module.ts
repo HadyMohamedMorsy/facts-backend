@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/common/filter/filter-date.module";
-import { Contact } from "./consultancy.entity";
+import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
 import { ContactUsController } from "./contact-us.controller";
+import { Contact } from "./contact-us.entity";
 import { ContactUsService } from "./providers/contact-us.service";
 
 @Module({

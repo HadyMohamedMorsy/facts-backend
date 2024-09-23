@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { FilterQueryDto } from "src/common/filter/dtos/filter.dto";
+import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { CreateGallarysDto } from "./dtos/create-gallary.dto";
 import { GallaryService } from "./providers/gallary.service";
 

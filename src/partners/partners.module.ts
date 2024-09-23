@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/common/filter/filter-date.module";
+import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
 import { Partner } from "./partner.entity";
 import { PartnersController } from "./partners.controller";
 import { PartnersService } from "./providers/partners.service";
