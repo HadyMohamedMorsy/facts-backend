@@ -9,7 +9,7 @@ export interface MulterSingleRequest extends Request {
 @Injectable()
 export class UploadFileMiddleware implements NestMiddleware {
   use(req: MulterSingleRequest, res: Response, next: () => void) {
-    const modulePath = req.baseUrl.split("/")[3];
+    const modulePath = req.path.split("/")[3];
     const upload = multer({
       storage: multer.diskStorage({
         destination: (req, file, callback) => {
@@ -40,11 +40,10 @@ export class UploadFileMiddleware implements NestMiddleware {
         console.error("Unknown Error:", err);
         return res.status(500).send(err.message);
       }
-      if (req.file) {
-        const baseURL = req.protocol + "://" + req.headers.host;
-        const newUrl = new URL(req.url, baseURL);
-        req.body.featuredImage = `${newUrl.origin}${newUrl.pathname}uploads/${modulePath}/${req.file.filename}`;
-      }
+      const baseURL = req.protocol + "://" + req.headers.host;
+      const newUrl = new URL(req.url, baseURL);
+      req.body.featuredImage = `${newUrl.origin}${newUrl.pathname}uploads/${modulePath}/${req.file.filename}`;
+
       next();
     });
   }

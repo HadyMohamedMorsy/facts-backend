@@ -3,20 +3,20 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { Repository } from "typeorm";
-import { Consultancy } from "../consultancy.entity";
-import { CreateConsultancyDto } from "../dtos/create-consultancy.dto";
+import { CreateJobDto } from "../dtos/create-job.dto";
+import { Job } from "../job.entity";
 
 @Injectable()
-export class ConsultancyService {
+export class JobService {
   constructor(
-    @InjectRepository(Consultancy)
-    private readonly repository: Repository<Consultancy>,
-    private readonly filterData: FilterDataProvider<Consultancy>,
+    @InjectRepository(Job)
+    private readonly repository: Repository<Job>,
+    private readonly filterData: FilterDataProvider<Job>,
   ) {}
 
-  public async create(create: CreateConsultancyDto) {
-    const createEntity = this.repository.create(create);
-    return await this.repository.save(createEntity);
+  public async create(create: CreateJobDto) {
+    const data = this.repository.create(create);
+    return await this.repository.save(data);
   }
 
   public async findAll(filter: FilterQueryDto) {
@@ -27,7 +27,6 @@ export class ConsultancyService {
       .sort()
       .paginate()
       .search()
-      .joinRelations(["consultancyAccordion"])
       .execute();
     return {
       data: entity,

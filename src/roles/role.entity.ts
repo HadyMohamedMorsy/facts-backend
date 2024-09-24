@@ -1,5 +1,5 @@
 import { User } from "src/users/user.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 @Entity()
 @Unique(["name"]) // Ensures role names are unique across all entries
 export class Role {
@@ -12,6 +12,6 @@ export class Role {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @OneToOne(() => User, user => user.role) // Assuming each user has one role
+  @ManyToOne(() => User, user => user.role) // Assuming each user has one role
   users: User;
 }

@@ -29,7 +29,7 @@ export class UploadFilesMiddleware implements NestMiddleware {
           callback(null, false);
         }
       },
-    }).array("featuredImages", 10); // Change '10' to limit the number of files
+    }).array("featuredImage", 4); // Change '10' to limit the number of files
 
     upload(req, res, function (err) {
       if (err instanceof multer.MulterError) {

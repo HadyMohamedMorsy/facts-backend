@@ -1,19 +1,21 @@
 /* eslint-disable prettier/prettier */
 import {
-  IsArray,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
+  IsOptional,
   IsString,
+  IsUrl,
   Matches,
   MaxLength,
   MinLength,
 } from "class-validator";
 
-export class CreateJobDto {
-  @IsNumber()
+export class CreateSettingDto {
+  @IsInt()
   @IsNotEmpty()
-  order: number;
+  parent_id: number;
 
+  @IsOptional()
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -29,16 +31,29 @@ export class CreateJobDto {
   @MaxLength(512)
   slug: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  short_description: string;
-
   @IsNotEmpty()
-  @IsString()
+  @MaxLength(1024)
   description: string;
 
-  @IsArray()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  skills?: string[];
+  @IsNotEmpty()
+  @MaxLength(1024)
+  short_description: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1024)
+  icon: string;
+
+  @IsOptional()
+  @IsUrl()
+  @MaxLength(1024)
+  featuredImage: string;
+
+  @IsInt()
+  language_id: number;
 }
