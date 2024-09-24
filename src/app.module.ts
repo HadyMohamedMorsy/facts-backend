@@ -8,6 +8,7 @@ import { ConsultancyModule } from "./consultancy/consultancy.module";
 import { ContactUsModule } from "./contact-us/contact-us.module";
 import { EducationsModule } from "./educations/educations.module";
 import { GallaryModule } from "./gallary/gallary.module";
+import { HeroSliderModule } from "./hero-sliders/hero-slider.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { LanguagesModule } from "./languages/languages.module";
 import { MagazinesModule } from "./magazines/magazines.module";
@@ -21,6 +22,7 @@ import { TeamModule } from "./team/team.module";
 import { UsersModule } from "./users/users.module";
 @Module({
   imports: [
+    HeroSliderModule,
     CategoryModule,
     RoleModule,
     TeamModule,
