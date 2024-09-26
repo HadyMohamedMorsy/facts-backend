@@ -11,8 +11,4 @@ import { ConsultancyService } from "./providers/consultancy.service";
   controllers: [ConsultancyController],
   providers: [ConsultancyService],
 })
-export class ConsultancyModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(UploadFileMiddleware).forRoutes("*");
-  // }
-}
+export class ConsultancyModule {}

@@ -22,6 +22,7 @@ export abstract class Base extends BaseEntity {
   @Column({
     unique: true,
     type: "int",
+    nullable: true,
   })
   order: number;
 

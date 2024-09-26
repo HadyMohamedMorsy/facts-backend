@@ -7,7 +7,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   Matches,
   MaxLength,
   MinLength,
@@ -17,6 +16,7 @@ import { ConsultancyAccordienDto } from "./consultancy-accordien.dto";
 export class CreateConsultancyDto {
   @IsNumber()
   @IsNotEmpty()
+  @Type(() => Number)
   order: number;
 
   @IsString()
@@ -38,16 +38,22 @@ export class CreateConsultancyDto {
   @IsString()
   short_description?: string;
 
-  @IsOptional()
-  @IsUrl()
+  @IsNotEmpty()
   @MaxLength(1024)
   featuredImage: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ConsultancyAccordienDto)
-  consultancy: ConsultancyAccordienDto;
+  consultancyAccordion: ConsultancyAccordienDto;
 
   @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
   language_id: number;
+
+  @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
+  created_by: number;
 }

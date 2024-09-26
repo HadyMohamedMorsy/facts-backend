@@ -13,5 +13,5 @@ export class CreateGallarysDto {
 
   @IsArray()
   @MaxLength(1024)
-  featuredImages: string[];
+  files: string[];
 }

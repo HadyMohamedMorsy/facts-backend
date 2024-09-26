@@ -1,24 +1,11 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { FilterQueryDto } from "../shared/common/filter/dtos/filter.dto";
+import { Controller } from "@nestjs/common";
+import { BaseController } from "src/shared/common/base/base.controller";
 import { CreateConsultancyDto } from "./dtos/create-consultancy.dto";
 import { ConsultancyService } from "./providers/consultancy.service";
 
 @Controller("consultancy")
-export class ConsultancyController {
-  constructor(private readonly consultancyService: ConsultancyService) {}
-
-  @Post("/index")
-  public index(@Body() filterQueryDto: FilterQueryDto) {
-    return this.consultancyService.findAll(filterQueryDto);
-  }
-
-  @Post("/store")
-  public create(@Body() createConsultancyDto: CreateConsultancyDto) {
-    return this.consultancyService.create(createConsultancyDto);
-  }
-
-  @Post("/delete")
-  public delete(@Body() id: number) {
-    return this.consultancyService.delete(id);
+export class ConsultancyController extends BaseController<CreateConsultancyDto> {
+  constructor(private readonly consultancyService: ConsultancyService) {
+    super(consultancyService);
   }
 }

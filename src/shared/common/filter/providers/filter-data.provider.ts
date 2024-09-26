@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import { Brackets, Repository, SelectQueryBuilder } from "typeorm";
 import { FilterQueryDto } from "../dtos/filter.dto";
 
@@ -8,6 +9,9 @@ export class FilterDataProvider<T> {
   #entity: string;
   #repository: Repository<T>;
   #filterData: FilterQueryDto;
+  #totalRecords!: Promise<number>;
+
+  constructor(@Inject(REQUEST) private readonly request: Request) {}
 
   initRepositry(entity: string, repository: Repository<T>, filterData: FilterQueryDto) {
     this.#repository = repository;
@@ -49,6 +53,11 @@ export class FilterDataProvider<T> {
     return this;
   }
 
+  count() {
+    this.#totalRecords = this.#repository.count();
+    return this.#totalRecords;
+  }
+
   paginate() {
     const { start, length } = this.#filterData;
     this.#queryBuilder.skip(start).take(length);
@@ -79,6 +88,15 @@ export class FilterDataProvider<T> {
         this.#queryBuilder.leftJoinAndSelect(`${this.#entity}.${relation}`, relation);
       });
     }
+    return this;
+  }
+
+  filterByLanguage() {
+    const languageId = +this.request.headers["x-localization"];
+
+    this.#queryBuilder
+      .leftJoinAndSelect(`${this.#entity}.language`, "language")
+      .andWhere("language.id = :id", { id: languageId });
     return this;
   }
 

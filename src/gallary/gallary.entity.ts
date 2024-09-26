@@ -11,5 +11,5 @@ export class Gallary extends Base {
   accordion_title: string;
 
   @Column("text", { array: true })
-  featuredImages: string[];
+  files: string[];
 }
