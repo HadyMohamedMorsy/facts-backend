@@ -44,9 +44,13 @@ export class Contact {
   })
   message: string;
 
-  @CreateDateColumn()
-  createDate: Date;
+  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  created_at: Date;
 
-  @UpdateDateColumn()
-  updateDate: Date;
+  @UpdateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
+  updated_at: Date;
 }

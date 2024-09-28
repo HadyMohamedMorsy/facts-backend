@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, RequestTimeoutException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
@@ -23,12 +23,34 @@ export class UserService {
     const entity = await this.filterData
       .initRepositry("user", this.repository, filter)
       .filter()
-      .provideFields()
       .sort()
       .paginate()
       .search()
       .execute();
     return entity;
+  }
+
+  public async findOneById(id: number) {
+    let user = undefined;
+
+    try {
+      user = await this.repository.findOneBy({
+        id,
+      });
+    } catch (err) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment please try later",
+        {
+          description: "Error connecting to the the datbase",
+        },
+      );
+    }
+
+    if (!user) {
+      throw new BadRequestException("The user id does not exist");
+    }
+
+    return user;
   }
 
   public async delete(id: number) {

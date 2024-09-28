@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  Delete,
   HttpCode,
   Injectable,
   Post,
@@ -9,12 +10,12 @@ import {
   UseInterceptors,
   ValidationPipe,
 } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
+import multerOptions from "src/shared/config/multer-options";
+import { dtoMappings } from "../../config/dto-mapping";
 import { FilterQueryDto } from "../filter/dtos/filter.dto";
 import { HeaderToBodyInterceptor } from "../interceptor/transfrom-request.interceptor";
-import { dtoMappings } from "./dto-mapping";
-import { multerOptions } from "./multer-options";
 import { IBaseService } from "./service.types";
 
 @Injectable()
@@ -28,6 +29,7 @@ export abstract class BaseController<CreateDto> {
   }
 
   @Post("/store")
+  @UseInterceptors(NoFilesInterceptor())
   @UseInterceptors(HeaderToBodyInterceptor)
   public create(@Body() createDto: CreateDto) {
     return this.baseService.create(createDto);
@@ -41,38 +43,39 @@ export abstract class BaseController<CreateDto> {
     @Body() create: CreateDto,
     @Req() request: Request,
   ) {
-    const dto = this.#getDtoForEndpoint(request.path);
-    const baseURL = `${request.protocol}://${request.headers.host}`;
-    const modulePath = request.path.split("/")[3];
-    let createDto = create;
-    if (file) {
-      const filePath = `${baseURL}/uploads/${modulePath}/${file.filename}`;
-      createDto = { ...createDto, featuredImage: filePath };
-    }
-    const validatedDto = await this.#validateDto(dto, createDto);
+    const validatedDto = await this.#processFileUpload(request, create, file, "featuredImage");
     return this.baseService.create(validatedDto);
   }
 
   @Post("/store-uploads")
   @UseInterceptors(HeaderToBodyInterceptor)
   @UseInterceptors(FileInterceptor("files", multerOptions))
-  public createUploads(
+  public async createUploads(
     @UploadedFile() files: Array<Express.Multer.File>,
     @Body() create: CreateDto,
     @Req() request: Request,
   ) {
     if (files && files.length > 0) {
-      const modulePath = request.path.split("/")[3];
-      const baseURL = request.protocol + "://" + request.headers.host;
-      const newUrl = new URL(request.url, baseURL);
-      const createDto = {
-        ...create,
-        files: files.map(
-          file => `${newUrl.origin}${newUrl.pathname}uploads/${modulePath}/${file.filename}`,
-        ),
-      };
-      return this.baseService.create(createDto);
+      const validatedDto = await this.#processFileUpload(request, create, files, "featuredImage");
+      return this.baseService.create(validatedDto);
     }
+  }
+
+  transformUpdate(file: Express.Multer.File, patch: any, request: Request, entityRel: any) {
+    if (file) {
+      const baseURL = `${request.protocol}://${request.headers.host}`;
+      const modulePath = request.path.split("/")[3];
+      const fileUrls: string[] = [];
+      fileUrls.push(`${baseURL}/public/uploads/${modulePath}/${file.filename}`);
+      patch.featuredImage = fileUrls[0];
+    }
+
+    Object.keys(patch).forEach(key => {
+      if (patch[key] === entityRel[key]) {
+        delete patch[key];
+      }
+    });
+    return patch;
   }
 
   #getDtoForEndpoint(path: string) {
@@ -95,8 +98,39 @@ export abstract class BaseController<CreateDto> {
     });
   }
 
-  @Post("/delete")
-  public delete(@Body() id: number) {
-    return this.baseService.delete(id);
+  @Delete("/delete")
+  @UseInterceptors(NoFilesInterceptor())
+  public delete(@Body() body: { id: string }, @Req() request: Request) {
+    const modulePath = request.path.split("/")[3];
+    return this.baseService.delete(+body.id, modulePath);
+  }
+
+  async #processFileUpload(
+    request: Request,
+    createDto: CreateDto,
+    files: Express.Multer.File | Array<Express.Multer.File>,
+    fieldName: string,
+  ): Promise<CreateDto> {
+    const dto = this.#getDtoForEndpoint(request.path);
+    const baseURL = `${request.protocol}://${request.headers.host}`;
+    const modulePath = request.path.split("/")[3];
+
+    if (!files || (Array.isArray(files) && files.length === 0)) {
+      throw new BadRequestException(`No files provided for field: ${fieldName}`);
+    }
+
+    let fileUrls: string[] = [];
+    if (Array.isArray(files)) {
+      fileUrls = files.map(file => `${baseURL}/public/uploads/${modulePath}/${file.filename}`);
+    } else {
+      fileUrls.push(`${baseURL}/public/uploads/${modulePath}/${files.filename}`);
+    }
+
+    const updatedDto = {
+      ...createDto,
+      [fieldName]: Array.isArray(files) ? fileUrls : fileUrls[0],
+    };
+
+    return this.#validateDto(dto, updatedDto);
   }
 }

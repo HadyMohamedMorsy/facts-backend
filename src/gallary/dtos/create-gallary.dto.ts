@@ -1,11 +1,7 @@
-/* eslint-disable prettier/prettier */
-import { IsArray, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
+import { IsArray, IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreateGallarysDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+export class CreateGallarysDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)

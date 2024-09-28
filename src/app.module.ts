@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
+import { ServeStaticModule } from "@nestjs/serve-static";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { BannerModule } from "./banner/banner.module";
 import { CategoryModule } from "./categories/category.module";
 import { ConsultancyModule } from "./consultancy/consultancy.module";
 import { ContactUsModule } from "./contact-us/contact-us.module";
@@ -16,11 +19,14 @@ import { RoleModule } from "./roles/role.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
+import { StatisticsModule } from "./statistics/statistics.module";
 import { TeamModule } from "./team/team.module";
 import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
+    StatisticsModule,
+    BannerModule,
     HeroSliderModule,
     CategoryModule,
     RoleModule,
@@ -36,6 +42,10 @@ import { UsersModule } from "./users/users.module";
     EducationsModule,
     ConsultancyModule,
     FilterDateModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "public"),
+      serveRoot: "/public",
+    }),
     TypeOrmModule.forRootAsync({
       imports: [],
       inject: [],

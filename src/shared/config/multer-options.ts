@@ -1,13 +1,19 @@
 import { BadRequestException } from "@nestjs/common";
+import { existsSync, mkdirSync } from "fs";
 import { diskStorage } from "multer";
-import { extname } from "path";
+import { extname, join } from "path";
 
-export const multerOptions = {
+const multerOptions = {
   storage: diskStorage({
-    destination: (req, file, callback) => {
+    destination: (req, file, cb) => {
       const modulePath = req.path.split("/")[3];
-      const dest = `src/uploads/${modulePath}`;
-      callback(null, dest);
+      const dest = join(process.cwd(), "public", "uploads", modulePath);
+
+      if (!existsSync(dest)) {
+        mkdirSync(dest, { recursive: true });
+      }
+
+      cb(null, dest);
     },
     filename: (req, file, cb) => {
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}${extname(file.originalname)}`;
@@ -15,7 +21,6 @@ export const multerOptions = {
     },
   }),
 
-  // File size limit (100kb)
   limits: {
     fileSize: 100 * 1024,
   },
@@ -28,3 +33,5 @@ export const multerOptions = {
     }
   },
 };
+
+export default multerOptions;

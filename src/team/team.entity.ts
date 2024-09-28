@@ -1,5 +1,6 @@
-import { Base } from "src/shared/common/base/base.entity";
-import { Column, Entity, Unique } from "typeorm";
+import { Base } from "src/shared/common/base/entity/base.entity";
+import { Column, Entity, OneToMany, Unique } from "typeorm";
+import { TeamSocial } from "./team-social.entity";
 
 @Entity()
 @Unique(["order", "language"])
@@ -7,15 +8,15 @@ export class Team extends Base {
   @Column({ type: "varchar", length: 256 })
   name: string;
 
-  @Column("inet", { array: true }) // Stores data as JSON string
-  phone_number: number[];
+  @Column("text", { array: true })
+  phone_number: string[];
 
   @Column("text")
   description: string;
 
-  @Column("simple-array", { nullable: true })
-  social_links?: string[];
+  @OneToMany(() => TeamSocial, social => social.team)
+  social_links: TeamSocial[];
 
-  @Column({ type: "varchar", length: 1024, nullable: true })
+  @Column({ type: "varchar", length: 1024 })
   featuredImage: string;
 }

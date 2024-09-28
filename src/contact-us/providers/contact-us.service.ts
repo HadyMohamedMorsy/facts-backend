@@ -17,7 +17,6 @@ export class ContactUsService {
     const contactUs = await this.filterData
       .initRepositry("contact", this.contactUsRepository, filter)
       .filter()
-      .provideFields()
       .sort()
       .paginate()
       .search()

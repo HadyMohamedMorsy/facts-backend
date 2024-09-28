@@ -23,7 +23,6 @@ export class JobService {
     const entity = await this.filterData
       .initRepositry("consultancy", this.repository, filter)
       .filter()
-      .provideFields()
       .sort()
       .paginate()
       .search()

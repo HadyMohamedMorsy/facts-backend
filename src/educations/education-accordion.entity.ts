@@ -1,19 +1,9 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Education } from "./education.entity";
 
 @Entity()
-export class EducationAccordion {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class EducationAccordion extends BaseTime {
   @Column({
     type: "varchar",
     length: 512,
@@ -28,13 +18,7 @@ export class EducationAccordion {
   })
   description: string;
 
-  @CreateDateColumn()
-  createDate: Date;
-
-  @UpdateDateColumn()
-  updateDate: Date;
-
-  @ManyToOne(() => Education, education => education.educationAccordion, {
+  @ManyToOne(() => Education, education => education.education_accordion, {
     onDelete: "CASCADE",
   })
   @JoinColumn()

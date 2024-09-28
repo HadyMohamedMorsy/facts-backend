@@ -1,11 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreateCategoryDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+export class CreateCategoryDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)

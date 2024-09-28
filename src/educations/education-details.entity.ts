@@ -1,0 +1,18 @@
+import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Education } from "./education.entity";
+
+@Entity()
+export class EducationDetails extends BaseTime {
+  @Column({ length: 256 })
+  name: string;
+
+  @Column({ length: 256 })
+  value: string;
+
+  @ManyToOne(() => Education, education => education.education_accordion, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
+  education: Education;
+}

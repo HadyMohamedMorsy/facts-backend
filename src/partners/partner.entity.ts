@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
-import { Base } from "src/shared/common/base/base.entity";
+import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity, Unique } from "typeorm";
 
 @Entity()

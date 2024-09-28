@@ -23,7 +23,6 @@ export class SettingsService {
     const entity = await this.filterData
       .initRepositry("setting", this.repository, filter)
       .filter()
-      .provideFields()
       .sort()
       .paginate()
       .search()

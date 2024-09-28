@@ -2,25 +2,19 @@
 import { Type } from "class-transformer";
 import {
   IsArray,
-  IsDate,
-  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   Matches,
   MaxLength,
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { EducationDetailDto } from "./educations.dto";
+import { BaseDto } from "src/shared/common/base/base.dto";
+import { EducationDetailsDto } from "./details-education.dto";
+import { EducationAccordion } from "./educations.dto";
 
-export class CreateEducationsDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+export class CreateEducationsDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -40,54 +34,16 @@ export class CreateEducationsDto {
   @IsString()
   short_description?: string;
 
-  @IsOptional()
-  @IsUrl()
   @MaxLength(1024)
   featuredImage: string;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => EducationDetailDto)
-  education: EducationDetailDto[];
+  @Type(() => EducationAccordion)
+  education_accordion: EducationAccordion[];
 
-  @IsOptional()
-  @IsString()
-  duration: string;
-
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  students_number: number;
-
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  lessons_number: number;
-
-  @IsOptional()
-  @IsString()
-  skill_level: string;
-
-  @IsOptional()
-  @IsString()
-  quizzes: string;
-
-  @IsOptional()
-  @IsString()
-  certifications: string;
-
-  @IsOptional()
-  @IsString()
-  percentage: string;
-
-  @IsOptional()
-  @IsDate()
-  deadline: string;
-
-  @IsOptional()
-  @IsString()
-  instructor: string;
-
-  @IsInt()
-  language_id: number;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EducationDetailsDto)
+  education_details: EducationDetailsDto[];
 }

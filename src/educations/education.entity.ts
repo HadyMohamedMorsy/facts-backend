@@ -1,6 +1,7 @@
-import { Base } from "src/shared/common/base/base.entity";
+import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity, OneToMany, Unique } from "typeorm";
 import { EducationAccordion } from "./education-accordion.entity";
+import { EducationDetails } from "./education-details.entity";
 
 @Entity()
 @Unique(["order", "language"])
@@ -25,32 +26,11 @@ export class Education extends Base {
     cascade: true,
     eager: true,
   })
-  educationAccordion?: EducationAccordion[];
+  education_accordion?: EducationAccordion[];
 
-  @Column({ nullable: true })
-  duration: string;
-
-  @Column({ type: "int", nullable: true })
-  students_number: number;
-
-  @Column({ type: "int", nullable: true })
-  lessons_number: number;
-
-  @Column({ nullable: true })
-  skill_level: string;
-
-  @Column({ nullable: true })
-  quizzes: string;
-
-  @Column({ nullable: true })
-  certifications: string;
-
-  @Column({ nullable: true })
-  percentage: string;
-
-  @Column({ type: "date", nullable: true })
-  deadline: Date;
-
-  @Column({ nullable: true })
-  instructor: string;
+  @OneToMany(() => EducationDetails, education => education.education, {
+    cascade: true,
+    eager: true,
+  })
+  education_details?: EducationDetails[];
 }

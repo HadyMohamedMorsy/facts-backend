@@ -2,9 +2,7 @@
 import { Type } from "class-transformer";
 import {
   IsArray,
-  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -12,13 +10,9 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 import { ConsultancyAccordienDto } from "./consultancy-accordien.dto";
-export class CreateConsultancyDto {
-  @IsNumber()
-  @IsNotEmpty()
-  @Type(() => Number)
-  order: number;
-
+export class CreateConsultancyDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -45,15 +39,5 @@ export class CreateConsultancyDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ConsultancyAccordienDto)
-  consultancyAccordion: ConsultancyAccordienDto;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  language_id: number;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  created_by: number;
+  consultancy_accordion: ConsultancyAccordienDto[];
 }

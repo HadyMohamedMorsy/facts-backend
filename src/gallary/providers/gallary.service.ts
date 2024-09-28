@@ -1,38 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { LanguageService } from "src/languages/providers/language.service";
+import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
+import { UserService } from "src/users/providers/user.service";
 import { Repository } from "typeorm";
 import { CreateGallarysDto } from "../dtos/create-gallary.dto";
 import { Gallary } from "../gallary.entity";
 
 @Injectable()
-export class GallaryService {
+export class GallaryService extends BaseService<Gallary, CreateGallarysDto> {
   constructor(
     @InjectRepository(Gallary)
-    private readonly repository: Repository<Gallary>,
-    private readonly filterData: FilterDataProvider<Gallary>,
-  ) {}
-
-  public async create(create: CreateGallarysDto) {
-    const education = this.repository.create({ ...create });
-    return await this.repository.save(education);
+    repository: Repository<Gallary>,
+    filterData: FilterDataProvider<Gallary>,
+    usersService: UserService,
+    languageService: LanguageService,
+  ) {
+    super(repository, filterData, usersService, languageService);
   }
 
-  public async findAll(filter: FilterQueryDto) {
-    const entity = await this.filterData
-      .initRepositry("gallary", this.repository, filter)
-      .filter()
-      .provideFields()
-      .sort()
-      .paginate()
-      .search()
-      .execute();
-    return entity;
-  }
+  async findAll(filter: FilterQueryDto) {
+    const entity = await this.filters(filter, "gallary").execute();
+    const result = await this.filters(filter, "gallary").count();
 
-  public async delete(id: number) {
-    await this.repository.delete(id);
-    return { deleted: true, id };
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 }

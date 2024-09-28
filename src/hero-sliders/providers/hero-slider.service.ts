@@ -1,38 +1,36 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { LanguageService } from "src/languages/providers/language.service";
+import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
+import { UserService } from "src/users/providers/user.service";
 import { Repository } from "typeorm";
 import { CreateHeroSliderDto } from "../dtos/create-hero-slider.dto";
 import { HeroSlider } from "../hero-slider.entity";
 
 @Injectable()
-export class HeroSliderService {
+export class HeroSliderService extends BaseService<HeroSlider, CreateHeroSliderDto> {
   constructor(
     @InjectRepository(HeroSlider)
-    private readonly repository: Repository<HeroSlider>,
-    private readonly filterData: FilterDataProvider<HeroSlider>,
-  ) {}
-
-  public async create(create: CreateHeroSliderDto) {
-    const data = this.repository.create(create);
-    return await this.repository.save(data);
+    repository: Repository<HeroSlider>,
+    filterData: FilterDataProvider<HeroSlider>,
+    usersService: UserService,
+    languageService: LanguageService,
+  ) {
+    super(repository, filterData, usersService, languageService);
   }
 
-  public async findAll(filter: FilterQueryDto) {
-    const entity = await this.filterData
-      .initRepositry("magazine", this.repository, filter)
-      .filter()
-      .provideFields()
-      .sort()
-      .paginate()
-      .search()
+  async findAll(filter: FilterQueryDto) {
+    const entity = await this.filters(filter, "heroslider")
+      .provideFields(["featuredImage", "short_description"])
       .execute();
-    return entity;
-  }
+    const result = await this.filters(filter, "heroslider").count();
 
-  public async delete(id: number) {
-    await this.repository.delete(id);
-    return { deleted: true, id };
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 }

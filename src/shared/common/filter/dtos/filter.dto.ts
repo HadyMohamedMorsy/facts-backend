@@ -4,22 +4,14 @@ import {
   IsBoolean,
   IsInt,
   IsOptional,
-  IsPositive,
   IsString,
+  Min,
   ValidateNested,
 } from "class-validator";
 
-export class SearchDto {
-  @IsOptional()
-  @IsString()
-  value: string | null;
-
-  @IsBoolean()
-  regex: boolean;
-}
-
 export class OrderDto {
   @IsInt()
+  @Type(() => Number)
   column: number;
 
   @IsString()
@@ -28,7 +20,7 @@ export class OrderDto {
 
 export class DataTableColumnDto {
   @IsString()
-  id: string;
+  title: string;
 
   @IsString()
   name: string;
@@ -42,12 +34,14 @@ export class DataTableColumnDto {
 
 export class FilterQueryDto {
   @IsOptional()
-  @IsPositive()
+  @Type(() => Number)
+  @Min(1)
   length?: number = 10;
 
   @IsOptional()
-  @IsPositive()
-  start?: number = 1;
+  @Type(() => Number)
+  @Min(0)
+  start?: number = 0;
 
   @IsOptional()
   @IsArray()
@@ -62,10 +56,8 @@ export class FilterQueryDto {
 
   @IsOptional()
   @IsArray()
-  provideFields: string[];
+  provideFields?: string[];
 
   @IsOptional()
-  @ValidateNested()
-  @Type(() => SearchDto)
-  search?: SearchDto;
+  search?: string | null;
 }

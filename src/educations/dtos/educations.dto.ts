@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, MaxLength } from "class-validator";
-export class EducationDetailDto {
+export class EducationAccordion {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)

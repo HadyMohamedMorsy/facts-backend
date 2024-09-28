@@ -23,7 +23,6 @@ export class MagazineService {
     const entity = await this.filterData
       .initRepositry("magazine", this.repository, filter)
       .filter()
-      .provideFields()
       .sort()
       .paginate()
       .search()

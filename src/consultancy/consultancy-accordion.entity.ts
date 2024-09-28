@@ -1,19 +1,9 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Consultancy } from "./consultancy.entity";
 
 @Entity()
-export class ConsultancyAccordion {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class ConsultancyAccordion extends BaseTime {
   @Column({
     type: "varchar",
     length: 256,
@@ -26,13 +16,7 @@ export class ConsultancyAccordion {
   })
   description: string;
 
-  @CreateDateColumn()
-  createDate: Date;
-
-  @UpdateDateColumn()
-  updateDate: Date;
-
-  @ManyToOne(() => Consultancy, consultancy => consultancy.consultancyAccordion, {
+  @ManyToOne(() => Consultancy, consultancy => consultancy.consultancy_accordion, {
     onDelete: "CASCADE",
   })
   @JoinColumn()

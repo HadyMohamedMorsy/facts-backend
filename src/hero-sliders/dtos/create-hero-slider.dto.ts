@@ -1,19 +1,7 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MaxLength,
-  MinLength,
-} from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreateHeroSliderDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+export class CreateHeroSliderDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -22,13 +10,8 @@ export class CreateHeroSliderDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  short_description?: string;
 
-  @IsOptional()
-  @IsUrl()
   @MaxLength(1024)
   featuredImage: string;
-
-  @IsInt()
-  language_id: number;
 }

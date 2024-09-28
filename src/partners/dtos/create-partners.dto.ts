@@ -1,11 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreatePartnersDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+export class CreatePartnersDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -18,7 +15,4 @@ export class CreatePartnersDto {
   @IsNotEmpty()
   @IsString()
   description: string;
-
-  @IsInt()
-  language_id: number;
 }

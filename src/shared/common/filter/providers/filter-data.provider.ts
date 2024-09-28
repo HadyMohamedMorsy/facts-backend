@@ -31,9 +31,9 @@ export class FilterDataProvider<T> {
     return this;
   }
 
-  provideFields() {
-    if (this.#filterData.provideFields && this.#filterData.provideFields.length) {
-      const fields = this.#filterData.provideFields.map(field => `${this.#entity}.${field}`);
+  provideFields(providers: string[]) {
+    if (providers.length) {
+      const fields = providers.map(field => `${this.#entity}.${field}`);
       this.#queryBuilder.addSelect(fields);
     }
     return this;
@@ -93,7 +93,6 @@ export class FilterDataProvider<T> {
 
   filterByLanguage() {
     const languageId = +this.request.headers["x-localization"];
-
     this.#queryBuilder
       .leftJoinAndSelect(`${this.#entity}.language`, "language")
       .andWhere("language.id = :id", { id: languageId });

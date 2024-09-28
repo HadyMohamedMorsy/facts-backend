@@ -1,38 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { LanguageService } from "src/languages/providers/language.service";
+import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
+import { UserService } from "src/users/providers/user.service";
 import { Repository } from "typeorm";
 import { CreatePartnersDto } from "../dtos/create-partners.dto";
 import { Partner } from "../partner.entity";
 
 @Injectable()
-export class PartnersService {
+export class PartnersService extends BaseService<Partner, CreatePartnersDto> {
   constructor(
     @InjectRepository(Partner)
-    private readonly repository: Repository<Partner>,
-    private readonly filterData: FilterDataProvider<Partner>,
-  ) {}
-
-  public async create(create: CreatePartnersDto) {
-    const education = this.repository.create({ ...create });
-    return await this.repository.save(education);
+    repository: Repository<Partner>,
+    filterData: FilterDataProvider<Partner>,
+    usersService: UserService,
+    languageService: LanguageService,
+  ) {
+    super(repository, filterData, usersService, languageService);
   }
 
-  public async findAll(filter: FilterQueryDto) {
-    const entity = await this.filterData
-      .initRepositry("partner", this.repository, filter)
-      .filter()
-      .provideFields()
-      .sort()
-      .paginate()
-      .search()
-      .execute();
-    return entity;
-  }
+  async findAll(filter: FilterQueryDto) {
+    const entity = await this.filters(filter, "partner").execute();
+    const result = await this.filters(filter, "partner").count();
 
-  public async delete(id: number) {
-    await this.repository.delete(id);
-    return { deleted: true, id };
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 }

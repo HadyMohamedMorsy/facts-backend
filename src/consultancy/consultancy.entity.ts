@@ -1,4 +1,4 @@
-import { Base } from "src/shared/common/base/base.entity";
+import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity, OneToMany, Unique } from "typeorm";
 import { ConsultancyAccordion } from "./consultancy-accordion.entity";
 
@@ -18,5 +18,5 @@ export class Consultancy extends Base {
   short_description?: string;
 
   @OneToMany(() => ConsultancyAccordion, consultancyAccordion => consultancyAccordion.consultancy)
-  consultancyAccordion: ConsultancyAccordion[];
+  consultancy_accordion: ConsultancyAccordion[];
 }
