@@ -23,7 +23,7 @@ export class Banner {
   @Column({ length: 256 })
   title: string;
 
-  @Column({ length: 256 })
+  @Column({ length: 256, unique: true })
   page: string;
 
   @Column({ type: "text", nullable: true })

@@ -21,8 +21,15 @@ export class GallaryService extends BaseService<Gallary, CreateGallarysDto> {
     super(repository, filterData, usersService, languageService);
   }
 
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "gallary").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "gallary").execute();
+    const entity = await this.filters(filter, "gallary").provideFields(["files"]).execute();
     const result = await this.filters(filter, "gallary").count();
 
     return {

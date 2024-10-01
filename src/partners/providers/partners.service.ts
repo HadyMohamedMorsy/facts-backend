@@ -31,4 +31,11 @@ export class PartnersService extends BaseService<Partner, CreatePartnersDto> {
       totalRecords: +result,
     };
   }
+
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "partner").execute();
+    return {
+      data: entity,
+    };
+  }
 }

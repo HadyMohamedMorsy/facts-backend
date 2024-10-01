@@ -8,6 +8,6 @@ export class CreateGallarysDto extends BaseDto {
   accordion_title: string;
 
   @IsArray()
-  @MaxLength(1024)
+  @IsString({ each: true })
   files: string[];
 }

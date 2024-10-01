@@ -21,8 +21,18 @@ export class TeamService extends BaseService<Team, CreateTeamDto> {
     super(repository, filterData, usersService, languageService);
   }
 
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "team").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "team").execute();
+    const entity = await this.filters(filter, "team")
+      .provideFields(["featuredImage", "phone_number"])
+      .joinRelations(["social_links"])
+      .execute();
     const result = await this.filters(filter, "team").count();
 
     return {

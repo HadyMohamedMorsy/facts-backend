@@ -12,8 +12,7 @@ export class EducationAccordion extends BaseTime {
   accordion_title: string;
 
   @Column({
-    type: "varchar",
-    length: 512,
+    type: "text",
     nullable: false,
   })
   description: string;

@@ -6,21 +6,38 @@ import {
   Injectable,
   Post,
   Req,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
   ValidationPipe,
 } from "@nestjs/common";
-import { FileInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
+import { AnyFilesInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
+import { dtoMappings } from "src/shared/config/dto-mapping";
 import multerOptions from "src/shared/config/multer-options";
-import { dtoMappings } from "../../config/dto-mapping";
 import { FilterQueryDto } from "../filter/dtos/filter.dto";
+import { TransformRequest } from "../filter/providers/transform-request.entity.provider";
 import { HeaderToBodyInterceptor } from "../interceptor/transfrom-request.interceptor";
 import { IBaseService } from "./service.types";
 
+type UpdateDto<CreateDto> = {
+  id: number;
+} & CreateDto;
+
 @Injectable()
 export abstract class BaseController<CreateDto> {
-  constructor(private readonly baseService: IBaseService<CreateDto>) {}
+  constructor(
+    private readonly baseService: IBaseService<CreateDto>,
+    private readonly transformRequest: TransformRequest,
+  ) {}
+  protected fileFieldName = "featuredImage";
+  protected propertiesRel = [];
+  protected duplicatedPropertirs = ["order", "slug"];
+
+  @Post("front/index")
+  @HttpCode(200)
+  public front(@Body() filterQueryDto: FilterQueryDto) {
+    return this.baseService.front(filterQueryDto);
+  }
 
   @Post("/index")
   @HttpCode(200)
@@ -29,73 +46,40 @@ export abstract class BaseController<CreateDto> {
   }
 
   @Post("/store")
-  @UseInterceptors(NoFilesInterceptor())
   @UseInterceptors(HeaderToBodyInterceptor)
-  public create(@Body() createDto: CreateDto) {
-    return this.baseService.create(createDto);
-  }
-
-  @Post("/store-upload")
-  @UseInterceptors(HeaderToBodyInterceptor)
-  @UseInterceptors(FileInterceptor("featuredImage", multerOptions))
-  public async createUpload(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() create: CreateDto,
+  @UseInterceptors(AnyFilesInterceptor(multerOptions))
+  public async create(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() createDto: CreateDto,
     @Req() request: Request,
   ) {
-    const validatedDto = await this.#processFileUpload(request, create, file, "featuredImage");
+    const validatedDto = await this.#processFileUpload(
+      request,
+      createDto,
+      files,
+      this.fileFieldName,
+    );
     return this.baseService.create(validatedDto);
   }
 
-  @Post("/store-uploads")
+  @Post("/update")
   @UseInterceptors(HeaderToBodyInterceptor)
-  @UseInterceptors(FileInterceptor("files", multerOptions))
-  public async createUploads(
-    @UploadedFile() files: Array<Express.Multer.File>,
-    @Body() create: CreateDto,
+  @UseInterceptors(AnyFilesInterceptor(multerOptions))
+  public async update(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() patch: UpdateDto<CreateDto>,
     @Req() request: Request,
   ) {
-    if (files && files.length > 0) {
-      const validatedDto = await this.#processFileUpload(request, create, files, "featuredImage");
-      return this.baseService.create(validatedDto);
-    }
-  }
-
-  transformUpdate(file: Express.Multer.File, patch: any, request: Request, entityRel: any) {
-    if (file) {
-      const baseURL = `${request.protocol}://${request.headers.host}`;
-      const modulePath = request.path.split("/")[3];
-      const fileUrls: string[] = [];
-      fileUrls.push(`${baseURL}/public/uploads/${modulePath}/${file.filename}`);
-      patch.featuredImage = fileUrls[0];
-    }
-
-    Object.keys(patch).forEach(key => {
-      if (patch[key] === entityRel[key]) {
-        delete patch[key];
-      }
-    });
-    return patch;
-  }
-
-  #getDtoForEndpoint(path: string) {
-    const dtoClass = dtoMappings[path];
-    if (!dtoClass) {
-      throw new BadRequestException("Invalid endpoint");
-    }
-    return dtoClass;
-  }
-
-  async #validateDto(dtoClass: any, body: CreateDto) {
-    const validationPipe = new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    });
-    return await validationPipe.transform(body, {
-      metatype: dtoClass,
-      type: "body",
-    });
+    const entity = await this.baseService.findOne(+patch.id, this.propertiesRel);
+    let updatedDto = this.transformRequest
+      .initEntity(request, patch, entity)
+      .handleFiles(files)
+      .updateEntity()
+      .checkDuplicate(this.duplicatedPropertirs)
+      .getUpdatedEntity();
+    const dto = this.#getDtoForEndpoint(request.path);
+    updatedDto = await this.#validateDto(dto, updatedDto, false);
+    return this.baseService.update(updatedDto);
   }
 
   @Delete("/delete")
@@ -108,7 +92,7 @@ export abstract class BaseController<CreateDto> {
   async #processFileUpload(
     request: Request,
     createDto: CreateDto,
-    files: Express.Multer.File | Array<Express.Multer.File>,
+    files: Array<Express.Multer.File>,
     fieldName: string,
   ): Promise<CreateDto> {
     const dto = this.#getDtoForEndpoint(request.path);
@@ -120,17 +104,33 @@ export abstract class BaseController<CreateDto> {
     }
 
     let fileUrls: string[] = [];
-    if (Array.isArray(files)) {
-      fileUrls = files.map(file => `${baseURL}/public/uploads/${modulePath}/${file.filename}`);
-    } else {
-      fileUrls.push(`${baseURL}/public/uploads/${modulePath}/${files.filename}`);
-    }
+    fileUrls = files.map(file => `${baseURL}/public/uploads/${modulePath}/${file.filename}`);
 
     const updatedDto = {
       ...createDto,
-      [fieldName]: Array.isArray(files) ? fileUrls : fileUrls[0],
+      [fieldName]: fieldName === "featuredImage" || "avatar" ? fileUrls[0] : fileUrls,
     };
 
     return this.#validateDto(dto, updatedDto);
+  }
+
+  #getDtoForEndpoint(path: string) {
+    const dtoClass = dtoMappings[path];
+    if (!dtoClass) {
+      throw new BadRequestException("Invalid endpoint");
+    }
+    return dtoClass;
+  }
+
+  async #validateDto(dtoClass: any, body: CreateDto, isPartial: boolean = true) {
+    const validationPipe = new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: isPartial,
+    });
+    return await validationPipe.transform(body, {
+      metatype: dtoClass,
+      type: "body",
+    });
   }
 }

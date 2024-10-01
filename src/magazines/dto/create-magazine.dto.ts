@@ -3,7 +3,6 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -11,11 +10,8 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
-export class CreateMagazineDto {
-  @IsNumber()
-  @IsNotEmpty()
-  order: number;
-
+import { BaseDto } from "src/shared/common/base/base.dto";
+export class CreateMagazineDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -47,7 +43,4 @@ export class CreateMagazineDto {
   @IsArray()
   @IsInt()
   category_ids: number[];
-
-  @IsInt()
-  language_id: number;
 }

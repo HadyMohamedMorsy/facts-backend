@@ -7,6 +7,5 @@ export class EducationAccordion {
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(1024)
   description: string;
 }

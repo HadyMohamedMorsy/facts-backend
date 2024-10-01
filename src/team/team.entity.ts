@@ -14,6 +14,9 @@ export class Team extends Base {
   @Column("text")
   description: string;
 
+  @Column({ type: "text", nullable: true })
+  position: string;
+
   @OneToMany(() => TeamSocial, social => social.team)
   social_links: TeamSocial[];
 

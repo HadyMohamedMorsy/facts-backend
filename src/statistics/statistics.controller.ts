@@ -1,30 +1,16 @@
-import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { Request } from "express";
+import { Controller } from "@nestjs/common";
 import { BaseController } from "src/shared/common/base/base.controller";
-import { HeaderToBodyInterceptor } from "src/shared/common/interceptor/transfrom-request.interceptor";
-import multerOptions from "src/shared/config/multer-options";
+import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
 import { CreateStatisticsDto } from "./dtos/create-statistics.dto";
-import { PatchStatisticsDto } from "./dtos/patch-partners.dto";
 import { StatisticsService } from "./providers/statistics.service";
 
 @Controller("statistics")
 export class StatisticsController extends BaseController<CreateStatisticsDto> {
-  constructor(private readonly statisticsService: StatisticsService) {
-    super(statisticsService);
-  }
-
-  @Post("/update")
-  @UseInterceptors(HeaderToBodyInterceptor)
-  @UseInterceptors(FileInterceptor("featuredImage", multerOptions))
-  public async update(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() patch: PatchStatisticsDto,
-    @Req() request: Request,
+  constructor(
+    private readonly statisticsService: StatisticsService,
+    private readonly TransformRequest: TransformRequest,
   ) {
-    const { id } = patch;
-    const entity = await this.statisticsService.findOne(+id);
-    const updatedDto = this.transformUpdate(file, patch, request, entity);
-    return this.statisticsService.update(+id, entity, updatedDto);
+    super(statisticsService, TransformRequest);
+    this.duplicatedPropertirs = ["order"];
   }
 }

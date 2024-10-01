@@ -1,24 +1,20 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
+import { Controller, Get, Param } from "@nestjs/common";
+import { BaseController } from "src/shared/common/base/base.controller";
+import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
 import { CreateMagazineDto } from "./dto/create-magazine.dto";
 import { MagazineService } from "./providers/magazine.service";
 
 @Controller("magazine")
-export class GallaryController {
-  constructor(private readonly magazineService: MagazineService) {}
-
-  @Post("/index")
-  public index(@Body() filterQueryDto: FilterQueryDto) {
-    return this.magazineService.findAll(filterQueryDto);
+export class MagazineController extends BaseController<CreateMagazineDto> {
+  constructor(
+    private readonly magazineService: MagazineService,
+    private readonly TransformRequest: TransformRequest,
+  ) {
+    super(magazineService, TransformRequest);
   }
 
-  @Post("/store")
-  public create(@Body() create: CreateMagazineDto) {
-    return this.magazineService.create(create);
-  }
-
-  @Post("/delete")
-  public delete(@Body() id: number) {
-    return this.magazineService.delete(id);
+  @Get(":slug")
+  async findBySlug(@Param("slug") slug: string) {
+    return this.magazineService.findBySlug(slug);
   }
 }

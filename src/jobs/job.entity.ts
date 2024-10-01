@@ -15,6 +15,9 @@ export class Job extends Base {
   @Column()
   description: string;
 
+  @Column({ length: 1024 })
+  featuredImage: string;
+
   @Column("simple-array") // Storing the skills as a simple comma-separated list
   skills: string[];
 }

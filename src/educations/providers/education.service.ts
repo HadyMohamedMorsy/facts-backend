@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LanguageService } from "src/languages/providers/language.service";
 import { BaseService } from "src/shared/common/base/base.service";
@@ -21,9 +21,32 @@ export class EducationService extends BaseService<Education, CreateEducationsDto
     super(repository, filterData, usersService, languageService);
   }
 
+  async findBySlug(slug: string) {
+    const education = await this.repository.findOne({
+      where: { slug },
+      relations: ["education_accordion", "education_details"], // Add any relations you need
+    });
+
+    if (!education) {
+      throw new NotFoundException(`Education with slug '${slug}' not found`);
+    }
+
+    return {
+      data: education,
+    };
+  }
+
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "education").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "education")
       .joinRelations(["education_accordion", "education_details"])
+      .provideFields(["featuredImage", "short_description"])
       .execute();
     const result = await this.filters(filter, "education").count();
 

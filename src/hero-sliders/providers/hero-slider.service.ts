@@ -33,4 +33,11 @@ export class HeroSliderService extends BaseService<HeroSlider, CreateHeroSliderD
       totalRecords: +result,
     };
   }
+
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "slider").execute();
+    return {
+      data: entity,
+    };
+  }
 }

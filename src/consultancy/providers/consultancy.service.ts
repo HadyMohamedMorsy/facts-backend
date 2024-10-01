@@ -21,6 +21,13 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
     super(repository, filterData, usersService, languageService);
   }
 
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "consultancy").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "consultancy")
       .joinRelations(["consultancy_accordion"])

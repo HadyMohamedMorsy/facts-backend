@@ -5,6 +5,8 @@ import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { BannerModule } from "./banner/banner.module";
+import { BlogsModule } from "./blogs/blogs.module";
+import { CategoryBlogsModule } from "./categories-blogs/category-blogs.module";
 import { CategoryModule } from "./categories/category.module";
 import { ConsultancyModule } from "./consultancy/consultancy.module";
 import { ContactUsModule } from "./contact-us/contact-us.module";
@@ -19,12 +21,15 @@ import { RoleModule } from "./roles/role.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
+import { SocialLinksModule } from "./social-links/social-links.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { TeamModule } from "./team/team.module";
 import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
+    BlogsModule,
+    SocialLinksModule,
     StatisticsModule,
     BannerModule,
     HeroSliderModule,
@@ -35,6 +40,7 @@ import { UsersModule } from "./users/users.module";
     LanguagesModule,
     ContactUsModule,
     GallaryModule,
+    CategoryBlogsModule,
     UsersModule,
     PartnersModule,
     MagazinesModule,

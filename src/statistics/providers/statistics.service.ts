@@ -21,8 +21,15 @@ export class StatisticsService extends BaseService<Statistics, CreateStatisticsD
     super(repository, filterData, usersService, languageService);
   }
 
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "statistics").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "statistics").execute();
+    const entity = await this.filters(filter, "statistics").provideFields(["icon"]).execute();
     const result = await this.filters(filter, "statistics").count();
 
     return {

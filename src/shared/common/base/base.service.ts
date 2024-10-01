@@ -24,25 +24,22 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     private readonly languageService: LanguageService,
   ) {}
 
+  abstract front(filter: FilterQueryDto): Promise<any>;
   abstract findAll(filter: FilterQueryDto): Promise<any>;
 
-  async findOneRel(id: number, relations: string[] = []): Promise<T> {
-    const entity = await this.repository.findOne({
-      where: { id } as FindOptionsWhere<T>,
-      relations,
-    });
+  async findOne(id: number, relations: string[] = []): Promise<T> {
+    let entity = undefined;
 
-    if (!entity) {
-      throw new NotFoundException(`Record with ID ${id} not found`);
+    if (relations.length) {
+      entity = await this.repository.findOne({
+        where: { id } as FindOptionsWhere<T>,
+        relations,
+      });
+    } else {
+      entity = await this.repository.findOne({
+        where: { id } as FindOptionsWhere<T>,
+      });
     }
-
-    return entity;
-  }
-
-  async findOne(id: number): Promise<T> {
-    const entity = await this.repository.findOne({
-      where: { id } as FindOptionsWhere<T>,
-    });
 
     if (!entity) {
       throw new NotFoundException(`Record with ID ${id} not found`);
@@ -72,9 +69,8 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     return this.repository.save(entity);
   }
 
-  async update(id: number, entity: T, updateDto: DeepPartial<T>): Promise<T> {
-    const updatedEntity = this.repository.merge(entity, updateDto);
-    return this.repository.save(updatedEntity);
+  async update(updateDto: DeepPartial<T>): Promise<T> {
+    return this.repository.save(updateDto);
   }
 
   filters(filter: FilterQueryDto, entityType: string) {
@@ -84,6 +80,14 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
       .sort()
       .paginate()
       .search()
+      .filterByLanguage();
+    return entity;
+  }
+
+  filtersFront(filter: FilterQueryDto, entityType: string) {
+    const entity = this.filterData
+      .initRepositry(entityType, this.repository, filter)
+      .paginate()
       .filterByLanguage();
     return entity;
   }

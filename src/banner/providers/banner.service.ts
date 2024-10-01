@@ -21,6 +21,13 @@ export class BannerService extends BaseService<Banner, CreateBannerDto> {
     super(repository, filterData, usersService, languageService);
   }
 
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "banner").execute();
+    return {
+      data: entity,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "banner")
       .provideFields(["featuredImage", "short_description"])

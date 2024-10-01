@@ -4,10 +4,10 @@ import { Education } from "./education.entity";
 
 @Entity()
 export class EducationDetails extends BaseTime {
-  @Column({ length: 256 })
+  @Column("text")
   name: string;
 
-  @Column({ length: 256 })
+  @Column("text")
   value: string;
 
   @ManyToOne(() => Education, education => education.education_accordion, {

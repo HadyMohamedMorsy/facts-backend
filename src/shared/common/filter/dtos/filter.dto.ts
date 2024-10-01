@@ -49,10 +49,11 @@ export class FilterQueryDto {
   @Type(() => OrderDto)
   order?: OrderDto[];
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => DataTableColumnDto)
-  columns: DataTableColumnDto[];
+  columns?: DataTableColumnDto[];
 
   @IsOptional()
   @IsArray()
@@ -60,4 +61,6 @@ export class FilterQueryDto {
 
   @IsOptional()
   search?: string | null;
+
+  [key: string]: any;
 }

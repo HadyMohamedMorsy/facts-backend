@@ -1,3 +1,4 @@
+import { IsString, MaxLength } from "class-validator";
 import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity } from "typeorm";
 
@@ -9,6 +10,11 @@ export class Statistics extends Base {
   @Column({ type: "int" })
   value: string;
 
-  @Column({ type: "text", nullable: true })
-  icon?: string;
+  @IsString()
+  @MaxLength(1024)
+  @Column({
+    type: "varchar",
+    length: 1024,
+  })
+  icon: string;
 }

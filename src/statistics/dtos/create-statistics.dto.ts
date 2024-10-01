@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
 
@@ -10,11 +11,10 @@ export class CreateStatisticsDto extends BaseDto {
 
   @IsInt()
   @IsNotEmpty()
-  @MaxLength(256)
+  @Type(() => Number)
   value: string;
 
-  @IsString()
-  @IsNotEmpty()
   @MaxLength(1024)
+  @IsNotEmpty()
   icon: string;
 }

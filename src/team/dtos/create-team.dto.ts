@@ -18,6 +18,10 @@ export class CreateTeamDto extends BaseDto {
   @IsString()
   description: string;
 
+  @IsNotEmpty()
+  @IsString()
+  position: string;
+
   @IsOptional()
   @IsArray()
   @Type(() => SoicalLinkDto)

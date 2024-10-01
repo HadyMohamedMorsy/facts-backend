@@ -7,6 +7,9 @@ export class Category extends Base {
   @Column({ length: 255 })
   name: string;
 
+  @Column({ length: 512, nullable: false })
+  slug: string;
+
   @ManyToMany(() => Magazine, magazine => magazine.categories)
   magazines: Magazine[];
 }
