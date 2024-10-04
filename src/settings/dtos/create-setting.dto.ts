@@ -1,26 +1,27 @@
 /* eslint-disable prettier/prettier */
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUrl,
-  Matches,
-  MaxLength,
-  MinLength,
-} from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateSettingDto {
-  @IsInt()
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
   @IsNotEmpty()
-  parent_id: number;
+  @MaxLength(256)
+  section_name: string;
 
   @IsOptional()
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -35,13 +36,25 @@ export class CreateSettingDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(1024)
-  description: string;
+  description_en: string;
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(1024)
-  short_description: string;
+  description_ar: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1024)
+  short_description_en: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1024)
+  short_description_ar: string;
 
   @IsOptional()
   @IsString()
@@ -50,10 +63,6 @@ export class CreateSettingDto {
   icon: string;
 
   @IsOptional()
-  @IsUrl()
-  @MaxLength(1024)
+  @IsString()
   featuredImage: string;
-
-  @IsInt()
-  language_id: number;
 }

@@ -10,10 +10,5 @@ export class BaseDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  language_id: number;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
   created_by: number;
 }

@@ -1,13 +1,15 @@
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, OneToMany, Unique } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { EducationAccordion } from "./education-accordion.entity";
 import { EducationDetails } from "./education-details.entity";
 
 @Entity()
-@Unique(["order", "language"])
 export class Education extends Base {
   @Column({ length: 256 })
-  title: string;
+  title_en: string;
+
+  @Column({ length: 256 })
+  title_ar: string;
 
   @Column({
     type: "varchar",
@@ -16,10 +18,13 @@ export class Education extends Base {
   })
   slug: string;
 
-  @Column({ type: "text", nullable: true })
-  short_description?: string;
+  @Column({ type: "text" })
+  short_description_en?: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text" })
+  short_description_ar?: string;
+
+  @Column({ type: "text" })
   featuredImage: string;
 
   @OneToMany(() => EducationAccordion, education => education.education, {

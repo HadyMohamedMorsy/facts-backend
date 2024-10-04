@@ -1,12 +1,18 @@
-import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreateBannerDto {
+export class CreateBannerDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -15,18 +21,12 @@ export class CreateBannerDto {
 
   @IsOptional()
   @IsString()
-  short_description?: string;
+  short_description_en?: string;
 
-  @MaxLength(1024)
+  @IsOptional()
+  @IsString()
+  short_description_ar?: string;
+
+  @IsString()
   featuredImage: string;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  language_id: number;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  created_by: number;
 }

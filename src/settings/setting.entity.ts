@@ -1,28 +1,35 @@
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { ParentSettings } from "./parent-setting.entity";
+import { Column, Entity } from "typeorm";
 
 @Entity()
 export class Settings extends Base {
   @Column({ length: 256, nullable: true })
-  title: string;
+  section_name: string;
+
+  @Column({ length: 256, nullable: true })
+  title_en: string;
+
+  @Column({ length: 256, nullable: true })
+  title_ar: string;
 
   @Column({ length: 512, unique: true })
   slug: string;
 
   @Column({ length: 1024, nullable: true })
-  description: string;
+  description_en: string;
 
   @Column({ length: 1024, nullable: true })
-  short_description: string;
+  description_ar: string;
+
+  @Column({ length: 1024, nullable: true })
+  short_description_en: string;
+
+  @Column({ length: 1024, nullable: true })
+  short_description_ar: string;
 
   @Column({ length: 1024, nullable: true })
   icon: string;
 
   @Column({ length: 1024, nullable: true })
   featuredImage: string;
-
-  @ManyToOne(() => ParentSettings)
-  @JoinColumn({ name: "parent_id" })
-  parent: ParentSettings[];
 }

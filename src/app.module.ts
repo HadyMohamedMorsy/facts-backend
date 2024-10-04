@@ -1,12 +1,21 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
+import { AdvertisementsModule } from "./advertisements/advertisements.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { EmployerModule } from "./employer/employer.module";
+import { ApplicantsModule } from "./applicants/applicants.module";
+import { AuthModule } from "./auth/auth.module";
+import jwtConfig from "./auth/config/jwt.config";
+import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard";
+import { AuthenticationGuard } from "./auth/guards/authentication/authentication.guard";
 import { BannerModule } from "./banner/banner.module";
 import { BlogsModule } from "./blogs/blogs.module";
-import { CategoryBlogsModule } from "./categories-blogs/category-blogs.module";
 import { CategoryModule } from "./categories/category.module";
 import { ConsultancyModule } from "./consultancy/consultancy.module";
 import { ContactUsModule } from "./contact-us/contact-us.module";
@@ -14,20 +23,31 @@ import { EducationsModule } from "./educations/educations.module";
 import { GallaryModule } from "./gallary/gallary.module";
 import { HeroSliderModule } from "./hero-sliders/hero-slider.module";
 import { JobsModule } from "./jobs/jobs.module";
-import { LanguagesModule } from "./languages/languages.module";
 import { MagazinesModule } from "./magazines/magazines.module";
+import { MailModule } from "./mail/mail.module";
 import { PartnersModule } from "./partners/partners.module";
 import { RoleModule } from "./roles/role.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
+import { TransformInterceptor } from "./shared/common/interceptor/transform-response.interceptor";
+import appConfig from "./shared/config/app.config";
+import databaseConfig from "./shared/config/database.config";
+import enviromentValidation from "./shared/config/enviroment.validation";
 import { SocialLinksModule } from "./social-links/social-links.module";
 import { StatisticsModule } from "./statistics/statistics.module";
+import { SubscribtionModule } from "./subscribtion/subscribtion.module";
 import { TeamModule } from "./team/team.module";
 import { UsersModule } from "./users/users.module";
 
+const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
+    EmployerModule,
+    SocialLinksModule,
+    SubscribtionModule,
+    ApplicantsModule,
+    AdvertisementsModule,
     BlogsModule,
     SocialLinksModule,
     StatisticsModule,
@@ -37,10 +57,9 @@ import { UsersModule } from "./users/users.module";
     RoleModule,
     TeamModule,
     SettingsModule,
-    LanguagesModule,
     ContactUsModule,
     GallaryModule,
-    CategoryBlogsModule,
+    MailModule,
     UsersModule,
     PartnersModule,
     MagazinesModule,
@@ -48,26 +67,49 @@ import { UsersModule } from "./users/users.module";
     EducationsModule,
     ConsultancyModule,
     FilterDateModule,
+    MailModule,
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      //envFilePath: ['.env.development', '.env'],
+      envFilePath: !ENV ? ".env" : `.env.${ENV}`,
+      load: [appConfig, databaseConfig],
+      validationSchema: enviromentValidation,
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "public"),
       serveRoot: "/public",
     }),
     TypeOrmModule.forRootAsync({
-      imports: [],
-      inject: [],
-      useFactory: () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
         type: "postgres",
         synchronize: true,
-        port: 5432,
-        username: "postgres",
-        password: "123",
-        host: "localhost",
+        port: configService.get("database.port"),
+        username: configService.get("database.user"),
+        password: configService.get("database.password"),
+        host: configService.get("database.host"),
         autoLoadEntities: true,
-        database: "facts",
+        database: configService.get("database.name"),
       }),
     }),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [FilterDataProvider, AppService],
+  providers: [
+    FilterDataProvider,
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    AccessTokenGuard,
+  ],
 })
 export class AppModule {}

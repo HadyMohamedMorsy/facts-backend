@@ -1,26 +1,31 @@
 import { Category } from "src/categories/category.entity";
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, JoinTable, ManyToMany, Unique } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 
 @Entity()
-@Unique(["order", "language"])
 export class Magazine extends Base {
   @Column({ length: 256 })
-  title: string;
+  title_ar: string;
 
-  @Column({ length: 512 })
+  @Column({ length: 256 })
+  title_en: string;
+
+  @Column({ length: 512, unique: true })
   slug: string;
 
-  @Column({ length: 1024, nullable: true })
-  short_description: string;
+  @Column({ length: 1024 })
+  short_description_ar: string;
 
   @Column({ length: 1024 })
-  description: string;
+  short_description_en: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text" })
   featuredImage: string;
 
+  @Column()
+  publicationDate?: string;
+
   @ManyToMany(() => Category, category => category.magazines)
-  @JoinTable()
+  @JoinTable({ name: "category_ids" })
   categories: Category[];
 }

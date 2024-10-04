@@ -11,6 +11,5 @@ export class SoicalLinkDto {
   @IsString()
   @MinLength(3)
   @IsOptional()
-  @MaxLength(256)
   link: string;
 }

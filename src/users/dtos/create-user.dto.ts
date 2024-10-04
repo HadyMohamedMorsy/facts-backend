@@ -1,6 +1,8 @@
+import { Type } from "class-transformer";
 import {
   IsEmail,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -46,4 +48,9 @@ export class CreateUserDto {
     message: "Minimum eight characters, at least one letter, one number and one special character",
   })
   password: string;
+
+  @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
+  role_id: number;
 }

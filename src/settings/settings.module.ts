@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { ParentSettings } from "./parent-setting.entity";
+import { UsersModule } from "src/users/users.module";
 import { SettingsService } from "./providers/settings.service";
 import { SettingsController } from "./setting.controller";
 import { Settings } from "./setting.entity";
 
 @Module({
-  imports: [FilterDateModule, TypeOrmModule.forFeature([Settings, ParentSettings])],
+  imports: [UsersModule, FilterDateModule, FilterDateModule, TypeOrmModule.forFeature([Settings])],
   controllers: [SettingsController],
   providers: [SettingsService],
 })

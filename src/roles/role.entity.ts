@@ -1,17 +1,10 @@
-import { User } from "src/users/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ROLES } from "./enum/enum";
 @Entity()
-@Unique(["name"]) // Ensures role names are unique across all entries
 export class Role {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
-  name: string; // Example: 'admin', 'user', 'editor'
-
-  @Column({ type: "text", nullable: true })
-  description: string;
-
-  @ManyToOne(() => User, user => user.role) // Assuming each user has one role
-  users: User;
+  @Column({ type: "enum", enum: ROLES })
+  name: ROLES;
 }

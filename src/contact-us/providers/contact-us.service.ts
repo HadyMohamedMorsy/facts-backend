@@ -4,18 +4,19 @@ import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { Repository } from "typeorm";
 import { Contact } from "../contact-us.entity";
+import { CreateContactDto } from "../dtos/create-contact";
 
 @Injectable()
 export class ContactUsService {
   constructor(
     @InjectRepository(Contact)
-    private readonly contactUsRepository: Repository<Contact>,
+    private readonly repository: Repository<Contact>,
     private readonly filterData: FilterDataProvider<Contact>,
   ) {}
 
   public async findAll(filter: FilterQueryDto) {
     const contactUs = await this.filterData
-      .initRepositry("contact", this.contactUsRepository, filter)
+      .initRepositry("contact", this.repository, filter)
       .filter()
       .sort()
       .paginate()
@@ -24,8 +25,13 @@ export class ContactUsService {
     return contactUs;
   }
 
+  async create(createDto: CreateContactDto) {
+    const entity = this.repository.create(createDto as any);
+    return this.repository.save(entity);
+  }
+
   public async delete(id: number) {
-    await this.contactUsRepository.delete(id);
+    await this.repository.delete(id);
     return { deleted: true, id };
   }
 }

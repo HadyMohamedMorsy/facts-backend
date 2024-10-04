@@ -6,7 +6,12 @@ export class CreateCategoryDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)
-  name: string;
+  name_en: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(256)
+  name_ar: string;
 
   @IsString()
   @IsNotEmpty()

@@ -1,21 +1,26 @@
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, OneToMany, Unique } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { ConsultancyAccordion } from "./consultancy-accordion.entity";
 
 @Entity()
-@Unique(["order", "language"])
 export class Consultancy extends Base {
-  @Column({ length: 256, nullable: false })
-  title: string;
+  @Column({ length: 256 })
+  title_en: string;
 
-  @Column({ length: 512, nullable: false })
+  @Column({ length: 256 })
+  title_ar: string;
+
+  @Column({ length: 512 })
   slug: string;
 
-  @Column({ type: "varchar", length: 1024, nullable: false })
+  @Column({ type: "text" })
   featuredImage: string;
 
-  @Column({ type: "text", nullable: true })
-  short_description?: string;
+  @Column({ type: "text" })
+  short_description_en?: string;
+
+  @Column({ type: "text" })
+  short_description_ar?: string;
 
   @OneToMany(() => ConsultancyAccordion, consultancyAccordion => consultancyAccordion.consultancy)
   consultancy_accordion: ConsultancyAccordion[];

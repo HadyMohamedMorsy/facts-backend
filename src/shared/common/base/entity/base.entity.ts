@@ -1,4 +1,3 @@
-import { Language } from "src/languages/language.entity";
 import { User } from "src/users/user.entity";
 import {
   BaseEntity,
@@ -39,8 +38,4 @@ export abstract class Base extends BaseEntity {
   @ManyToOne(() => User)
   @JoinColumn({ name: "created_by" })
   createdBy: User;
-
-  @ManyToOne(() => Language)
-  @JoinColumn({ name: "language_id" })
-  language: Language;
 }

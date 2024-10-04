@@ -2,8 +2,14 @@ import { IsString } from "class-validator";
 
 export class EducationDetailsDto {
   @IsString()
-  name: string;
+  name_en: string;
 
   @IsString()
-  value: string;
+  name_ar: string;
+
+  @IsString()
+  value_en: string;
+
+  @IsString()
+  value_ar: string;
 }

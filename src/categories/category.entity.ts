@@ -5,9 +5,12 @@ import { Column, Entity, ManyToMany } from "typeorm";
 @Entity()
 export class Category extends Base {
   @Column({ length: 255 })
-  name: string;
+  name_en: string;
 
-  @Column({ length: 512, nullable: false })
+  @Column({ length: 255 })
+  name_ar: string;
+
+  @Column({ length: 512, unique: true })
   slug: string;
 
   @ManyToMany(() => Magazine, magazine => magazine.categories)

@@ -6,12 +6,20 @@ export class CreateHeroSliderDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsOptional()
   @IsString()
-  short_description?: string;
+  short_description_en?: string;
+  @IsOptional()
+  @IsString()
+  short_description_ar?: string;
 
-  @MaxLength(1024)
+  @IsString()
   featuredImage: string;
 }

@@ -1,13 +1,28 @@
 /* eslint-disable prettier/prettier */
-import { IsArray, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
+import { TYPE } from "../enum/enum";
 
 export class CreateJobDto extends BaseDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -18,9 +33,21 @@ export class CreateJobDto extends BaseDto {
   @MaxLength(512)
   slug: string;
 
+  @IsEnum(TYPE, { message: "Type must be either parttime or fulltime" })
+  @IsNotEmpty()
+  type: TYPE;
+
+  @IsNumber()
+  @IsNotEmpty()
+  sallary: number;
+
   @IsNotEmpty()
   @IsString()
-  short_description: string;
+  short_description_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  short_description_ar: string;
 
   @IsNotEmpty()
   @MaxLength(1024)
@@ -28,10 +55,9 @@ export class CreateJobDto extends BaseDto {
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  description_en: string;
 
-  @IsArray()
   @IsNotEmpty()
   @IsString()
-  skills?: string[];
+  description_ar: string;
 }

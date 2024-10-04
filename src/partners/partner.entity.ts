@@ -1,32 +1,32 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, Unique } from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity()
-@Unique(["order", "language"])
 export class Partner extends Base {
-  @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
   @Column({
     type: "varchar",
     length: 256,
   })
-  title: string;
+  title_en: string;
 
-  @IsString()
-  @MaxLength(1024)
   @Column({
     type: "varchar",
-    length: 1024,
+    length: 256,
   })
-  featuredImage: string;
+  title_ar: string;
 
-  @IsNotEmpty()
-  @IsString()
   @Column({
     type: "text",
   })
-  description: string;
+  description_en: string;
+
+  @Column({
+    type: "text",
+  })
+  description_ar: string;
+
+  @Column({
+    type: "text",
+  })
+  featuredImage: string;
 }

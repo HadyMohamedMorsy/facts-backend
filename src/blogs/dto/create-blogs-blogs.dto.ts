@@ -1,12 +1,17 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsNotEmpty, IsString, Matches, MaxLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
 
-export class CreateCategoryBlogsDto extends BaseDto {
+export class CreateBlogsDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -18,14 +23,40 @@ export class CreateCategoryBlogsDto extends BaseDto {
   slug: string;
 
   @IsString()
-  short_description: string;
+  @IsOptional()
+  @MaxLength(256)
+  meta_title_en: string;
 
   @IsString()
-  meta_description: string;
-
-  @IsBoolean()
-  is_featured: boolean;
+  @IsOptional()
+  @MaxLength(256)
+  meta_title_ar: string;
 
   @IsString()
-  description: string;
+  @IsOptional()
+  meta_description_en: string;
+
+  @IsString()
+  @IsOptional()
+  meta_description_ar: string;
+
+  @IsString()
+  @IsOptional()
+  short_description_en: string;
+
+  @IsString()
+  @IsOptional()
+  short_description_ar: string;
+
+  @IsString()
+  description_en: string;
+
+  @IsString()
+  description_ar: string;
+
+  @IsNotEmpty()
+  featuredImage: string;
+
+  @IsNotEmpty()
+  thumbnail: string;
 }

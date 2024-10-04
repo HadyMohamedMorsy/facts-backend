@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LanguageService } from "src/languages/providers/language.service";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
@@ -16,9 +15,8 @@ export class EducationService extends BaseService<Education, CreateEducationsDto
     repository: Repository<Education>,
     filterData: FilterDataProvider<Education>,
     usersService: UserService,
-    languageService: LanguageService,
   ) {
-    super(repository, filterData, usersService, languageService);
+    super(repository, filterData, usersService);
   }
 
   async findBySlug(slug: string) {
@@ -46,7 +44,7 @@ export class EducationService extends BaseService<Education, CreateEducationsDto
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "education")
       .joinRelations(["education_accordion", "education_details"])
-      .provideFields(["featuredImage", "short_description"])
+      .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
       .execute();
     const result = await this.filters(filter, "education").count();
 

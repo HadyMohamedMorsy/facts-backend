@@ -5,7 +5,6 @@ import { IBaseService } from "src/shared/common/base/service.types";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
-import { LanguageService } from "../../../languages/providers/language.service";
 import { UserService } from "../../../users/providers/user.service";
 interface BaseEntity {
   id: number;
@@ -21,7 +20,6 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     protected readonly repository: Repository<T>,
     protected readonly filterData: FilterDataProvider<T>,
     private readonly usersService: UserService,
-    private readonly languageService: LanguageService,
   ) {}
 
   abstract front(filter: FilterQueryDto): Promise<any>;
@@ -49,21 +47,18 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
   }
 
   async create(createDto: CreateDto): Promise<T> {
-    const { created_by, language_id } = createDto as any;
+    const { created_by } = createDto as any;
 
     let createdBy = undefined;
-    let language = undefined;
 
     try {
       createdBy = await this.usersService.findOneById(created_by);
-      language = await this.languageService.findOneById(language_id);
     } catch (error) {
       throw new ConflictException(error);
     }
 
     const entity = this.repository.create({
       ...createDto,
-      language,
       createdBy,
     } as DeepPartial<T>);
     return this.repository.save(entity);
@@ -79,16 +74,12 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
       .filter()
       .sort()
       .paginate()
-      .search()
-      .filterByLanguage();
+      .search();
     return entity;
   }
 
   filtersFront(filter: FilterQueryDto, entityType: string) {
-    const entity = this.filterData
-      .initRepositry(entityType, this.repository, filter)
-      .paginate()
-      .filterByLanguage();
+    const entity = this.filterData.initRepositry(entityType, this.repository, filter).paginate();
     return entity;
   }
 

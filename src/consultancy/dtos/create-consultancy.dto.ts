@@ -17,7 +17,13 @@ export class CreateConsultancyDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -30,10 +36,14 @@ export class CreateConsultancyDto extends BaseDto {
 
   @IsOptional()
   @IsString()
-  short_description?: string;
+  short_description_en?: string;
 
+  @IsOptional()
+  @IsString()
+  short_description_ar?: string;
+  
+  @IsString()
   @IsNotEmpty()
-  @MaxLength(1024)
   featuredImage: string;
 
   @IsArray()

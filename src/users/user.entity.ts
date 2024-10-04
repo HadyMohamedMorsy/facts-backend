@@ -3,7 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -46,7 +47,6 @@ export class User {
   @Column({
     type: "enum",
     enum: Gender,
-    nullable: true,
   })
   gender: Gender;
 
@@ -69,6 +69,7 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => Role, role => role.users)
+  @OneToOne(() => Role)
+  @JoinColumn({ name: "role_id" })
   role: Role;
 }

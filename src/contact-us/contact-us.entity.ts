@@ -12,8 +12,7 @@ export class Contact {
   id: number;
 
   @Column({
-    type: "varchar",
-    length: 256,
+    type: "text",
     unique: true,
   })
   email: string;
@@ -27,7 +26,6 @@ export class Contact {
   @Column({
     type: "varchar",
     length: 256,
-    unique: true,
   })
   subject: string;
 
@@ -35,12 +33,10 @@ export class Contact {
     type: "inet",
     unique: true,
   })
-  number: number;
+  phone_number: number;
 
   @Column({
-    type: "varchar",
-    length: 1024,
-    unique: true,
+    type: "text",
   })
   message: string;
 

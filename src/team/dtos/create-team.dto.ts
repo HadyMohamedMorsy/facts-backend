@@ -8,7 +8,12 @@ export class CreateTeamDto extends BaseDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)
-  name: string;
+  name_en: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(256)
+  name_ar: string;
 
   @IsArray()
   @IsNotEmpty()
@@ -16,11 +21,19 @@ export class CreateTeamDto extends BaseDto {
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  description_en: string;
 
   @IsNotEmpty()
   @IsString()
-  position: string;
+  description_ar: string;
+
+  @IsNotEmpty()
+  @IsString()
+  position_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  position_ar: string;
 
   @IsOptional()
   @IsArray()

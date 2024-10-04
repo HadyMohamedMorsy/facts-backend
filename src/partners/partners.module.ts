@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { LanguagesModule } from "src/languages/languages.module";
 import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
 import { UsersModule } from "src/users/users.module";
 import { Partner } from "./partner.entity";
@@ -8,7 +7,7 @@ import { PartnersController } from "./partners.controller";
 import { PartnersService } from "./providers/partners.service";
 
 @Module({
-  imports: [UsersModule, LanguagesModule, FilterDateModule, TypeOrmModule.forFeature([Partner])],
+  imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([Partner])],
   controllers: [PartnersController],
   providers: [PartnersService],
 })

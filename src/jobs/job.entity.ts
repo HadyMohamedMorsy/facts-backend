@@ -1,23 +1,36 @@
 import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity } from "typeorm";
+import { TYPE } from "./enum/enum";
 
 @Entity()
 export class Job extends Base {
   @Column({ length: 256 })
-  title: string;
+  title_en: string;
 
-  @Column({ length: 512 })
+  @Column({ length: 256 })
+  title_ar: string;
+
+  @Column({ length: 512, unique: true })
   slug: string;
 
-  @Column()
-  short_description: string;
+  @Column({ type: "text", nullable: true })
+  short_description_en: string;
 
-  @Column()
-  description: string;
+  @Column({ type: "text", nullable: true })
+  short_description_ar: string;
 
-  @Column({ length: 1024 })
+  @Column({ type: "enum", enum: TYPE })
+  type: TYPE;
+
+  @Column({ type: "inet" })
+  sallary: number;
+
+  @Column({ type: "text" })
+  description_en: string;
+
+  @Column({ type: "text" })
+  description_ar: string;
+
+  @Column({ type: "text" })
   featuredImage: string;
-
-  @Column("simple-array") // Storing the skills as a simple comma-separated list
-  skills: string[];
 }

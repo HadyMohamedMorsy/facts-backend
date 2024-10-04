@@ -27,7 +27,7 @@ type UpdateDto<CreateDto> = {
 export abstract class BaseController<CreateDto> {
   constructor(
     private readonly baseService: IBaseService<CreateDto>,
-    private readonly transformRequest: TransformRequest,
+    private readonly transform: TransformRequest,
   ) {}
   protected fileFieldName = "featuredImage";
   protected propertiesRel = [];
@@ -71,7 +71,7 @@ export abstract class BaseController<CreateDto> {
     @Req() request: Request,
   ) {
     const entity = await this.baseService.findOne(+patch.id, this.propertiesRel);
-    let updatedDto = this.transformRequest
+    let updatedDto = this.transform
       .initEntity(request, patch, entity)
       .handleFiles(files)
       .updateEntity()

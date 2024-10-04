@@ -1,4 +1,13 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Post,
+  UseInterceptors,
+} from "@nestjs/common";
+import { NoFilesInterceptor } from "@nestjs/platform-express";
+import { Auth } from "src/auth/decorators/auth.decorator";
+import { AuthType } from "src/auth/enums/auth-type.enum";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UserService } from "./providers/user.service";
@@ -12,12 +21,16 @@ export class UserController {
     return this.userService.findAll(filterQueryDto);
   }
 
-  @Post("/store")
-  public create(@Body() create: CreateUserDto) {
-    return this.userService.create(create);
+  @Post("/signup")
+  @UseInterceptors(NoFilesInterceptor())
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Auth(AuthType.None)
+  public createUsers(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
   }
 
   @Post("/delete")
+  @UseInterceptors(NoFilesInterceptor())
   public delete(@Body() id: number) {
     return this.userService.delete(id);
   }

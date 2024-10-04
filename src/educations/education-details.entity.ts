@@ -5,10 +5,16 @@ import { Education } from "./education.entity";
 @Entity()
 export class EducationDetails extends BaseTime {
   @Column("text")
-  name: string;
+  name_en: string;
 
   @Column("text")
-  value: string;
+  name_ar: string;
+
+  @Column("text")
+  value_en: string;
+
+  @Column("text")
+  value_ar: string;
 
   @ManyToOne(() => Education, education => education.education_accordion, {
     onDelete: "CASCADE",

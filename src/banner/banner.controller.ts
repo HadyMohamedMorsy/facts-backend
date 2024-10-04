@@ -8,9 +8,9 @@ import { BannerService } from "./providers/banner.service";
 export class BannerController extends BaseController<CreateBannerDto> {
   constructor(
     private readonly bannerService: BannerService,
-    private readonly TransformRequest: TransformRequest,
+    private readonly transformRequest: TransformRequest,
   ) {
-    super(bannerService, TransformRequest);
+    super(bannerService, transformRequest);
     this.duplicatedPropertirs = ["page"];
   }
 }

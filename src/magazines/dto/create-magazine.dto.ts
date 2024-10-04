@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import {
   IsArray,
+  IsDateString,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
   Matches,
   MaxLength,
   MinLength,
@@ -16,7 +16,13 @@ export class CreateMagazineDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -28,17 +34,18 @@ export class CreateMagazineDto extends BaseDto {
   slug: string;
 
   @IsString()
-  short_description?: string;
+  @IsOptional()
+  short_description_en?: string;
 
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
-  description: string;
+  short_description_ar?: string;
 
-  @IsOptional()
-  @IsUrl()
-  @MaxLength(1024)
+  @IsString()
   featuredImage: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  publication_date?: Date;
 
   @IsArray()
   @IsInt()

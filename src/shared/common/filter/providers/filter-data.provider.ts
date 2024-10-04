@@ -91,14 +91,6 @@ export class FilterDataProvider<T> {
     return this;
   }
 
-  filterByLanguage() {
-    const languageId = +this.request.headers["x-localization"];
-    this.#queryBuilder
-      .leftJoinAndSelect(`${this.#entity}.language`, "language")
-      .andWhere("language.id = :id", { id: languageId });
-    return this;
-  }
-
   async execute(): Promise<T[]> {
     return this.#queryBuilder.getMany();
   }

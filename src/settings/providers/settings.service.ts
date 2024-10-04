@@ -1,37 +1,47 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
+import { UserService } from "src/users/providers/user.service";
 import { Repository } from "typeorm";
 import { CreateSettingDto } from "../dtos/create-setting.dto";
 import { Settings } from "../setting.entity";
 
 @Injectable()
-export class SettingsService {
+export class SettingsService extends BaseService<Settings, CreateSettingDto> {
   constructor(
     @InjectRepository(Settings)
-    private readonly repository: Repository<Settings>,
-    private readonly filterData: FilterDataProvider<Settings>,
-  ) {}
-
-  public async create(create: CreateSettingDto) {
-    const education = this.repository.create(create);
-    return await this.repository.save(education);
+    repository: Repository<Settings>,
+    filterData: FilterDataProvider<Settings>,
+    usersService: UserService,
+  ) {
+    super(repository, filterData, usersService);
   }
 
-  public async findAll(filter: FilterQueryDto) {
-    const entity = await this.filterData
-      .initRepositry("setting", this.repository, filter)
-      .filter()
-      .sort()
-      .paginate()
-      .search()
+  async front(filter: FilterQueryDto) {
+    const entity = await this.filtersFront(filter, "settings").execute();
+    return {
+      data: entity,
+    };
+  }
+
+  async findAll(filter: FilterQueryDto) {
+    const entity = await this.filters(filter, "settings")
+      .provideFields([
+        "featuredImage",
+        "short_description_ar",
+        "short_description_en",
+        "description_ar",
+        "description_en",
+      ])
       .execute();
-    return entity;
-  }
+    const result = await this.filters(filter, "settings").count();
 
-  public async delete(id: number) {
-    await this.repository.delete(id);
-    return { deleted: true, id };
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 }

@@ -7,7 +7,13 @@ export class CreateStatisticsDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsInt()
   @IsNotEmpty()

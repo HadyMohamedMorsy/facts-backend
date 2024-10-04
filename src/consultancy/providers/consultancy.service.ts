@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LanguageService } from "src/languages/providers/language.service";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
@@ -16,9 +15,8 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
     repository: Repository<Consultancy>,
     filterData: FilterDataProvider<Consultancy>,
     usersService: UserService,
-    languageService: LanguageService,
   ) {
-    super(repository, filterData, usersService, languageService);
+    super(repository, filterData, usersService);
   }
 
   async front(filter: FilterQueryDto) {
@@ -31,7 +29,7 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "consultancy")
       .joinRelations(["consultancy_accordion"])
-      .provideFields(["featuredImage", "short_description"])
+      .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
       .execute();
     const result = await this.filters(filter, "consultancy").count();
 

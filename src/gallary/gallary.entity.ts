@@ -1,11 +1,13 @@
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, Unique } from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity()
-@Unique(["order", "language"])
 export class Gallary extends Base {
   @Column({ type: "varchar", length: 256 })
-  accordion_title: string;
+  accordion_title_en: string;
+
+  @Column({ type: "varchar", length: 256 })
+  accordion_title_ar: string;
 
   @Column("text", { array: true })
   files: string[];

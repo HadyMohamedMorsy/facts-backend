@@ -19,7 +19,13 @@ export class CreateEducationsDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
+
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsString()
   @IsNotEmpty()
@@ -32,9 +38,13 @@ export class CreateEducationsDto extends BaseDto {
 
   @IsOptional()
   @IsString()
-  short_description?: string;
+  short_description_en?: string;
 
-  @MaxLength(1024)
+  @IsOptional()
+  @IsString()
+  short_description_ar?: string;
+
+  @IsString()
   featuredImage: string;
 
   @IsArray()

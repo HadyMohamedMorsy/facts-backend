@@ -9,13 +9,26 @@ export class EducationAccordion extends BaseTime {
     length: 512,
     nullable: false,
   })
-  accordion_title: string;
+  accordion_title_en: string;
+
+  @Column({
+    type: "varchar",
+    length: 512,
+    nullable: false,
+  })
+  accordion_title_ar: string;
 
   @Column({
     type: "text",
     nullable: false,
   })
-  description: string;
+  description_en: string;
+
+  @Column({
+    type: "text",
+    nullable: false,
+  })
+  description_ar: string;
 
   @ManyToOne(() => Education, education => education.education_accordion, {
     onDelete: "CASCADE",

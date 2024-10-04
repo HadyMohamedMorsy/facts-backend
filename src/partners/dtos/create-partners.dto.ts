@@ -7,12 +7,22 @@ export class CreatePartnersDto extends BaseDto {
   @MinLength(3)
   @IsNotEmpty()
   @MaxLength(256)
-  title: string;
+  title_en: string;
 
-  @MaxLength(1024)
-  featuredImage: string;
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  title_ar: string;
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  description_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description_ar: string;
+
+  @IsString()
+  featuredImage: string;
 }
