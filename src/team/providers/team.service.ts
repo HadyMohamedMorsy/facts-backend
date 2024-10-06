@@ -29,7 +29,7 @@ export class TeamService extends BaseService<Team, CreateTeamDto> {
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "team")
       .provideFields(["featuredImage", "phone_number"])
-      .joinRelations(["social_links"])
+      .joinRelations("social_links", ["icon", "link"])
       .execute();
     const result = await this.filters(filter, "team").count();
 

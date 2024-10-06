@@ -10,6 +10,10 @@ import { CreateGallarysDto } from "src/gallary/dtos/create-gallary.dto";
 import { PatchGallaryDto } from "src/gallary/dtos/patch-gallary.dto";
 import { CreateHeroSliderDto } from "src/hero-sliders/dtos/create-hero-slider.dto";
 import { PatchPostDto } from "src/hero-sliders/dtos/patch-consultancy.dto";
+import { CreateJobDto } from "src/jobs/dtos/create-job.dto";
+import { PatchJobDto } from "src/jobs/dtos/patch-job.dto";
+import { CreateMagazineDto } from "src/magazines/dto/create-magazine.dto";
+import { PatchMagazineDto } from "src/magazines/dto/patch-magazine.dto";
 import { CreatePartnersDto } from "src/partners/dtos/create-partners.dto";
 import { PatchPartnerDto } from "src/partners/dtos/patch-partners.dto";
 import { CreateStatisticsDto } from "src/statistics/dtos/create-statistics.dto";
@@ -38,4 +42,8 @@ export const dtoMappings = {
   [`${APIVERSION}/gallary/update`]: PatchGallaryDto,
   [`${APIVERSION}/category/store`]: CreateCategoryDto,
   [`${APIVERSION}/category/update`]: PatchCategoryDto,
+  [`${APIVERSION}/job/store`]: CreateJobDto,
+  [`${APIVERSION}/job/update`]: PatchJobDto,
+  [`${APIVERSION}/magazine/store`]: CreateMagazineDto,
+  [`${APIVERSION}/magazine/update`]: PatchMagazineDto,
 };

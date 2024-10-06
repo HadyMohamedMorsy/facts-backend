@@ -11,6 +11,7 @@ export class MagazineController extends BaseController<CreateMagazineDto> {
     private readonly TransformRequest: TransformRequest,
   ) {
     super(magazineService, TransformRequest);
+    this.propertiesRel = ["categories_objects"];
   }
 
   @Get(":slug")

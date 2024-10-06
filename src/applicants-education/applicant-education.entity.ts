@@ -1,4 +1,4 @@
-import { Job } from "src/jobs/job.entity";
+import { Education } from "src/educations/education.entity";
 import { User } from "src/users/user.entity";
 import {
   Column,
@@ -11,17 +11,17 @@ import {
 } from "typeorm";
 
 @Entity()
-export class Applicant {
+export class ApplicantEducation {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "created_by" })
-  createdBy: User;
+  created_by: User;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "jon_id" })
-  job: Job;
+  @ManyToOne(() => Education)
+  @JoinColumn({ name: "education_id" })
+  education: Education;
 
   @Column({
     type: "boolean",

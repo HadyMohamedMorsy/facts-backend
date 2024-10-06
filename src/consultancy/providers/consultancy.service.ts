@@ -28,7 +28,12 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "consultancy")
-      .joinRelations(["consultancy_accordion"])
+      .joinRelations("consultancy_accordion", [
+        "accordion_title_en",
+        "accordion_title_ar",
+        "description_en",
+        "description_ar",
+      ])
       .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
       .execute();
     const result = await this.filters(filter, "consultancy").count();

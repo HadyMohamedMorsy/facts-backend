@@ -46,7 +46,7 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     return entity;
   }
 
-  async create(createDto: CreateDto): Promise<T> {
+  async create(createDto: CreateDto, relationProp?: any): Promise<T> {
     const { created_by } = createDto as any;
 
     let createdBy = undefined;
@@ -59,9 +59,22 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
 
     const entity = this.repository.create({
       ...createDto,
+      ...relationProp,
       createdBy,
     } as DeepPartial<T>);
-    return this.repository.save(entity);
+
+    await this.repository.save(entity);
+
+    const result = await this.repository.findOne({
+      where: { id: entity.id } as FindOptionsWhere<T>,
+      relations: ["created_by"],
+    });
+
+    if (!result) {
+      throw new NotFoundException(`Entity with ID ${entity.id} not found`);
+    }
+
+    return result;
   }
 
   async update(updateDto: DeepPartial<T>): Promise<T> {
@@ -74,6 +87,7 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
       .filter()
       .sort()
       .paginate()
+      .joinRelations("created_by", ["email"])
       .search();
     return entity;
   }

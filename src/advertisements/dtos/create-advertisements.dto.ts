@@ -9,5 +9,8 @@ export class CreatAdvertisementDto extends BaseDto {
   company_name_ar: string;
 
   @IsString()
+  page: string;
+
+  @IsString()
   featuredImage: string;
 }

@@ -11,6 +11,6 @@ export class AdvertisementServiceController extends BaseController<CreatAdvertis
     private readonly transformRequest: TransformRequest,
   ) {
     super(advertisementService, transformRequest);
-    this.duplicatedPropertirs = ["order"];
+    this.duplicatedPropertirs = ["order", "page"];
   }
 }

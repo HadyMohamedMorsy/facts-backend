@@ -37,5 +37,5 @@ export abstract class Base extends BaseEntity {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "created_by" })
-  createdBy: User;
+  created_by: User;
 }

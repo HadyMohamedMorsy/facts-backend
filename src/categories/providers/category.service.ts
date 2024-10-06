@@ -4,7 +4,7 @@ import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
 import { UserService } from "src/users/providers/user.service";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { Category } from "../category.entity";
 import { CreateCategoryDto } from "../dto/create-category.dto";
 
@@ -24,6 +24,16 @@ export class CategoryService extends BaseService<Category, CreateCategoryDto> {
     return {
       data: entity,
     };
+  }
+
+  public async findMultipleCategories(categories: number[]) {
+    const results = await this.repository.find({
+      where: {
+        id: In(categories),
+      },
+    });
+
+    return results;
   }
 
   async findAll(filter: FilterQueryDto) {

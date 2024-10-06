@@ -1,13 +1,6 @@
 /* eslint-disable prettier/prettier */
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from "class-validator";
+import { Type } from "class-transformer";
+import { IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
 import { TYPE } from "../enum/enum";
 
@@ -24,20 +17,12 @@ export class CreateJobDto extends BaseDto {
   @MaxLength(256)
   title_ar: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-    message:
-      'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
-  })
-  @MaxLength(512)
-  slug: string;
-
   @IsEnum(TYPE, { message: "Type must be either parttime or fulltime" })
   @IsNotEmpty()
   type: TYPE;
 
   @IsNumber()
+  @Type(() => Number)
   @IsNotEmpty()
   sallary: number;
 

@@ -16,7 +16,7 @@ export class Subscribe {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "created_by" })
-  createdBy: User;
+  created_by: User;
 
   @Column({ type: "text", unique: true })
   email_subscribe: string;

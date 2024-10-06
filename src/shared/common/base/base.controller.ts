@@ -53,7 +53,7 @@ export abstract class BaseController<CreateDto> {
     @Body() createDto: CreateDto,
     @Req() request: Request,
   ) {
-    const validatedDto = await this.#processFileUpload(
+    const validatedDto = await this.processFileUpload(
       request,
       createDto,
       files,
@@ -89,7 +89,7 @@ export abstract class BaseController<CreateDto> {
     return this.baseService.delete(+body.id, modulePath);
   }
 
-  async #processFileUpload(
+  async processFileUpload(
     request: Request,
     createDto: CreateDto,
     files: Array<Express.Multer.File>,
@@ -100,7 +100,7 @@ export abstract class BaseController<CreateDto> {
     const modulePath = request.path.split("/")[3];
 
     if (!files || (Array.isArray(files) && files.length === 0)) {
-      throw new BadRequestException(`No files provided for field: ${fieldName}`);
+      return this.#validateDto(dto, createDto);
     }
 
     let fileUrls: string[] = [];

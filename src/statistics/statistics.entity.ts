@@ -5,7 +5,10 @@ import { Column, Entity } from "typeorm";
 @Entity()
 export class Statistics extends Base {
   @Column({ length: 256 })
-  title: string;
+  title_en: string;
+
+  @Column({ length: 256 })
+  title_ar: string;
 
   @Column({ type: "int" })
   value: string;

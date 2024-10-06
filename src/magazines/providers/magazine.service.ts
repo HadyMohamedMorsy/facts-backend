@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { CategoryService } from "src/categories/providers/category.service";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { UserService } from "src/users/providers/user.service";
@@ -15,6 +16,7 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
     repository: Repository<Magazine>,
     filterData: FilterDataProvider<Magazine>,
     usersService: UserService,
+    private categoryService: CategoryService,
   ) {
     super(repository, filterData, usersService);
   }
@@ -31,6 +33,11 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
     };
   }
 
+  async createMagazine(createDto: CreateMagazineDto) {
+    const categories = await this.categoryService.findMultipleCategories(createDto.categories);
+    super.create(createDto, categories);
+  }
+
   async front(filter: FilterQueryDto) {
     const entity = await this.filtersFront(filter, "magazine").execute();
     return {
@@ -40,11 +47,12 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "magazine")
+      .joinRelations("categories_objects", ["label", "value"])
       .provideFields([
         "featuredImage",
         "short_description_en",
         "short_description_ar",
-        "publicationDate",
+        "publication_date",
       ])
       .execute();
     const result = await this.filters(filter, "magazine").count();

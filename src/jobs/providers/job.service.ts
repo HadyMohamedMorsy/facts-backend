@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
@@ -17,18 +17,6 @@ export class JobService extends BaseService<Job, CreateJobDto> {
     usersService: UserService,
   ) {
     super(repository, filterData, usersService);
-  }
-
-  async findBySlug(slug: string) {
-    const job = await this.repository.findOne({
-      where: { slug },
-    });
-    if (!job) {
-      throw new NotFoundException(`Education with slug '${slug}' not found`);
-    }
-    return {
-      data: job,
-    };
   }
 
   async front(filter: FilterQueryDto) {

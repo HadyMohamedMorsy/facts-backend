@@ -25,7 +25,10 @@ export class Team extends Base {
   @Column({ type: "text", nullable: true })
   position_ar: string;
 
-  @OneToMany(() => TeamSocial, social => social.team)
+  @OneToMany(() => TeamSocial, social => social.team, {
+    cascade: true,
+    eager: true,
+  })
   social_links: TeamSocial[];
 
   @Column({ type: "varchar", length: 1024 })

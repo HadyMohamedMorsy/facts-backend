@@ -9,6 +9,9 @@ export class Advertisement extends Base {
   @Column({ length: 256 })
   company_name_ar: string;
 
+  @Column({ length: 256 })
+  page: string;
+
   @Column({ type: "text" })
   featuredImage: string;
 }

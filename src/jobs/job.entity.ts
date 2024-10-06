@@ -10,9 +10,6 @@ export class Job extends Base {
   @Column({ length: 256 })
   title_ar: string;
 
-  @Column({ length: 512, unique: true })
-  slug: string;
-
   @Column({ type: "text", nullable: true })
   short_description_en: string;
 
@@ -22,7 +19,7 @@ export class Job extends Base {
   @Column({ type: "enum", enum: TYPE })
   type: TYPE;
 
-  @Column({ type: "inet" })
+  @Column({ type: "numeric" })
   sallary: number;
 
   @Column({ type: "text" })

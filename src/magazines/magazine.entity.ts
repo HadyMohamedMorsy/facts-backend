@@ -1,6 +1,7 @@
 import { Category } from "src/categories/category.entity";
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
+import { MagazineCategories } from "./magazine-categories.entity";
 
 @Entity()
 export class Magazine extends Base {
@@ -22,10 +23,18 @@ export class Magazine extends Base {
   @Column({ type: "text" })
   featuredImage: string;
 
-  @Column()
-  publicationDate?: string;
+  @Column({ type: "date", nullable: true })
+  publication_date?: string;
 
-  @ManyToMany(() => Category, category => category.magazines)
-  @JoinTable({ name: "category_ids" })
+  @OneToMany(() => MagazineCategories, magazineCategories => magazineCategories.categories, {
+    cascade: true,
+    eager: true,
+  })
+  categories_objects?: MagazineCategories[];
+
+  @ManyToMany(() => Category, category => category.magazines, {
+    eager: true,
+  })
+  @JoinTable()
   categories: Category[];
 }

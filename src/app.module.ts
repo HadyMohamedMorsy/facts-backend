@@ -8,8 +8,9 @@ import { join } from "path";
 import { AdvertisementsModule } from "./advertisements/advertisements.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { EmployerModule } from "./employer/employer.module";
-import { ApplicantsModule } from "./applicants/applicants.module";
+import { ApplicantEducationModule } from "./applicants-education/applicants-education.module";
+import { ApplicantGraduatesModule } from "./applicants-graduates/applicants-graduates.module";
+import { ApplicantJobsModule } from "./applicants-job/applicants-job.module";
 import { AuthModule } from "./auth/auth.module";
 import jwtConfig from "./auth/config/jwt.config";
 import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard";
@@ -20,13 +21,16 @@ import { CategoryModule } from "./categories/category.module";
 import { ConsultancyModule } from "./consultancy/consultancy.module";
 import { ContactUsModule } from "./contact-us/contact-us.module";
 import { EducationsModule } from "./educations/educations.module";
+import { EmployerModule } from "./employer/employer.module";
 import { GallaryModule } from "./gallary/gallary.module";
+import { GraduatesModule } from "./graduates/graduates.module";
 import { HeroSliderModule } from "./hero-sliders/hero-slider.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { MagazinesModule } from "./magazines/magazines.module";
 import { MailModule } from "./mail/mail.module";
 import { PartnersModule } from "./partners/partners.module";
 import { RoleModule } from "./roles/role.module";
+import { ServicesHomeModule } from "./services-home/services-home.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
@@ -43,10 +47,13 @@ import { UsersModule } from "./users/users.module";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
+    ServicesHomeModule,
+    GraduatesModule,
     EmployerModule,
     SocialLinksModule,
     SubscribtionModule,
-    ApplicantsModule,
+    ApplicantJobsModule,
+    ApplicantEducationModule,
     AdvertisementsModule,
     BlogsModule,
     SocialLinksModule,
@@ -56,6 +63,7 @@ const ENV = process.env.NODE_ENV;
     CategoryModule,
     RoleModule,
     TeamModule,
+    ApplicantGraduatesModule,
     SettingsModule,
     ContactUsModule,
     GallaryModule,

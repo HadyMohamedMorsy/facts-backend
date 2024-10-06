@@ -11,6 +11,6 @@ export class BannerController extends BaseController<CreateBannerDto> {
     private readonly transformRequest: TransformRequest,
   ) {
     super(bannerService, transformRequest);
-    this.duplicatedPropertirs = ["page"];
+    this.duplicatedPropertirs = ["page", "order"];
   }
 }

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
@@ -9,8 +10,10 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
+import { MagazineCategoriesDto } from "./magazine-categories.dto";
 export class CreateMagazineDto extends BaseDto {
   @IsString()
   @MinLength(3)
@@ -44,10 +47,15 @@ export class CreateMagazineDto extends BaseDto {
   featuredImage: string;
 
   @IsDateString()
-  @IsNotEmpty()
   publication_date?: Date;
 
   @IsArray()
-  @IsInt()
-  category_ids: number[];
+  @ValidateNested({ each: true })
+  @Type(() => MagazineCategoriesDto)
+  categories_objects: MagazineCategoriesDto[];
+
+  @IsArray()
+  @IsInt({ each: true })
+  @Type(() => Number)
+  categories: number[];
 }

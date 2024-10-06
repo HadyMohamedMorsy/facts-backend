@@ -25,7 +25,7 @@ export class Employer {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "created_by" })
-  createdBy: User;
+  created_by: User;
 
   @Column({
     type: "boolean",

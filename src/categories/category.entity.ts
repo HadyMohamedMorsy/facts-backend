@@ -13,6 +13,8 @@ export class Category extends Base {
   @Column({ length: 512, unique: true })
   slug: string;
 
-  @ManyToMany(() => Magazine, magazine => magazine.categories)
+  @ManyToMany(() => Magazine, magazine => magazine.categories, {
+    onDelete: "CASCADE",
+  })
   magazines: Magazine[];
 }

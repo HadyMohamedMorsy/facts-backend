@@ -2,7 +2,7 @@
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsString } from "class-validator";
 
-export class CreateApplicantstDto {
+export class CreateApplicantJobstDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
