@@ -1,9 +1,11 @@
+import { Graduates } from "src/graduates/graduates.entity";
 import { Role } from "src/roles/role.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -37,10 +39,21 @@ export class User {
   username: string;
 
   @Column({
+    nullable: true,
+  })
+  phone_number: string;
+
+  @Column({
+    type: "varchar",
+    length: 96,
+    nullable: true,
+  })
+  country: string;
+
+  @Column({
     type: "varchar",
     length: 96,
     nullable: false,
-    unique: true,
   })
   email: string;
 
@@ -49,6 +62,9 @@ export class User {
     enum: Gender,
   })
   gender: Gender;
+
+  @Column({ type: "text", nullable: true })
+  address?: string;
 
   @Column({
     type: "varchar",
@@ -69,7 +85,10 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => Role)
+  @ManyToOne(() => Role)
   @JoinColumn({ name: "role_id" })
   role: Role;
+
+  @OneToOne(() => Graduates, graduate => graduate.user)
+  graduate: Graduates;
 }

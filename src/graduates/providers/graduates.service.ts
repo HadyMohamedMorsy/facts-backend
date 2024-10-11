@@ -28,7 +28,8 @@ export class GraduatesService extends BaseService<Graduates, CreateGraduatestDto
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "graduates")
-      .provideFields(["featuredImage"])
+      .provideFields(["featuredImage", "description_en", "description_ar"])
+      .joinRelations("user", ["username", "id"])
       .execute();
     const result = await this.filters(filter, "graduates").count();
 

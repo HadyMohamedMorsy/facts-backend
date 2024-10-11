@@ -1,6 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
 import { BaseDto } from "src/shared/common/base/base.dto";
+import { createMagazineBlogDto } from "./create-magazine-blog.dto";
 
 export class CreateBlogsDto extends BaseDto {
   @IsString()
@@ -59,4 +69,14 @@ export class CreateBlogsDto extends BaseDto {
 
   @IsNotEmpty()
   thumbnail: string;
+
+  @IsArray()
+  @Type(() => Number)
+  @IsNotEmpty()
+  magazines: number[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => createMagazineBlogDto)
+  selectMagazines: createMagazineBlogDto[];
 }

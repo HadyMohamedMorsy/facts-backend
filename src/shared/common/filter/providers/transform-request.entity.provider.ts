@@ -16,15 +16,39 @@ export class TransformRequest {
     return this;
   }
 
-  handleFiles(files: Express.Multer.File[], fieldName = "featuredImage") {
+  cleanFiles() {
+    const keysToCheck = ["files"];
+    for (const key of keysToCheck) {
+      if (!this.patch[key]) {
+        this.entity[key] = [];
+      }
+    }
+    return this;
+  }
+
+  handleFiles(files: Express.Multer.File[]) {
     if (files.length) {
       const modulePath = this.request.path.split("/")[3];
-      const baseURL = `${this.request.protocol}://${this.request.headers.host}`;
 
-      let fileUrls: string[] = [];
-      fileUrls = files.map(file => `${baseURL}/public/uploads/${modulePath}/${file.filename}`);
+      const fileGroup = {};
+      files.forEach(file => {
+        const fileUrl = `${this.baseURL}/public/uploads/${modulePath}/${file.filename}`;
+        const fieldname = file.fieldname.replace(/\[\d+\]$/, "");
 
-      this.patch[fieldName] = fieldName === "featuredImage" || "avatar" ? fileUrls[0] : fileUrls;
+        if (fileGroup[fieldname]) {
+          fileGroup[fieldname].push(fileUrl);
+        } else {
+          fileGroup[fieldname] = [fileUrl];
+        }
+      });
+
+      Object.keys(fileGroup).forEach(fieldname => {
+        if (fileGroup[fieldname].length > 1) {
+          this.patch[fieldname] = fileGroup[fieldname];
+        } else {
+          this.patch[fieldname] = fileGroup[fieldname][0];
+        }
+      });
     }
     return this;
   }
@@ -40,7 +64,7 @@ export class TransformRequest {
     if (keys && keys.length) {
       keys.forEach(key => {
         if (this.patch[key] === this.entity[key]) {
-          delete this.patch[key];
+          delete this.entity[key];
         }
       });
     }

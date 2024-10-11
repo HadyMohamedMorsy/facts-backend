@@ -20,7 +20,9 @@ export class CategoryService extends BaseService<Category, CreateCategoryDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "category").execute();
+    const entity = await this.filtersFront(filter, "category")
+      .searchFrontOnly(filter.search, ["name_en", "name_ar"])
+      .execute();
     return {
       data: entity,
     };

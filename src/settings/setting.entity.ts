@@ -12,24 +12,30 @@ export class Settings extends Base {
   @Column({ length: 256, nullable: true })
   title_ar: string;
 
+  @Column({ length: 256, nullable: true })
+  link: string;
+
   @Column({ length: 512, unique: true })
   slug: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text", nullable: true })
   description_en: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text", nullable: true })
   description_ar: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text", nullable: true })
   short_description_en: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text", nullable: true })
   short_description_ar: string;
 
   @Column({ length: 1024, nullable: true })
   icon: string;
 
-  @Column({ length: 1024, nullable: true })
+  @Column({ type: "text", nullable: true })
   featuredImage: string;
+
+  @Column({ type: "text", nullable: true })
+  screen_shot: string;
 }

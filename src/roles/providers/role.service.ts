@@ -9,6 +9,14 @@ export class RoleService {
     private readonly repository: Repository<Role>,
   ) {}
 
+  public async findAll() {
+    const entity = await this.repository.find();
+
+    return {
+      data: entity,
+    };
+  }
+
   public async findOneById(id: number) {
     let role = undefined;
 

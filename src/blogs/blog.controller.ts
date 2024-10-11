@@ -11,5 +11,6 @@ export class BlogController extends BaseController<CreateBlogsDto> {
     private readonly transformRequest: TransformRequest,
   ) {
     super(blogService, transformRequest);
+    this.propertiesRel = ["created_by", "magazines"];
   }
 }

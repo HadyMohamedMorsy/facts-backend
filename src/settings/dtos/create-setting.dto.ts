@@ -12,16 +12,17 @@ export class CreateSettingDto {
   @IsOptional()
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
   title_en: string;
 
   @IsOptional()
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
   title_ar: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  link: string;
 
   @IsString()
   @IsNotEmpty()
@@ -34,35 +35,29 @@ export class CreateSettingDto {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
   description_en: string;
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
   description_ar: string;
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
   short_description_en: string;
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
   short_description_ar: string;
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(1024)
   icon: string;
 
   @IsOptional()
   @IsString()
   featuredImage: string;
+
+  @IsOptional()
+  @IsString()
+  screen_shot: string;
 }

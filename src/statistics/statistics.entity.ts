@@ -4,6 +4,13 @@ import { Column, Entity } from "typeorm";
 
 @Entity()
 export class Statistics extends Base {
+  @Column({
+    unique: true,
+    type: "int",
+    nullable: true,
+  })
+  order: number;
+
   @Column({ length: 256 })
   title_en: string;
 

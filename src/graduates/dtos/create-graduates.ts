@@ -1,17 +1,23 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { User } from "src/users/user.entity";
+import { BaseDto } from "src/shared/common/base/base.dto";
+import { createUserGraduatesDto } from "./create-graduates-users.dto";
 
-export class CreateGraduatestDto {
+export class CreateGraduatestDto extends BaseDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
   created_by: number;
 
+  @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
+  user: number;
+
   @ValidateNested({ each: true })
-  @Type(() => User)
-  user: User;
+  @Type(() => createUserGraduatesDto)
+  selectUser: createUserGraduatesDto;
 
   @IsString()
   @IsNotEmpty()
@@ -25,6 +31,9 @@ export class CreateGraduatestDto {
   @Type(() => String)
   @IsNotEmpty()
   courses: string[];
+
+  @IsString()
+  featuredImage: string;
 
   @IsString()
   @IsNotEmpty()

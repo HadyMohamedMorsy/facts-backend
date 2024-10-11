@@ -33,13 +33,12 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
     };
   }
 
-  async createMagazine(createDto: CreateMagazineDto) {
-    const categories = await this.categoryService.findMultipleCategories(createDto.categories);
-    super.create(createDto, categories);
-  }
-
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "magazine").execute();
+    const entity = await this.filtersFront(filter, "magazine")
+      .paginate()
+      .searchFrontOnly(filter.search, ["title_en", "title_ar"])
+      .filterByActive()
+      .execute();
     return {
       data: entity,
     };
@@ -47,9 +46,10 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "magazine")
-      .joinRelations("categories_objects", ["label", "value"])
+      .joinRelations("categories", ["name_en", "name_ar", "id"])
       .provideFields([
         "featuredImage",
+        "selectedCategories",
         "short_description_en",
         "short_description_ar",
         "publication_date",

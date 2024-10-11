@@ -11,7 +11,6 @@ export class GallaryController extends BaseController<CreateGallarysDto> {
     private readonly TransformRequest: TransformRequest,
   ) {
     super(gallaryService, TransformRequest);
-    this.fileFieldName = "files";
     this.duplicatedPropertirs = ["order"];
   }
 }

@@ -15,14 +15,21 @@ export class ContactUsService {
   ) {}
 
   public async findAll(filter: FilterQueryDto) {
-    const contactUs = await this.filterData
+    const entity = await this.filterData
       .initRepositry("contact", this.repository, filter)
       .filter()
       .sort()
       .paginate()
       .search()
       .execute();
-    return contactUs;
+
+    const result = await this.filterData.initRepositry("contact", this.repository, filter).count();
+
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 
   async create(createDto: CreateContactDto) {

@@ -53,6 +53,22 @@ export class FilterDataProvider<T> {
     return this;
   }
 
+  searchFrontOnly(searchString: string, fields: string[]) {
+    if (searchString && fields.length > 0) {
+      this.#queryBuilder.andWhere(
+        new Brackets(qb => {
+          fields.forEach(field => {
+            qb.orWhere(`${this.#entity}.${field} LIKE :searchString`, {
+              searchString: `%${searchString}%`,
+            });
+          });
+        }),
+      );
+    }
+
+    return this;
+  }
+
   sort() {
     if (this.#filterData.order && this.#filterData.order.length) {
       this.#filterData.order.forEach(({ column, dir }) => {
@@ -112,6 +128,16 @@ export class FilterDataProvider<T> {
         this.#queryBuilder.addSelect(`${relationAlias}.${field}`);
       });
     }
+    return this;
+  }
+
+  filterByActive() {
+    this.#queryBuilder.andWhere(`${this.#entity}.is_active = :isActive`, { isActive: true });
+    return this;
+  }
+
+  orderByOrder(direction: "ASC" | "DESC" = "ASC") {
+    this.#queryBuilder.addOrderBy(`${this.#entity}.order`, direction);
     return this;
   }
 

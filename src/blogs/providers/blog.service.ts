@@ -28,6 +28,7 @@ export class BlogService extends BaseService<Blog, CreateBlogsDto> {
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "blog")
+      .joinRelations("magazines", ["title_ar", "title_en", "id"])
       .provideFields([
         "featuredImage",
         "thumbnail",

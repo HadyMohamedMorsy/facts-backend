@@ -1,15 +1,15 @@
-import { Type } from "class-transformer";
-import { ValidateNested } from "class-validator";
 import { Base } from "src/shared/common/base/entity/base.entity";
 import { User } from "src/users/user.entity";
 import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { createUserGraduatesDto } from "./dtos/create-graduates-users.dto";
 
 @Entity()
 export class Graduates extends Base {
-  @ValidateNested({ each: true })
-  @Type(() => User)
+  @Column("json", { nullable: true })
+  selectUser: createUserGraduatesDto;
+
   @OneToOne(() => User)
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn({ name: "user" })
   user: User;
 
   @Column({ type: "varchar" })
@@ -20,6 +20,9 @@ export class Graduates extends Base {
 
   @Column("simple-array")
   courses: string[];
+
+  @Column({ type: "varchar" })
+  featuredImage: string;
 
   @Column({ type: "varchar" })
   attachment: string;

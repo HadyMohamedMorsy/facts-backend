@@ -1,5 +1,7 @@
 import { CreateBannerDto } from "src/banner/dtos/create-banner.dto";
 import { PatchBannerDto } from "src/banner/dtos/patch-banner.dto";
+import { CreateBlogsDto } from "src/blogs/dto/create-blogs-blogs.dto";
+import { PatchBlogDto } from "src/blogs/dto/patch-blog.dto";
 import { CreateCategoryDto } from "src/categories/dto/create-category.dto";
 import { PatchCategoryDto } from "src/categories/dto/patch-category.dto";
 import { CreateConsultancyDto } from "src/consultancy/dtos/create-consultancy.dto";
@@ -8,6 +10,8 @@ import { CreateEducationsDto } from "src/educations/dtos/create-educations.dto";
 import { PatchEducationDto } from "src/educations/dtos/patch-education.dto";
 import { CreateGallarysDto } from "src/gallary/dtos/create-gallary.dto";
 import { PatchGallaryDto } from "src/gallary/dtos/patch-gallary.dto";
+import { CreateGraduatestDto } from "src/graduates/dtos/create-graduates";
+import { PatchGraduatesDto } from "src/graduates/dtos/patch-graduates.dto";
 import { CreateHeroSliderDto } from "src/hero-sliders/dtos/create-hero-slider.dto";
 import { PatchPostDto } from "src/hero-sliders/dtos/patch-consultancy.dto";
 import { CreateJobDto } from "src/jobs/dtos/create-job.dto";
@@ -46,4 +50,8 @@ export const dtoMappings = {
   [`${APIVERSION}/job/update`]: PatchJobDto,
   [`${APIVERSION}/magazine/store`]: CreateMagazineDto,
   [`${APIVERSION}/magazine/update`]: PatchMagazineDto,
+  [`${APIVERSION}/graduates/store`]: CreateGraduatestDto,
+  [`${APIVERSION}/graduates/update`]: PatchGraduatesDto,
+  [`${APIVERSION}/blog/store`]: CreateBlogsDto,
+  [`${APIVERSION}/blog/update`]: PatchBlogDto,
 };

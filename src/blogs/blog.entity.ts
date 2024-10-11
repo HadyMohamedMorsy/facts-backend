@@ -1,6 +1,7 @@
 import { Magazine } from "src/magazines/magazine.entity";
 import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { createMagazineBlogDto } from "./dto/create-magazine-blog.dto";
 
 @Entity()
 export class Blog extends Base {
@@ -44,6 +45,9 @@ export class Blog extends Base {
   thumbnail: string;
 
   @ManyToOne(() => Magazine)
-  @JoinColumn({ name: "magazine_id" })
-  magazine: Magazine;
+  @JoinColumn({ name: "magazines" })
+  magazines: Magazine[];
+
+  @Column("json", { nullable: true })
+  selectMagazine: createMagazineBlogDto[];
 }

@@ -3,7 +3,6 @@ import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -12,6 +11,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
+import { Category } from "src/categories/category.entity";
 import { BaseDto } from "src/shared/common/base/base.dto";
 import { MagazineCategoriesDto } from "./magazine-categories.dto";
 export class CreateMagazineDto extends BaseDto {
@@ -44,6 +44,7 @@ export class CreateMagazineDto extends BaseDto {
   short_description_ar?: string;
 
   @IsString()
+  @IsOptional()
   featuredImage: string;
 
   @IsDateString()
@@ -52,10 +53,9 @@ export class CreateMagazineDto extends BaseDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MagazineCategoriesDto)
-  categories_objects: MagazineCategoriesDto[];
+  selectedCategories: MagazineCategoriesDto[];
 
   @IsArray()
-  @IsInt({ each: true })
-  @Type(() => Number)
-  categories: number[];
+  @Type(() => Category)
+  categories: Category[];
 }

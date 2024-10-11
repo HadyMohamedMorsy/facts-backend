@@ -11,5 +11,6 @@ export class GraduatesController extends BaseController<CreateGraduatestDto> {
     private readonly transformRequest: TransformRequest,
   ) {
     super(graduatesService, transformRequest);
+    this.propertiesRel = ["created_by", "user"];
   }
 }

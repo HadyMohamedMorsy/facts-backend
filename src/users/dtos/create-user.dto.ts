@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -49,8 +50,35 @@ export class CreateUserDto {
   })
   password: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(96)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+    message: "Minimum eight characters, at least one letter, one number and one special character",
+  })
+  password_confirmation: string;
+
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  role_id: number;
+  role: number;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(3)
+  @MaxLength(96)
+  country?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  phone_number?: string;
+
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @IsBoolean()
+  @Type(() => Boolean)
+  is_active?: boolean;
 }
