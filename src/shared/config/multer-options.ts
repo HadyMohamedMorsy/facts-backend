@@ -29,11 +29,12 @@ const multerOptions = {
     if (
       file.mimetype === "image/jpeg" ||
       file.mimetype === "image/png" ||
-      file.mimetype === "image/svg+xml"
+      file.mimetype === "image/svg+xml" ||
+      file.mimetype === "application/pdf"
     ) {
       cb(null, true);
     } else {
-      cb(new BadRequestException("Only .png or .jpg files are allowed!"), false);
+      cb(new BadRequestException("Only .png or pdf or .jpg files are allowed!"), false);
     }
   },
 };

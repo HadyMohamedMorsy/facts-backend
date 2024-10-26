@@ -44,10 +44,12 @@ export class Blog extends Base {
   @Column({ type: "text" })
   thumbnail: string;
 
-  @ManyToOne(() => Magazine)
-  @JoinColumn({ name: "magazines" })
-  magazines: Magazine[];
+  @ManyToOne(() => Magazine, magazine => magazine.blogs, {
+    onDelete: "CASCADE", // This tells TypeORM to delete the Magazine when the Blog is deleted
+  })
+  @JoinColumn()
+  magazine: Magazine;
 
   @Column("json", { nullable: true })
-  selectMagazine: createMagazineBlogDto[];
+  selectMagazine: createMagazineBlogDto;
 }

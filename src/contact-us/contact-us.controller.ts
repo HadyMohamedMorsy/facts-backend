@@ -1,4 +1,6 @@
 import { Body, Controller, Post } from "@nestjs/common";
+import { Auth } from "src/auth/decorators/auth.decorator";
+import { AuthType } from "src/auth/enums/auth-type.enum";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { CreateContactDto } from "./dtos/create-contact";
 import { ContactUsService } from "./providers/contact-us.service";
@@ -12,6 +14,7 @@ export class ContactUsController {
   }
 
   @Post("/store")
+  @Auth(AuthType.None)
   public async create(@Body() createDto: CreateContactDto) {
     return this.contactUsService.create(createDto);
   }

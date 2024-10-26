@@ -1,6 +1,7 @@
+import { Blog } from "src/blogs/blog.entity";
 import { Category } from "src/categories/category.entity";
 import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { MagazineCategoriesDto } from "./dto/magazine-categories.dto";
 
 @Entity()
@@ -29,9 +30,15 @@ export class Magazine extends Base {
   @Column("json", { nullable: true })
   selectedCategories: MagazineCategoriesDto[];
 
-  @ManyToMany(() => Category, categort => categort.magazines, {
+  @ManyToMany(() => Category, category => category.magazines, {
     eager: true,
   })
   @JoinTable()
   categories: Category[];
+
+  @OneToMany(() => Blog, blog => blog.magazine, {
+    eager: true,
+  })
+  @JoinTable()
+  blogs: Blog[];
 }

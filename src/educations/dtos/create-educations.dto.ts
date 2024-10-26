@@ -27,6 +27,14 @@ export class CreateEducationsDto extends BaseDto {
   @MaxLength(256)
   title_ar: string;
 
+  @IsOptional()
+  @IsString()
+  intro_description_ar?: string;
+
+  @IsOptional()
+  @IsString()
+  intro_description_en?: string;
+
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
@@ -46,6 +54,9 @@ export class CreateEducationsDto extends BaseDto {
 
   @IsString()
   featuredImage: string;
+
+  @IsString()
+  thumbnail: string;
 
   @IsArray()
   @ValidateNested({ each: true })

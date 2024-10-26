@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Type } from "class-transformer";
-import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateContactDto {
   @IsString()
@@ -16,16 +15,11 @@ export class CreateContactDto {
   @IsNotEmpty()
   subject: string;
 
-  @IsInt()
+  @IsString()
   @IsNotEmpty()
-  phone_number: number;
+  phone_number: string;
 
   @IsString()
   @IsOptional()
   message: string;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  created_by: number;
 }

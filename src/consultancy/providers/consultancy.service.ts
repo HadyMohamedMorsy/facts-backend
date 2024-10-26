@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
@@ -20,7 +20,10 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "consultancy").execute();
+    const entity = await this.filtersFront(filter, "consultancy")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -35,6 +38,7 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
         "description_ar",
       ])
       .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "consultancy").count();
 
@@ -42,6 +46,21 @@ export class ConsultancyService extends BaseService<Consultancy, CreateConsultan
       data: entity,
       recordsFiltered: entity.length,
       totalRecords: +result,
+    };
+  }
+
+  async findBySlug(slug: string) {
+    const education = await this.repository.findOne({
+      where: { slug },
+      relations: ["consultancy_accordion"], // Add any relations you need
+    });
+
+    if (!education) {
+      throw new NotFoundException(`Education with slug '${slug}' not found`);
+    }
+
+    return {
+      data: education,
     };
   }
 }

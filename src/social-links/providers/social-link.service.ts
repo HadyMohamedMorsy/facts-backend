@@ -20,14 +20,20 @@ export class SocialLinkService extends BaseService<SocialLink, CreateSocialLinkD
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "sociallink").execute();
+    const entity = await this.filtersFront(filter, "sociallink")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
   }
 
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "sociallink").provideFields(["icon"]).execute();
+    const entity = await this.filters(filter, "sociallink")
+      .provideFields(["icon"])
+      .orderByOrder()
+      .execute();
     const result = await this.filters(filter, "sociallink").count();
 
     return {

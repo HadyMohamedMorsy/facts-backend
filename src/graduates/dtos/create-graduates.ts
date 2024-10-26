@@ -1,10 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNotEmpty, IsString, ValidateNested } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
 import { createUserGraduatesDto } from "./create-graduates-users.dto";
 
-export class CreateGraduatestDto extends BaseDto {
+export class CreateGraduatestDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
@@ -18,6 +25,19 @@ export class CreateGraduatestDto extends BaseDto {
   @ValidateNested({ each: true })
   @Type(() => createUserGraduatesDto)
   selectUser: createUserGraduatesDto;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message:
+      'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
+  })
+  @MaxLength(512)
+  slug: string;
+
+  @IsString()
+  @IsNotEmpty()
+  type: string;
 
   @IsString()
   @IsNotEmpty()

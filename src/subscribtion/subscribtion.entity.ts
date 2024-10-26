@@ -21,7 +21,7 @@ export class Subscribe {
   @Column({ type: "text", unique: true })
   email_subscribe: string;
 
-  @Column({ type: "text", unique: true })
+  @Column({ type: "text" })
   type: string;
 
   @Column({

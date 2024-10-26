@@ -131,6 +131,29 @@ export class FilterDataProvider<T> {
     return this;
   }
 
+  dynamicFilter(filters: { [key: string]: any }) {
+    Object.keys(filters).forEach(key => {
+      const value = filters[key];
+      if (value !== undefined) {
+        // Ensure value is not undefined
+        this.#queryBuilder.andWhere(`${this.#entity}.${key} = :value`, { value });
+      }
+    });
+    return this;
+  }
+
+  joinInnerRelations(relation: string, fields?: string[]) {
+    if (relation) {
+      const relationAlias = `${this.#entity}_${relation}`;
+      this.#queryBuilder.innerJoin(`${this.#entity}.${relation}`, relationAlias);
+
+      fields?.forEach(field => {
+        this.#queryBuilder.addSelect(`${relationAlias}.${field}`);
+      });
+    }
+    return this;
+  }
+
   filterByActive() {
     this.#queryBuilder.andWhere(`${this.#entity}.is_active = :isActive`, { isActive: true });
     return this;
@@ -138,6 +161,31 @@ export class FilterDataProvider<T> {
 
   orderByOrder(direction: "ASC" | "DESC" = "ASC") {
     this.#queryBuilder.addOrderBy(`${this.#entity}.order`, direction);
+    return this;
+  }
+
+  joinRelatedEntitiesById(
+    relationName: string,
+    relationEntityField: string,
+    id: any,
+    fields?: string[],
+  ) {
+    if (!id) return this;
+
+    const uniqueAlias = `${relationName}_${id}`;
+    this.#queryBuilder.innerJoinAndSelect(
+      `${this.#entity}.${relationName}`,
+      uniqueAlias,
+      `${uniqueAlias}.${relationEntityField} = :id`,
+      { id },
+    );
+
+    if (fields) {
+      fields.forEach(field => {
+        this.#queryBuilder.addSelect(`${uniqueAlias}.${field}`);
+      });
+    }
+
     return this;
   }
 

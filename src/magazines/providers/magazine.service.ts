@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { BlogService } from "src/blogs/providers/blog.service";
 import { CategoryService } from "src/categories/providers/category.service";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
@@ -16,7 +17,10 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
     repository: Repository<Magazine>,
     filterData: FilterDataProvider<Magazine>,
     usersService: UserService,
-    private categoryService: CategoryService,
+    private readonly blogService: BlogService,
+
+    @Inject(forwardRef(() => CategoryService))
+    private readonly categoryService: CategoryService,
   ) {
     super(repository, filterData, usersService);
   }
@@ -35,12 +39,18 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
 
   async front(filter: FilterQueryDto) {
     const entity = await this.filtersFront(filter, "magazine")
-      .paginate()
       .searchFrontOnly(filter.search, ["title_en", "title_ar"])
+      .joinRelations("created_by", ["firstName", "lastName"])
+      .joinRelations("categories", ["name_ar", "name_en", "slug"])
+      .joinRelatedEntitiesById("categories", "id", filter?.filters?.categoryId)
       .filterByActive()
+      .orderByOrder()
       .execute();
+    const result = await this.filtersFront(filter, "magazine").count();
     return {
       data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
     };
   }
 
@@ -54,6 +64,7 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
         "short_description_ar",
         "publication_date",
       ])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "magazine").count();
 
@@ -62,5 +73,17 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
       recordsFiltered: entity.length,
       totalRecords: +result,
     };
+  }
+
+  async deleteMagazineRelations(entity: Magazine): Promise<void> {
+    if (!entity) {
+      throw new NotFoundException("Magazine not found");
+    }
+
+    if (entity.blogs && entity.blogs.length > 0) {
+      for (const blog of entity.blogs) {
+        await this.blogService.delete(blog.id);
+      }
+    }
   }
 }

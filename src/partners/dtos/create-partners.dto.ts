@@ -14,6 +14,12 @@ export class CreatePartnersDto extends BaseDto {
   @IsNotEmpty()
   @MaxLength(256)
   title_ar: string;
+  
+  @IsString()
+  @MinLength(3)
+  @IsNotEmpty()
+  @MaxLength(256)
+  link: string;
 
   @IsNotEmpty()
   @IsString()

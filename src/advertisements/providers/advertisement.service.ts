@@ -20,7 +20,10 @@ export class AdvertisementService extends BaseService<Advertisement, CreatAdvert
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "advertisement").execute();
+    const entity = await this.filtersFront(filter, "advertisement")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -29,6 +32,7 @@ export class AdvertisementService extends BaseService<Advertisement, CreatAdvert
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "advertisement")
       .provideFields(["featuredImage"])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "advertisement").count();
 

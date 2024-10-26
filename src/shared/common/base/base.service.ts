@@ -11,6 +11,8 @@ interface BaseEntity {
   id: number;
   featuredImage?: string;
   files?: string[];
+  thumbnail?: string;
+  attachment?: string;
 }
 
 @Injectable()
@@ -81,7 +83,6 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
       .filter()
       .sort()
       .paginate()
-      .orderByOrder()
       .joinRelations("created_by", ["email"])
       .search();
     return entity;
@@ -91,35 +92,42 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     const entity = this.filterData
       .initRepositry(entityType, this.repository, filter)
       .paginate()
-      .filterByActive()
-      .orderByOrder();
+      .filterByActive();
     return entity;
   }
 
-  async delete(id: number, modulePath: string) {
+  async delete(id: number, modulePath?: string | undefined) {
     const record = await this.repository.findOne({ where: { id } as FindOptionsWhere<T> });
 
     if (!record) {
       throw new NotFoundException(`Record with id ${id} not found`);
     }
 
-    const keysToCheck: Array<keyof BaseEntity> = ["featuredImage", "files"];
-    try {
-      for (const key of keysToCheck) {
-        const fileOrFiles = record[key];
-        if (fileOrFiles) {
-          if (Array.isArray(fileOrFiles)) {
-            for (const file of fileOrFiles) {
-              await this.deleteFile(file, modulePath);
+    if (modulePath) {
+      const keysToCheck: Array<keyof BaseEntity> = [
+        "featuredImage",
+        "files",
+        "thumbnail",
+        "attachment",
+      ];
+      try {
+        for (const key of keysToCheck) {
+          const fileOrFiles = record[key];
+          if (fileOrFiles) {
+            if (Array.isArray(fileOrFiles)) {
+              for (const file of fileOrFiles) {
+                await this.deleteFile(file, modulePath);
+              }
+            } else {
+              console.log(fileOrFiles);
+              await this.deleteFile(fileOrFiles as string, modulePath);
             }
-          } else {
-            await this.deleteFile(fileOrFiles as string, modulePath);
           }
         }
+      } catch (error) {
+        console.error(`Error deleting files: ${error.message}`);
+        throw new NotFoundException(`Failed to delete associated files for record with id ${id}`);
       }
-    } catch (error) {
-      console.error(`Error deleting files: ${error.message}`);
-      throw new NotFoundException(`Failed to delete associated files for record with id ${id}`);
     }
 
     await this.repository.delete(id);

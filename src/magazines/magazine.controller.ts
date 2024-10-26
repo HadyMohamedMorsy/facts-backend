@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -8,7 +9,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from "@nestjs/common";
-import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { AnyFilesInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { CategoryService } from "src/categories/providers/category.service";
 import { BaseController } from "src/shared/common/base/base.controller";
@@ -44,6 +45,14 @@ export class MagazineController extends BaseController<CreateMagazineDto> {
     const categories = await this.categoryService.findMultipleCategories(categoryIds);
     const updateDto = { ...createDto, categories };
     return await super.create(files, updateDto, request);
+  }
+
+  @Delete("/delete")
+  @UseInterceptors(NoFilesInterceptor())
+  public async delete(@Body() body: { id: string }, @Req() request: Request) {
+    const entity = await this.magazineService.findOne(+body.id, ["categories"]);
+    await this.magazineService.deleteMagazineRelations(entity);
+    return await super.delete(body, request);
   }
 
   @Get(":slug")

@@ -10,5 +10,6 @@ import { BlogService } from "./providers/blog.service";
   imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([Blog])],
   controllers: [BlogController],
   providers: [BlogService],
+  exports: [BlogService],
 })
 export class BlogsModule {}

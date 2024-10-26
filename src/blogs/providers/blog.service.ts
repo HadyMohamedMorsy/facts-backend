@@ -20,7 +20,10 @@ export class BlogService extends BaseService<Blog, CreateBlogsDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "blog").execute();
+    const entity = await this.filtersFront(filter, "blog")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -28,17 +31,22 @@ export class BlogService extends BaseService<Blog, CreateBlogsDto> {
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "blog")
-      .joinRelations("magazines", ["title_ar", "title_en", "id"])
+      .joinRelations("magazine", ["title_ar", "title_en", "id"])
       .provideFields([
         "featuredImage",
         "thumbnail",
         "short_description_en",
         "short_description_ar",
         "meta_description_en",
+        "selectMagazine",
+        "meta_title_en",
+        "meta_title_ar",
+        "meta_description_en",
         "meta_description_ar",
         "description_en",
         "description_ar",
       ])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "blog").count();
 

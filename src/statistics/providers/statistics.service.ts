@@ -20,14 +20,20 @@ export class StatisticsService extends BaseService<Statistics, CreateStatisticsD
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "statistics").execute();
+    const entity = await this.filtersFront(filter, "statistics")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
   }
 
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "statistics").provideFields(["icon"]).execute();
+    const entity = await this.filters(filter, "statistics")
+      .provideFields(["icon"])
+      .orderByOrder()
+      .execute();
     const result = await this.filters(filter, "statistics").count();
 
     return {

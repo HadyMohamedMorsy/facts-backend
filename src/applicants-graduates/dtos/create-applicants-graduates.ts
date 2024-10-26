@@ -11,5 +11,5 @@ export class CreateApplicantGraduatesDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  graduat_id: number;
+  graduate: number;
 }

@@ -63,7 +63,7 @@ export class TransformRequest {
   checkDuplicate(keys: string[]) {
     if (keys && keys.length) {
       keys.forEach(key => {
-        if (this.patch[key] === this.entity[key]) {
+        if (this.patch[key] == this.entity[key]) {
           delete this.entity[key];
         }
       });

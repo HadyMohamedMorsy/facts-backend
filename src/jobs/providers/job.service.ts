@@ -20,9 +20,12 @@ export class JobService extends BaseService<Job, CreateJobDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "job").execute();
+    const entity = await this.filtersFront(filter, "job").filterByActive().execute();
+    const result = await this.filtersFront(filter, "job").count();
     return {
       data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
     };
   }
 

@@ -4,7 +4,7 @@ import { TransformRequest } from "src/shared/common/filter/providers/transform-r
 import { CreateServiceDto } from "./dto/service.dto";
 import { ServiceService } from "./providers/service.service";
 
-@Controller("service")
+@Controller("service-home")
 export class ServiceController extends BaseController<CreateServiceDto> {
   constructor(
     private readonly serviceService: ServiceService,

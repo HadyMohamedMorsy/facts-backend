@@ -30,10 +30,10 @@ export class Contact {
   subject: string;
 
   @Column({
-    type: "inet",
+    type: "varchar",
     unique: true,
   })
-  phone_number: number;
+  phone_number: string;
 
   @Column({
     type: "text",

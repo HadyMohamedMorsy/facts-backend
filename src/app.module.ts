@@ -29,6 +29,8 @@ import { JobsModule } from "./jobs/jobs.module";
 import { MagazinesModule } from "./magazines/magazines.module";
 import { MailModule } from "./mail/mail.module";
 import { PartnersModule } from "./partners/partners.module";
+import { PatchModule } from "./patch/patch.module";
+import { ProfileModule } from "./profile/profile.module";
 import { RoleModule } from "./roles/role.module";
 import { ServicesHomeModule } from "./services-home/services-home.module";
 import { SettingsModule } from "./settings/settings.module";
@@ -61,6 +63,7 @@ const ENV = process.env.NODE_ENV;
     BannerModule,
     HeroSliderModule,
     CategoryModule,
+    PatchModule,
     RoleModule,
     TeamModule,
     ApplicantGraduatesModule,
@@ -77,6 +80,7 @@ const ENV = process.env.NODE_ENV;
     FilterDateModule,
     MailModule,
     AuthModule,
+    ProfileModule,
     ConfigModule.forRoot({
       isGlobal: true,
       //envFilePath: ['.env.development', '.env'],

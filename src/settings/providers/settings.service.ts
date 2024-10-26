@@ -20,7 +20,10 @@ export class SettingsService extends BaseService<Settings, CreateSettingDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "settings").execute();
+    const entity = await this.filtersFront(filter, "settings")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -29,12 +32,18 @@ export class SettingsService extends BaseService<Settings, CreateSettingDto> {
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "settings")
       .provideFields([
+        "order",
         "featuredImage",
         "short_description_ar",
         "short_description_en",
         "description_ar",
         "description_en",
+        "title_en",
+        "title_ar",
+        "link",
+        "icon",
       ])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "settings").count();
 

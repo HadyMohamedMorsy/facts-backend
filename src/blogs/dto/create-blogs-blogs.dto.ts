@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
 import {
-  IsArray,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -70,13 +70,12 @@ export class CreateBlogsDto extends BaseDto {
   @IsNotEmpty()
   thumbnail: string;
 
-  @IsArray()
+  @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  magazines: number[];
+  magazine: number;
 
-  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => createMagazineBlogDto)
-  selectMagazines: createMagazineBlogDto[];
+  selectMagazine: createMagazineBlogDto;
 }

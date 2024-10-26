@@ -19,6 +19,12 @@ export class Education extends Base {
   slug: string;
 
   @Column({ type: "text" })
+  intro_description_ar?: string;
+
+  @Column({ type: "text" })
+  intro_description_en?: string;
+
+  @Column({ type: "text" })
   short_description_en?: string;
 
   @Column({ type: "text" })
@@ -26,6 +32,9 @@ export class Education extends Base {
 
   @Column({ type: "text" })
   featuredImage: string;
+
+  @Column({ type: "text" })
+  thumbnail: string;
 
   @OneToMany(() => EducationAccordion, education => education.education, {
     cascade: true,

@@ -16,6 +16,12 @@ export class Partner extends Base {
   title_ar: string;
 
   @Column({
+    type: "varchar",
+    length: 256,
+  })
+  link: string;
+
+  @Column({
     type: "text",
   })
   description_en: string;

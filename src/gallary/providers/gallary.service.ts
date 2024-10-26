@@ -20,14 +20,20 @@ export class GallaryService extends BaseService<Gallary, CreateGallarysDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "gallary").execute();
+    const entity = await this.filtersFront(filter, "gallary")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
   }
 
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "gallary").provideFields(["files"]).execute();
+    const entity = await this.filters(filter, "gallary")
+      .orderByOrder()
+      .provideFields(["files"])
+      .execute();
     const result = await this.filters(filter, "gallary").count();
 
     return {

@@ -35,7 +35,10 @@ export class EducationService extends BaseService<Education, CreateEducationsDto
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "education").execute();
+    const entity = await this.filtersFront(filter, "education")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -50,7 +53,15 @@ export class EducationService extends BaseService<Education, CreateEducationsDto
         "description_ar",
       ])
       .joinRelations("education_details", ["name_en", "name_ar", "value_en", "value_ar"])
-      .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
+      .provideFields([
+        "featuredImage",
+        "short_description_en",
+        "short_description_ar",
+        "intro_description_en",
+        "intro_description_ar",
+        "thumbnail",
+      ])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "education").count();
 

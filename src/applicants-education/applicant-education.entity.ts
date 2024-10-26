@@ -29,9 +29,6 @@ export class ApplicantEducation {
   })
   is_active: boolean;
 
-  @Column({ type: "text" })
-  attachment: string;
-
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;
 

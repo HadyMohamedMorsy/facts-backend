@@ -1,3 +1,6 @@
+import { CreatAdvertisementDto } from "src/advertisements/dtos/create-advertisements.dto";
+import { CreateApplicantJobstDto } from "src/applicants-job/dtos/create-applicants-job";
+import { PatchApplicantJobsDto } from "src/applicants-job/dtos/patch-applicants-job.dto";
 import { CreateBannerDto } from "src/banner/dtos/create-banner.dto";
 import { PatchBannerDto } from "src/banner/dtos/patch-banner.dto";
 import { CreateBlogsDto } from "src/blogs/dto/create-blogs-blogs.dto";
@@ -20,6 +23,14 @@ import { CreateMagazineDto } from "src/magazines/dto/create-magazine.dto";
 import { PatchMagazineDto } from "src/magazines/dto/patch-magazine.dto";
 import { CreatePartnersDto } from "src/partners/dtos/create-partners.dto";
 import { PatchPartnerDto } from "src/partners/dtos/patch-partners.dto";
+import { CreatePatchDto } from "src/patch/dtos/create-patch.dto";
+import { PatchPatchDto } from "src/patch/dtos/patch-patch.dto";
+import { PatchServiceDto } from "src/services-home/dto/patch-service.dto";
+import { CreateServiceDto } from "src/services-home/dto/service.dto";
+import { CreateSettingDto } from "src/settings/dtos/create-setting.dto";
+import { patchSettingDto } from "src/settings/dtos/patch-setting.dto";
+import { CreateSocialLinkDto } from "src/social-links/dtos/create-social-link";
+import { PatchSocialLinkDto } from "src/social-links/dtos/patch-social-link.dto";
 import { CreateStatisticsDto } from "src/statistics/dtos/create-statistics.dto";
 import { PatchStatisticsDto } from "src/statistics/dtos/patch-statistics.dto";
 import { CreateTeamDto } from "src/team/dtos/create-team.dto";
@@ -48,10 +59,25 @@ export const dtoMappings = {
   [`${APIVERSION}/category/update`]: PatchCategoryDto,
   [`${APIVERSION}/job/store`]: CreateJobDto,
   [`${APIVERSION}/job/update`]: PatchJobDto,
+  [`${APIVERSION}/job/store/front`]: CreateJobDto,
   [`${APIVERSION}/magazine/store`]: CreateMagazineDto,
   [`${APIVERSION}/magazine/update`]: PatchMagazineDto,
   [`${APIVERSION}/graduates/store`]: CreateGraduatestDto,
   [`${APIVERSION}/graduates/update`]: PatchGraduatesDto,
+  [`${APIVERSION}/graduates/store/front`]: CreateGraduatestDto,
+  [`${APIVERSION}/graduates/update/front`]: PatchGraduatesDto,
   [`${APIVERSION}/blog/store`]: CreateBlogsDto,
   [`${APIVERSION}/blog/update`]: PatchBlogDto,
+  [`${APIVERSION}/setting/store`]: CreateSettingDto,
+  [`${APIVERSION}/setting/update`]: patchSettingDto,
+  [`${APIVERSION}/patch/store`]: CreatePatchDto,
+  [`${APIVERSION}/patch/update`]: PatchPatchDto,
+  [`${APIVERSION}/service-home/store`]: CreateServiceDto,
+  [`${APIVERSION}/service-home/update`]: PatchServiceDto,
+  [`${APIVERSION}/social-link/store`]: CreateSocialLinkDto,
+  [`${APIVERSION}/social-link/update`]: PatchSocialLinkDto,
+  [`${APIVERSION}/applicant-Job/store/front`]: CreateApplicantJobstDto,
+  [`${APIVERSION}/applicant-Job/update/front`]: PatchApplicantJobsDto,
+  [`${APIVERSION}/advertisement/store`]: CreatAdvertisementDto,
+  [`${APIVERSION}/advertisement/update`]: CreatAdvertisementDto,
 };

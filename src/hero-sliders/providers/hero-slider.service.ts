@@ -22,6 +22,7 @@ export class HeroSliderService extends BaseService<HeroSlider, CreateHeroSliderD
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "heroslider")
       .provideFields(["featuredImage", "short_description_en", "short_description_ar"])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "heroslider").count();
 
@@ -33,7 +34,10 @@ export class HeroSliderService extends BaseService<HeroSlider, CreateHeroSliderD
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "slider").execute();
+    const entity = await this.filtersFront(filter, "slider")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };

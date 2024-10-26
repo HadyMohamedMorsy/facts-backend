@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
@@ -20,9 +20,38 @@ export class GraduatesService extends BaseService<Graduates, CreateGraduatestDto
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "graduates").execute();
+    const entity = await this.filtersFront(filter, "graduates")
+      .joinRelations("user", [
+        "username",
+        "firstName",
+        "lastName",
+        "phone_number",
+        "country",
+        "email",
+        "gender",
+        "address",
+        "id",
+      ])
+      .dynamicFilter({ type: "facts" })
+      .filterByActive()
+      .execute();
     return {
       data: entity,
+    };
+  }
+
+  async findBySlug(slug: string) {
+    const education = await this.repository.findOne({
+      where: { slug },
+      relations: ["user"], // Add any relations you need
+    });
+
+    if (!education) {
+      throw new NotFoundException(`Education with slug '${slug}' not found`);
+    }
+
+    return {
+      data: education,
     };
   }
 

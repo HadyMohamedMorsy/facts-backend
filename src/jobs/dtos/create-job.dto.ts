@@ -1,10 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
-import { IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 import { TYPE } from "../enum/enum";
 
-export class CreateJobDto extends BaseDto {
+export class CreateJobDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
@@ -45,4 +52,9 @@ export class CreateJobDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
   description_ar: string;
+
+  @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
+  created_by: number;
 }

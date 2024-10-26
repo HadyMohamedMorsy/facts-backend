@@ -1,5 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 export class CreateSettingDto {
   @IsOptional()
@@ -60,4 +69,9 @@ export class CreateSettingDto {
   @IsOptional()
   @IsString()
   screen_shot: string;
+
+  @IsInt()
+  @Type(() => Number)
+  @IsNotEmpty()
+  created_by: number;
 }

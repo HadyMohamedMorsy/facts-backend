@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateApplicantEducationtDto {
   @IsInt()
@@ -11,12 +11,9 @@ export class CreateApplicantEducationtDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  education_id: number;
-  
-  @IsBoolean()
-  is_active: boolean;
+  education: number;
 
-  @IsString()
-  @IsNotEmpty()
-  attachment: string;
+  @IsBoolean()
+  @IsOptional()
+  is_active: boolean;
 }

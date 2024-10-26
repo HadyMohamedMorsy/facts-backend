@@ -81,12 +81,12 @@ export abstract class BaseController<CreateDto> {
         .initEntity(request, patch, entity)
         .cleanFiles()
         .handleFiles(files)
-        .updateEntity()
         .checkDuplicate(this.duplicatedPropertirs)
+        .updateEntity()
         .getUpdatedEntity();
       const dto = this.#getDtoForEndpoint(request.path);
       updatedDto = await this.#validateDto(dto, updatedDto, false);
-      return this.baseService.update(updatedDto, this.propertiesRel);
+      return await this.baseService.update(updatedDto, this.propertiesRel);
     } catch (error) {
       await this.cleanupFiles(files);
       throw error;
@@ -95,9 +95,9 @@ export abstract class BaseController<CreateDto> {
 
   @Delete("/delete")
   @UseInterceptors(NoFilesInterceptor())
-  public delete(@Body() body: { id: string }, @Req() request: Request) {
+  public async delete(@Body() body: { id: string }, @Req() request: Request) {
     const modulePath = request.path.split("/")[3];
-    return this.baseService.delete(+body.id, modulePath);
+    return await this.baseService.delete(+body.id, modulePath);
   }
 
   async cleanupFiles(files: Express.Multer.File[]) {
@@ -112,6 +112,8 @@ export abstract class BaseController<CreateDto> {
   async #handleFileDeletion(entity: any, patch: any, request: Request) {
     const keysToCheck = ["files"];
     for (const key of keysToCheck) {
+      if (!entity[key]) return;
+
       if (!patch[key]) {
         patch[key] = []; // Assume empty if not provided
       }

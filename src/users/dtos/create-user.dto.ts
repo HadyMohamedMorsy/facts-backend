@@ -66,8 +66,6 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(3)
-  @MaxLength(96)
   country?: string;
 
   @IsString()
@@ -79,6 +77,7 @@ export class CreateUserDto {
   address?: string;
 
   @IsBoolean()
+  @IsOptional()
   @Type(() => Boolean)
   is_active?: boolean;
 }

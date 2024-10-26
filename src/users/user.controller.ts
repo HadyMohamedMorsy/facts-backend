@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, Post, Req, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  Req,
+  UseInterceptors,
+} from "@nestjs/common";
 import { NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { Auth } from "src/auth/decorators/auth.decorator";
@@ -21,6 +31,13 @@ export class UserController {
   @Auth(AuthType.None)
   public front(@Body() filterQueryDto: FilterQueryDto) {
     return this.userService.front(filterQueryDto);
+  }
+
+  @Get("user")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  public getUser(@Query("email") email: string) {
+    return this.userService.findOneByEmail(email);
   }
 
   @Post("/index")
@@ -49,7 +66,7 @@ export class UserController {
     return this.userService.updateUser(updatedDto);
   }
 
-  @Post("/delete")
+  @Delete("/delete")
   @UseInterceptors(NoFilesInterceptor())
   public delete(@Body() id: number) {
     return this.userService.delete(id);

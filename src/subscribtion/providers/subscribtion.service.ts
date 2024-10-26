@@ -20,9 +20,19 @@ export class SubscribtionService {
       .filter()
       .sort()
       .paginate()
+      .joinRelations("created_by", ["email"])
       .search()
       .execute();
-    return entity;
+
+    const result = await this.filterData
+      .initRepositry("subscribe", this.repository, filter)
+      .count();
+
+    return {
+      data: entity,
+      recordsFiltered: entity.length,
+      totalRecords: +result,
+    };
   }
 
   async create(createDto: CreateSubscribeDto) {

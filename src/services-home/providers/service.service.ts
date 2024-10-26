@@ -20,14 +20,20 @@ export class ServiceService extends BaseService<Service, CreateServiceDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "service").execute();
+    const entity = await this.filtersFront(filter, "service")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
   }
 
   async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "service").provideFields(["featuredImage"]).execute();
+    const entity = await this.filters(filter, "service")
+      .provideFields(["featuredImage", "link"])
+      .orderByOrder()
+      .execute();
     const result = await this.filters(filter, "service").count();
 
     return {

@@ -20,7 +20,11 @@ export class TeamService extends BaseService<Team, CreateTeamDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "team").execute();
+    const entity = await this.filtersFront(filter, "team")
+      .joinRelations("social_links", ["icon", "link"])
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };
@@ -30,6 +34,7 @@ export class TeamService extends BaseService<Team, CreateTeamDto> {
     const entity = await this.filters(filter, "team")
       .provideFields(["featuredImage", "phone_number"])
       .joinRelations("social_links", ["icon", "link"])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "team").count();
 

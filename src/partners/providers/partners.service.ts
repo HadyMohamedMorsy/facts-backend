@@ -21,7 +21,8 @@ export class PartnersService extends BaseService<Partner, CreatePartnersDto> {
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "partner")
-      .provideFields(["featuredImage", "description_en", "description_ar"])
+      .provideFields(["featuredImage", "description_en", "link", "description_ar"])
+      .orderByOrder()
       .execute();
     const result = await this.filters(filter, "partner").count();
 
@@ -33,7 +34,10 @@ export class PartnersService extends BaseService<Partner, CreatePartnersDto> {
   }
 
   async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "partner").execute();
+    const entity = await this.filtersFront(filter, "partner")
+      .filterByActive()
+      .orderByOrder()
+      .execute();
     return {
       data: entity,
     };

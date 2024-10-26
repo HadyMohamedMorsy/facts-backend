@@ -22,6 +22,9 @@ export class Consultancy extends Base {
   @Column({ type: "text" })
   short_description_ar?: string;
 
-  @OneToMany(() => ConsultancyAccordion, consultancyAccordion => consultancyAccordion.consultancy)
+  @OneToMany(() => ConsultancyAccordion, consultancyAccordion => consultancyAccordion.consultancy, {
+    cascade: true,
+    eager: true,
+  })
   consultancy_accordion: ConsultancyAccordion[];
 }

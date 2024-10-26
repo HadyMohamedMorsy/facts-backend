@@ -11,7 +11,7 @@ export class CreateApplicantJobstDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
-  jon_id: number;
+  job: number;
 
   @IsString()
   @IsNotEmpty()

@@ -11,6 +11,6 @@ export class SettingsController extends BaseController<CreateSettingDto> {
     private readonly TransformRequest: TransformRequest,
   ) {
     super(settingsService, TransformRequest);
-    this.duplicatedPropertirs = ["order"];
+    this.duplicatedPropertirs = ["order", "slug"];
   }
 }
