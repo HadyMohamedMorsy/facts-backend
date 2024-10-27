@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/common/base/base.service";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
@@ -29,6 +29,21 @@ export class BlogService extends BaseService<Blog, CreateBlogsDto> {
     };
   }
 
+  async findBySlug(slug: string) {
+    const blog = await this.repository.findOne({
+      where: { slug },
+      relations: ["created_by"],
+    });
+
+    if (!blog) {
+      throw new NotFoundException(`Blog with slug '${slug}' not found`);
+    }
+
+    return {
+      data: blog,
+    };
+  }
+
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "blog")
       .joinRelations("magazine", ["title_ar", "title_en", "id"])
@@ -54,6 +69,23 @@ export class BlogService extends BaseService<Blog, CreateBlogsDto> {
       data: entity,
       recordsFiltered: entity.length,
       totalRecords: +result,
+    };
+  }
+
+  async findBySlugWithPaginatedBlogs(magazine: any, filter: FilterQueryDto) {
+    const { start, length } = filter;
+    const [blogs, totalBlogs] = await this.repository
+      .createQueryBuilder("blog")
+      .where("blog.magazineId = :magazineId", { magazineId: magazine.id })
+      .skip(start)
+      .take(length)
+      .getManyAndCount();
+    console.log(blogs);
+
+    return {
+      data: blogs,
+      recordsFiltered: blogs.length,
+      totalRecords: +totalBlogs,
     };
   }
 }

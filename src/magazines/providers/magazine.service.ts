@@ -43,6 +43,9 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
       .joinRelations("created_by", ["firstName", "lastName"])
       .joinRelations("categories", ["name_ar", "name_en", "slug"])
       .joinRelatedEntitiesById("categories", "id", filter?.filters?.categoryId)
+      .dynamicFilter({
+        publication_date: filter?.filters?.publication_date,
+      })
       .filterByActive()
       .orderByOrder()
       .execute();
@@ -85,5 +88,18 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
         await this.blogService.delete(blog.id);
       }
     }
+  }
+
+  async findBySlugWithPaginatedBlogs(filter: FilterQueryDto) {
+    const magazine = await this.repository.findOne({
+      where: {
+        slug: filter.filters?.slug,
+      },
+    });
+    if (!magazine) {
+      throw new NotFoundException(`Education with slug '${filter.filters?.slug}' not found`);
+    }
+
+    return await this.blogService.findBySlugWithPaginatedBlogs(magazine, filter);
   }
 }

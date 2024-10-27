@@ -1,4 +1,6 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
+import { Auth } from "src/auth/decorators/auth.decorator";
+import { AuthType } from "src/auth/enums/auth-type.enum";
 import { BaseController } from "src/shared/common/base/base.controller";
 import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
 import { CreateBlogsDto } from "./dto/create-blogs-blogs.dto";
@@ -12,5 +14,11 @@ export class BlogController extends BaseController<CreateBlogsDto> {
   ) {
     super(blogService, transformRequest);
     this.propertiesRel = ["created_by", "magazine"];
+  }
+
+  @Get(":slug")
+  @Auth(AuthType.None)
+  async findBySlug(@Param("slug") slug: string) {
+    return this.blogService.findBySlug(slug);
   }
 }

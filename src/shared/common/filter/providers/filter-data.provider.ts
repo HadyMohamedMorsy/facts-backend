@@ -135,7 +135,6 @@ export class FilterDataProvider<T> {
     Object.keys(filters).forEach(key => {
       const value = filters[key];
       if (value !== undefined) {
-        // Ensure value is not undefined
         this.#queryBuilder.andWhere(`${this.#entity}.${key} = :value`, { value });
       }
     });

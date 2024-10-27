@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
+import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
-export class PatchMagazineDto extends BaseDto {
+import { CreateMagazineDto } from "./create-magazine.dto";
+export class PatchMagazineDto extends PartialType(CreateMagazineDto) {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()

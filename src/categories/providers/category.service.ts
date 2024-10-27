@@ -32,6 +32,7 @@ export class CategoryService extends BaseService<Category, CreateCategoryDto> {
       .filterByActive()
       .orderByOrder()
       .execute();
+
     return {
       data: entity,
     };

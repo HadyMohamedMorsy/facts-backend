@@ -2,8 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
-  Param,
+  HttpCode,
   Post,
   Req,
   UploadedFiles,
@@ -11,8 +10,11 @@ import {
 } from "@nestjs/common";
 import { AnyFilesInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
+import { Auth } from "src/auth/decorators/auth.decorator";
+import { AuthType } from "src/auth/enums/auth-type.enum";
 import { CategoryService } from "src/categories/providers/category.service";
 import { BaseController } from "src/shared/common/base/base.controller";
+import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
 import { HeaderToBodyInterceptor } from "src/shared/common/interceptor/transfrom-request.interceptor";
 import multerOptions from "src/shared/config/multer-options";
@@ -55,8 +57,17 @@ export class MagazineController extends BaseController<CreateMagazineDto> {
     return await super.delete(body, request);
   }
 
-  @Get(":slug")
-  async findBySlug(@Param("slug") slug: string) {
-    return this.magazineService.findBySlug(slug);
+  @Post("front/index")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  public front(@Body() filterQueryDto: FilterQueryDto) {
+    return this.magazineService.front(filterQueryDto);
+  }
+
+  @Post("magazines/blogs")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  public slug(@Body() filterQueryDto: FilterQueryDto) {
+    return this.magazineService.findBySlugWithPaginatedBlogs(filterQueryDto);
   }
 }

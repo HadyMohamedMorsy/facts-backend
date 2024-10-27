@@ -40,6 +40,10 @@ export class FilterOptions {
 
   @IsOptional()
   @IsString()
+  publication_date?: number;
+
+  @IsOptional()
+  @IsString()
   slug?: string;
 }
 
