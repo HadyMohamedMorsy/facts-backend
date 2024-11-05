@@ -16,16 +16,6 @@ export class TransformRequest {
     return this;
   }
 
-  cleanFiles() {
-    const keysToCheck = ["files"];
-    for (const key of keysToCheck) {
-      if (!this.patch[key]) {
-        this.entity[key] = [];
-      }
-    }
-    return this;
-  }
-
   handleFiles(files: Express.Multer.File[]) {
     if (files.length) {
       const modulePath = this.request.path.split("/")[3];

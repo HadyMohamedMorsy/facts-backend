@@ -1,3 +1,4 @@
+import { ApplicantJob } from "src/applicants-job/applicant-job.entity";
 import { User } from "src/users/user.entity";
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -41,6 +43,12 @@ export class Job {
 
   @Column({ type: "text" })
   featuredImage: string;
+
+  @OneToMany(() => ApplicantJob, application => application.job, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  applications: ApplicantJob[];
 
   @Column({
     type: "boolean",

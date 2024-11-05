@@ -1,3 +1,5 @@
+import { ApplicantEducation } from "src/applicants-education/applicant-education.entity";
+import { ApplicantGraduates } from "src/applicants-graduates/applicant-graduates.entity";
 import { Base } from "src/shared/common/base/entity/base.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 import { EducationAccordion } from "./education-accordion.entity";
@@ -17,6 +19,12 @@ export class Education extends Base {
     unique: true,
   })
   slug: string;
+
+  @OneToMany(() => ApplicantEducation, application => application.education, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  applications: ApplicantGraduates[];
 
   @Column({ type: "text" })
   intro_description_ar?: string;

@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Request } from "express";
 import { BlogService } from "src/blogs/providers/blog.service";
 import { CategoryService } from "src/categories/providers/category.service";
 import { BaseService } from "src/shared/common/base/base.service";
@@ -44,7 +45,7 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
       .joinRelations("categories", ["name_ar", "name_en", "slug"])
       .joinRelatedEntitiesById("categories", "id", filter?.filters?.categoryId)
       .dynamicFilter({
-        publication_date: filter?.filters?.publication_date,
+        publication_date: { type: "where", value: filter?.filters?.publication_date },
       })
       .filterByActive()
       .orderByOrder()
@@ -78,14 +79,14 @@ export class MagazineService extends BaseService<Magazine, CreateMagazineDto> {
     };
   }
 
-  async deleteMagazineRelations(entity: Magazine): Promise<void> {
+  async deleteMagazineRelations(entity: Magazine, request: Request): Promise<void> {
     if (!entity) {
       throw new NotFoundException("Magazine not found");
     }
 
     if (entity.blogs && entity.blogs.length > 0) {
       for (const blog of entity.blogs) {
-        await this.blogService.delete(blog.id);
+        await this.blogService.delete(blog.id, request);
       }
     }
   }

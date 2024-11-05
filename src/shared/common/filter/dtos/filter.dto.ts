@@ -3,7 +3,6 @@ import {
   IsArray,
   IsBoolean,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -31,20 +30,6 @@ export class DataTableColumnDto {
 
   @IsBoolean()
   orderable: boolean;
-}
-
-export class FilterOptions {
-  @IsOptional()
-  @IsNumber()
-  categoryId?: number;
-
-  @IsOptional()
-  @IsString()
-  publication_date?: number;
-
-  @IsOptional()
-  @IsString()
-  slug?: string;
 }
 
 export class FilterQueryDto {
@@ -78,9 +63,5 @@ export class FilterQueryDto {
   search?: string | null;
 
   @IsOptional()
-  @ValidateNested()
-  @Type(() => FilterOptions)
-  filters?: FilterOptions;
-
-  [key: string]: any;
+  filters?: any;
 }

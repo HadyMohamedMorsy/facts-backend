@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Delete,
   HttpCode,
@@ -8,19 +7,17 @@ import {
   Req,
   UploadedFiles,
   UseInterceptors,
-  ValidationPipe,
 } from "@nestjs/common";
 import { AnyFilesInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
-import { access, constants, unlink } from "fs";
-import { join } from "path";
 import { Auth } from "src/auth/decorators/auth.decorator";
 import { AuthType } from "src/auth/enums/auth-type.enum";
-import { dtoMappings } from "src/shared/config/dto-mapping";
 import multerOptions from "src/shared/config/multer-options";
+import { checkUpdateFiles, cleanFilesWithError } from "src/shared/helpers/utilits";
 import { FilterQueryDto } from "../filter/dtos/filter.dto";
 import { TransformRequest } from "../filter/providers/transform-request.entity.provider";
 import { HeaderToBodyInterceptor } from "../interceptor/transfrom-request.interceptor";
+import { validateDto } from "../pipes/validateDto.pipe";
 import { IBaseService } from "./service.types";
 
 type UpdateDto<CreateDto> = {
@@ -58,10 +55,10 @@ export abstract class BaseController<CreateDto> {
     @Req() request: Request,
   ) {
     try {
-      const validatedDto = await this.processFileUpload(request, createDto, files);
-      return await this.baseService.create(validatedDto, this.propertiesRel);
+      const validateBody = await this.processFileUpload(request, createDto, files);
+      return await this.baseService.create(validateBody, this.propertiesRel);
     } catch (error) {
-      await this.cleanupFiles(files);
+      cleanFilesWithError(files);
       throw error;
     }
   }
@@ -76,19 +73,17 @@ export abstract class BaseController<CreateDto> {
   ) {
     try {
       const entity = await this.baseService.findOne(+patch.id, this.propertiesRel);
-      await this.#handleFileDeletion(entity, patch, request);
-      let updatedDto = await this.transform
+      checkUpdateFiles(entity, patch, request);
+      const body = await this.transform
         .initEntity(request, patch, entity)
-        .cleanFiles()
         .handleFiles(files)
         .checkDuplicate(this.duplicatedPropertirs)
         .updateEntity()
         .getUpdatedEntity();
-      const dto = this.#getDtoForEndpoint(request.path);
-      updatedDto = await this.#validateDto(dto, updatedDto, false);
-      return await this.baseService.update(updatedDto, this.propertiesRel);
+      const validateBody = await validateDto<CreateDto>(request.path, body, false);
+      return await this.baseService.update(validateBody, this.propertiesRel);
     } catch (error) {
-      await this.cleanupFiles(files);
+      cleanFilesWithError(files);
       throw error;
     }
   }
@@ -96,57 +91,7 @@ export abstract class BaseController<CreateDto> {
   @Delete("/delete")
   @UseInterceptors(NoFilesInterceptor())
   public async delete(@Body() body: { id: string }, @Req() request: Request) {
-    const modulePath = request.path.split("/")[3];
-    return await this.baseService.delete(+body.id, modulePath);
-  }
-
-  async cleanupFiles(files: Express.Multer.File[]) {
-    for (const file of files) {
-      unlink(file.path, err => {
-        if (err) throw err;
-        console.log(`${file.path} was deleted`);
-      });
-    }
-  }
-
-  async #handleFileDeletion(entity: any, patch: any, request: Request) {
-    const keysToCheck = ["files"];
-    for (const key of keysToCheck) {
-      if (!entity[key]) return;
-
-      if (!patch[key]) {
-        patch[key] = []; // Assume empty if not provided
-      }
-      for (const url of entity[key]) {
-        if (!patch[key].includes(url)) {
-          await this.#deleteFile(url, request);
-        }
-      }
-    }
-  }
-
-  async #deleteFile(url: string, request: Request) {
-    const fileName = url.split("/").pop();
-    const modulePath = request.path.split("/")[3];
-    const fullPath = join(process.cwd(), "public", "uploads", modulePath, fileName);
-    const exists = await this.#checkFileExists(fullPath);
-
-    if (exists) {
-      unlink(fullPath, err => {
-        if (err) throw err;
-        console.log(`${fullPath} was deleted`);
-      });
-    } else {
-      console.log(`No file to delete at ${fullPath}`);
-    }
-  }
-
-  async #checkFileExists(filePath: string): Promise<boolean> {
-    return new Promise(resolve => {
-      access(filePath, constants.F_OK, err => {
-        resolve(!err);
-      });
-    });
+    return await this.baseService.delete(+body.id, request);
   }
 
   async processFileUpload(
@@ -154,12 +99,11 @@ export abstract class BaseController<CreateDto> {
     createDto: CreateDto,
     files: Array<Express.Multer.File>,
   ): Promise<CreateDto> {
-    const dto = this.#getDtoForEndpoint(request.path);
     const baseURL = `${request.protocol}://${request.headers.host}`;
     const modulePath = request.path.split("/")[3];
 
     if (!files || (Array.isArray(files) && files.length === 0)) {
-      return this.#validateDto(dto, createDto);
+      return validateDto(request.path, createDto);
     }
     const updatedDto = { ...createDto };
     const fileGroup = {};
@@ -183,26 +127,6 @@ export abstract class BaseController<CreateDto> {
       }
     });
 
-    return this.#validateDto(dto, updatedDto);
-  }
-
-  #getDtoForEndpoint(path: string) {
-    const dtoClass = dtoMappings[path];
-    if (!dtoClass) {
-      throw new BadRequestException("Invalid endpoint");
-    }
-    return dtoClass;
-  }
-
-  async #validateDto(dtoClass: any, body: CreateDto, isPartial: boolean = true) {
-    const validationPipe = new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: isPartial,
-    });
-    return await validationPipe.transform(body, {
-      metatype: dtoClass,
-      type: "body",
-    });
+    return validateDto(request.path, updatedDto);
   }
 }

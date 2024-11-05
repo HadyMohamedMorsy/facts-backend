@@ -19,8 +19,10 @@ export class ApplicantGraduates {
   @JoinColumn({ name: "created_by" })
   created_by: User;
 
-  @ManyToOne(() => Graduates)
-  @JoinColumn({ name: "graduat_id" })
+  @ManyToOne(() => Graduates, graduate => graduate.applications, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
   graduate: Graduates;
 
   @Column({

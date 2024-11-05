@@ -20,8 +20,8 @@ export class ApplicantGraduatesService {
       .filter()
       .sort()
       .paginate()
+      .joinRelations("graduate", ["id"])
       .joinRelations("created_by", ["email"])
-      .joinRelations("graduate", ["user"])
       .search()
       .execute();
 

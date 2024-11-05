@@ -32,7 +32,14 @@ export class GraduatesService extends BaseService<Graduates, CreateGraduatestDto
         "address",
         "id",
       ])
-      .dynamicFilter({ type: "facts" })
+      .dynamicFilter({
+        type: { type: "where", value: "facts" },
+        course_name: { type: "search", value: filter.filters?.course_name },
+        code_certification: { type: "search", value: filter.filters?.code_certification },
+      })
+      .searchFrontRelation({
+        "user.username": "hady12318",
+      })
       .filterByActive()
       .execute();
     return {
@@ -57,7 +64,20 @@ export class GraduatesService extends BaseService<Graduates, CreateGraduatestDto
 
   async findAll(filter: FilterQueryDto) {
     const entity = await this.filters(filter, "graduates")
-      .provideFields(["featuredImage", "description_en", "description_ar"])
+      .provideFields([
+        "featuredImage",
+        "description_en",
+        "description_ar",
+        "course_name",
+        "code_certification",
+        "date_course",
+        "attachment",
+        "image_certification",
+        "type",
+        "courses",
+        "slug",
+        "selectUser",
+      ])
       .joinRelations("user", ["username", "id"])
       .execute();
     const result = await this.filters(filter, "graduates").count();

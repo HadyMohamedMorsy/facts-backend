@@ -4,6 +4,7 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -40,6 +41,18 @@ export class CreateGraduatestDto {
   type: string;
 
   @IsString()
+  @IsOptional()
+  course_name: string;
+
+  @IsString()
+  @IsOptional()
+  code_certification: string;
+
+  @IsString()
+  @IsOptional()
+  date_course: string;
+
+  @IsString()
   @IsNotEmpty()
   description_en: string;
 
@@ -56,6 +69,8 @@ export class CreateGraduatestDto {
   featuredImage: string;
 
   @IsString()
-  @IsNotEmpty()
+  image_certification: string;
+
+  @IsString()
   attachment: string;
 }

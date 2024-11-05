@@ -1,3 +1,4 @@
+import { ApplicantGraduates } from "src/applicants-graduates/applicant-graduates.entity";
 import { User } from "src/users/user.entity";
 import {
   Column,
@@ -5,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -24,8 +26,14 @@ export class Graduates {
   @Column("json", { nullable: true })
   selectUser: createUserGraduatesDto;
 
+  @OneToMany(() => ApplicantGraduates, application => application.graduate, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  applications: ApplicantGraduates[];
+
   @ManyToOne(() => User)
-  @JoinColumn({ name: "user" })
+  @JoinColumn()
   user: User;
 
   @Column({ length: 256 })
@@ -44,10 +52,22 @@ export class Graduates {
   courses: string[];
 
   @Column({ type: "varchar" })
+  course_name: string;
+
+  @Column({ type: "varchar" })
+  code_certification: string;
+
+  @Column({ type: "date", nullable: true })
+  date_course?: string;
+
+  @Column({ type: "varchar" })
   featuredImage: string;
 
   @Column({ type: "varchar" })
   attachment: string;
+
+  @Column({ type: "varchar" })
+  image_certification: string;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at: Date;

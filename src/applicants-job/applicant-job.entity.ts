@@ -19,8 +19,10 @@ export class ApplicantJob {
   @JoinColumn({ name: "created_by" })
   created_by: User;
 
-  @ManyToOne(() => Job)
-  @JoinColumn({ name: "jon_id" })
+  @ManyToOne(() => Job, job => job.applications, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
   job: Job;
 
   @Column({

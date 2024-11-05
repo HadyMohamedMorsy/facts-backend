@@ -53,7 +53,7 @@ export class MagazineController extends BaseController<CreateMagazineDto> {
   @UseInterceptors(NoFilesInterceptor())
   public async delete(@Body() body: { id: string }, @Req() request: Request) {
     const entity = await this.magazineService.findOne(+body.id, ["categories"]);
-    await this.magazineService.deleteMagazineRelations(entity);
+    await this.magazineService.deleteMagazineRelations(entity, request);
     return await super.delete(body, request);
   }
 

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { unlink } from "fs";
-import { join } from "path";
+import { Request } from "express";
 import { IBaseService } from "src/shared/common/base/service.types";
 import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
 import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
+import { deleteFile } from "src/shared/helpers/utilits";
 import { DeepPartial, FindOptionsWhere, Repository } from "typeorm";
 import { UserService } from "../../../users/providers/user.service";
 
@@ -84,7 +84,8 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
       .sort()
       .paginate()
       .joinRelations("created_by", ["email"])
-      .search();
+      .search()
+      .searchRelations();
     return entity;
   }
 
@@ -96,50 +97,39 @@ export abstract class BaseService<T extends BaseEntity, CreateDto>
     return entity;
   }
 
-  async delete(id: number, modulePath?: string | undefined) {
+  async delete(id: number, request: Request) {
     const record = await this.repository.findOne({ where: { id } as FindOptionsWhere<T> });
 
     if (!record) {
       throw new NotFoundException(`Record with id ${id} not found`);
     }
 
-    if (modulePath) {
-      const keysToCheck: Array<keyof BaseEntity> = [
-        "featuredImage",
-        "files",
-        "thumbnail",
-        "attachment",
-      ];
-      try {
-        for (const key of keysToCheck) {
-          const fileOrFiles = record[key];
-          if (fileOrFiles) {
-            if (Array.isArray(fileOrFiles)) {
-              for (const file of fileOrFiles) {
-                await this.deleteFile(file, modulePath);
-              }
-            } else {
-              console.log(fileOrFiles);
-              await this.deleteFile(fileOrFiles as string, modulePath);
+    const keysToCheck: Array<keyof BaseEntity> = [
+      "featuredImage",
+      "files",
+      "thumbnail",
+      "attachment",
+    ];
+
+    try {
+      for (const key of keysToCheck) {
+        const fileOrFiles = record[key];
+        if (fileOrFiles) {
+          if (Array.isArray(fileOrFiles)) {
+            for (const file of fileOrFiles) {
+              deleteFile(file, request);
             }
+          } else {
+            deleteFile(fileOrFiles as string, request);
           }
         }
-      } catch (error) {
-        console.error(`Error deleting files: ${error.message}`);
-        throw new NotFoundException(`Failed to delete associated files for record with id ${id}`);
       }
+    } catch (error) {
+      console.error(`Error deleting files: ${error.message}`);
+      throw new NotFoundException(`Failed to delete associated files for record with id ${id}`);
     }
 
     await this.repository.delete(id);
     return { data: null };
-  }
-
-  async deleteFile(filePath: string, modulePath: string) {
-    const fileName = filePath.split("/").pop();
-    const fullPath = join(process.cwd(), "public", "uploads", modulePath, fileName);
-    await unlink(fullPath, err => {
-      if (err) throw err;
-      console.log("/path/file.txt was deleted");
-    });
   }
 }

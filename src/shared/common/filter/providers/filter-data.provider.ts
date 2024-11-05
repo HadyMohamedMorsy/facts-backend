@@ -131,11 +131,54 @@ export class FilterDataProvider<T> {
     return this;
   }
 
+  searchFrontRelation(searchRel: { [fieldPath: string]: string }) {
+    Object.entries(searchRel).forEach(([fieldPath, searchValue]) => {
+      if (searchValue) {
+        const [relationAlias, field] = fieldPath.includes(".")
+          ? [
+              `${this.#entity}_${fieldPath.split(".")[0].replace(".", "_")}`,
+              fieldPath.split(".")[1],
+            ]
+          : [this.#entity, fieldPath];
+
+        this.#queryBuilder.andWhere(`${relationAlias}.${field} LIKE :search`, {
+          search: `%${searchValue}%`,
+        });
+      }
+    });
+
+    return this;
+  }
+
+  searchRelations() {
+    const { search, columns } = this.#filterData;
+    if (search && columns.some(c => c.searchable && c.name.includes("."))) {
+      this.#queryBuilder.andWhere(
+        new Brackets(qb => {
+          columns
+            .filter(c => c.searchable && c.name.includes("."))
+            .forEach(column => {
+              const [relationName, fieldName] = column.name.split(".");
+              const relationAlias = `${this.#entity}_${relationName}`;
+
+              qb.orWhere(`${relationAlias}.${fieldName} LIKE :search`, {
+                search: `%${search}%`,
+              });
+            });
+        }),
+      );
+    }
+    return this;
+  }
+
   dynamicFilter(filters: { [key: string]: any }) {
     Object.keys(filters).forEach(key => {
-      const value = filters[key];
-      if (value !== undefined) {
+      const value = filters[key].value;
+      if (!value) return this;
+      if (filters[key].type === "where") {
         this.#queryBuilder.andWhere(`${this.#entity}.${key} = :value`, { value });
+      } else if (filters[key].type === "search") {
+        this.#queryBuilder.andWhere(`${key} LIKE :searchTerm`, { searchTerm: value });
       }
     });
     return this;

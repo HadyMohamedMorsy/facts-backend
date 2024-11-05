@@ -26,7 +26,7 @@ export class CategoryController extends BaseController<CreateCategoryDto> {
   @UseInterceptors(NoFilesInterceptor())
   public async delete(@Body() body: { id: string }, @Req() request: Request) {
     const entity = await this.categoryService.findOne(+body.id, ["magazines"]);
-    await this.categoryService.deleteCategoriesRelations(entity);
+    await this.categoryService.deleteCategoriesRelations(entity, request);
     return await super.delete(body, request);
   }
 }

@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Request } from "express";
 import { BlogService } from "src/blogs/providers/blog.service";
 import { MagazineService } from "src/magazines/providers/magazine.service";
 import { BaseService } from "src/shared/common/base/base.service";
@@ -71,21 +72,21 @@ export class CategoryService extends BaseService<Category, CreateCategoryDto> {
     };
   }
 
-  async deleteCategoriesRelations(entity: Category): Promise<void> {
+  async deleteCategoriesRelations(entity: Category, request: Request): Promise<void> {
     if (!entity) {
       throw new NotFoundException("Magazine not found");
     }
     if (entity.magazines && entity.magazines.length > 0) {
       for (const magazine of entity.magazines) {
         for (const blog of magazine.blogs) {
-          await this.blogService.delete(blog.id, "blog");
+          await this.blogService.delete(blog.id, request);
         }
       }
     }
 
     if (entity.magazines && entity.magazines.length > 0) {
       for (const magazine of entity.magazines) {
-        await this.magazineService.delete(magazine.id, "magazine");
+        await this.magazineService.delete(magazine.id, request);
       }
     }
   }
