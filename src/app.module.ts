@@ -32,7 +32,7 @@ import { PartnersModule } from "./partners/partners.module";
 import { PatchModule } from "./patch/patch.module";
 import { ProfileModule } from "./profile/profile.module";
 import { RoleModule } from "./roles/role.module";
-import { ServicesHomeModule } from "./services-home/services-home.module";
+// import { ServicesHomeModule } from "./services-home/services-home.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
@@ -49,7 +49,7 @@ import { UsersModule } from "./users/users.module";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
-    ServicesHomeModule,
+    // ServicesHomeModule,
     GraduatesModule,
     EmployerModule,
     SocialLinksModule,
