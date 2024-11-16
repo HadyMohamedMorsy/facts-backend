@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
 import { UsersModule } from "src/users/users.module";
 import { ServiceService } from "./providers/service.service";
-import { ServiceController } from "./Service.controller";
+import { ServiceController } from "./service.controller";
 import { Service } from "./service.entity";
 
 @Module({
