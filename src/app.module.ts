@@ -33,6 +33,7 @@ import { PatchModule } from "./patch/patch.module";
 import { ProfileModule } from "./profile/profile.module";
 import { RoleModule } from "./roles/role.module";
 // import { ServicesHomeModule } from "./services-home/services-home.module";
+import { ServicesHomeModule } from "./services-home/services-home.module";
 import { SettingsModule } from "./settings/settings.module";
 import { FilterDateModule } from "./shared/common/filter/filter-date.module";
 import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
@@ -49,7 +50,7 @@ import { UsersModule } from "./users/users.module";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
-    // ServicesHomeModule,
+    ServicesHomeModule,
     GraduatesModule,
     EmployerModule,
     SocialLinksModule,
@@ -97,13 +98,15 @@ const ENV = process.env.NODE_ENV;
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
-        synchronize: true,
         port: configService.get("database.port"),
         username: configService.get("database.user"),
         password: configService.get("database.password"),
         host: configService.get("database.host"),
-        autoLoadEntities: true,
         database: configService.get("database.name"),
+        entities: ["dist/**/*.entity{.ts,.js}"],
+        migrations: ["dist/migrations/*{.ts,.js}"],
+        autoLoadEntities: true,
+        synchronize: false,
       }),
     }),
     ConfigModule.forFeature(jwtConfig),
