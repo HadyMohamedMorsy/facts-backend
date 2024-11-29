@@ -10,6 +10,7 @@ export class HeaderToBodyInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const createdBy = request.headers["created_by"];
+    console.log(createdBy);
 
     if (!createdBy) {
       throw new BadRequestException("Missing x-localization or created_by in headers");
