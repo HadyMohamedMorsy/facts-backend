@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import { Type } from "class-transformer";
+import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
-export class CreateSocialLinkDto extends BaseDto {
+export class CreateSocialLinkDto {
   @IsString()
   @MinLength(3)
   @IsOptional()
@@ -13,4 +13,9 @@ export class CreateSocialLinkDto extends BaseDto {
   @MinLength(3)
   @IsOptional()
   link: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  @Type(() => Number)
+  order: number;
 }

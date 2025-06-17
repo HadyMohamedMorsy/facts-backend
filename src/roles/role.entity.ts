@@ -1,7 +1,8 @@
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { ROLES } from "src/shared/enum/global-enum";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ROLES } from "./enum/enum";
 @Entity()
-export class Role {
+export class Role extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

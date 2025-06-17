@@ -30,7 +30,7 @@ export class GenerateTokensProvider {
         audience: this.jwtConfiguration.audience,
         issuer: this.jwtConfiguration.issuer,
         secret: this.jwtConfiguration.secret,
-        expiresIn: "100y",
+        expiresIn: expiresIn,
       },
     );
   }
@@ -40,11 +40,13 @@ export class GenerateTokensProvider {
       // Generate Access Token with Email
       this.signToken<Partial<ActiveUserData>>(user.id, this.jwtConfiguration.accessTokenTtl, {
         email: user.email,
+        id: user.id,
       }),
 
       // Generate Refresh token without email
       this.signToken(user.id, this.jwtConfiguration.refreshTokenTtl),
     ]);
+
     return {
       access_token,
       refreshToken,

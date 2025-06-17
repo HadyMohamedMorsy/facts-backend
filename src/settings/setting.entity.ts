@@ -1,8 +1,8 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Settings extends Base {
+export class Settings extends BaseMemberEntity {
   @Column({ length: 256, nullable: true })
   section_name: string;
 

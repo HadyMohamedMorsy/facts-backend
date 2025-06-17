@@ -11,7 +11,7 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
-import { Gender } from "../enum/enum";
+import { Gender } from "src/shared/enum/global-enum";
 
 export class CreateUserDto {
   @IsString()

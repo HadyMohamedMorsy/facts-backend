@@ -1,7 +1,7 @@
 import { Inject, Injectable, UnauthorizedException, forwardRef } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { UserService } from "src/users/providers/user.service";
+import { UserService } from "src/users/user.service";
 import jwtConfig from "../config/jwt.config";
 import { RefreshTokenDto } from "../dtos/refresh-token.dto";
 import { ActiveUserData } from "../interfaces/active-user-data.interface";
@@ -43,7 +43,7 @@ export class RefreshTokensProvider {
         },
       );
       // Fetch the user from the database
-      const user = await this.usersService.findOneById(sub);
+      const user = await this.usersService.findOne(sub);
 
       // Generate the tokens
       return await this.generateTokensProvider.generateTokens(user);

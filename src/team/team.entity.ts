@@ -1,9 +1,8 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, OneToMany } from "typeorm";
-import { TeamSocial } from "./team-social.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Team extends Base {
+export class Team extends BaseMemberEntity {
   @Column({ type: "varchar", length: 256 })
   name_en: string;
 
@@ -25,11 +24,8 @@ export class Team extends Base {
   @Column({ type: "text", nullable: true })
   position_ar: string;
 
-  @OneToMany(() => TeamSocial, social => social.team, {
-    cascade: true,
-    eager: true,
-  })
-  social_links: TeamSocial[];
+  @Column("jsonb", { default: [] })
+  social_links: { icon: string; link: string }[];
 
   @Column({ type: "varchar", length: 1024 })
   featuredImage: string;

@@ -1,5 +1,7 @@
 import { Graduates } from "src/graduates/graduates.entity";
 import { Role } from "src/roles/role.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Gender } from "src/shared/enum/global-enum";
 import {
   Column,
   CreateDateColumn,
@@ -10,10 +12,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Gender } from "./enum/enum";
 
 @Entity()
-export class User {
+export class User extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

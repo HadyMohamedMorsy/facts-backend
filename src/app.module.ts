@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
@@ -32,21 +32,21 @@ import { PartnersModule } from "./partners/partners.module";
 import { PatchModule } from "./patch/patch.module";
 import { ProfileModule } from "./profile/profile.module";
 import { RoleModule } from "./roles/role.module";
-// import { ServicesHomeModule } from "./services-home/services-home.module";
 import { ServicesHomeModule } from "./services-home/services-home.module";
 import { SettingsModule } from "./settings/settings.module";
-import { FilterDateModule } from "./shared/common/filter/filter-date.module";
-import { FilterDataProvider } from "./shared/common/filter/providers/filter-data.provider";
-import { TransformInterceptor } from "./shared/common/interceptor/transform-response.interceptor";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
-import enviromentValidation from "./shared/config/enviroment.validation";
+import { FilterDateModule } from "./shared/filters/filter-date.module";
+import { APIFeaturesService } from "./shared/filters/filter.service";
+import { TransformInterceptor } from "./shared/interceptor/transform-response.interceptor";
+import { LanMiddleware } from "./shared/middleware/lang.middleware";
+import { UserMiddleware } from "./shared/middleware/user.middleware";
 import { SocialLinksModule } from "./social-links/social-links.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { SubscribtionModule } from "./subscribtion/subscribtion.module";
 import { TeamModule } from "./team/team.module";
 import { UsersModule } from "./users/users.module";
-
+import enviromentValidation from "./shared/validations/env.validation";
 const ENV = process.env.NODE_ENV;
 @Module({
   imports: [
@@ -82,6 +82,10 @@ const ENV = process.env.NODE_ENV;
     MailModule,
     AuthModule,
     ProfileModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "uploads"),
+      serveRoot: "/uploads",
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       //envFilePath: ['.env.development', '.env'],
@@ -98,15 +102,13 @@ const ENV = process.env.NODE_ENV;
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
+        host: configService.get("database.host"),
         port: configService.get("database.port"),
+        database: configService.get("database.name"),
         username: configService.get("database.user"),
         password: configService.get("database.password"),
-        host: configService.get("database.host"),
-        database: configService.get("database.name"),
-        entities: ["dist/**/*.entity{.ts,.js}"],
-        migrations: ["dist/migrations/*{.ts,.js}"],
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     ConfigModule.forFeature(jwtConfig),
@@ -114,17 +116,22 @@ const ENV = process.env.NODE_ENV;
   ],
   controllers: [AppController],
   providers: [
-    FilterDataProvider,
+    APIFeaturesService,
     AppService,
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
     },
+    AccessTokenGuard,
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
     },
-    AccessTokenGuard,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LanMiddleware).forRoutes("*");
+    consumer.apply(UserMiddleware).exclude("auth/login").forRoutes("*");
+  }
+}

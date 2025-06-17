@@ -1,8 +1,8 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Service extends Base {
+export class Service extends BaseMemberEntity {
   @Column({ length: 256 })
   name_en: string;
 

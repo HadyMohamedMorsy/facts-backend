@@ -1,9 +1,9 @@
 import { IsString, MaxLength } from "class-validator";
-import { Base } from "src/shared/common/base/entity/base.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Statistics extends Base {
+export class Statistics extends BaseMemberEntity {
   @Column({
     unique: true,
     type: "int",
