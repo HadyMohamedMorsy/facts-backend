@@ -1,41 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { BaseService } from "src/shared/common/base/base.service";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
-import { FilterDataProvider } from "src/shared/common/filter/providers/filter-data.provider";
-import { UserService } from "src/users/providers/user.service";
+import { BaseService } from "src/shared/base/base";
+import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { Repository } from "typeorm";
 import { ApplicantJob } from "../applicant-job.entity";
 import { CreateApplicantJobstDto } from "../dtos/create-applicants-job";
+import { PatchApplicantJobsDto } from "../dtos/patch-applicants-job.dto";
 
 @Injectable()
-export class ApplicantJobsService extends BaseService<ApplicantJob, CreateApplicantJobstDto> {
+export class ApplicantJobsService extends BaseService<
+  ApplicantJob,
+  CreateApplicantJobstDto,
+  PatchApplicantJobsDto
+> {
   constructor(
     @InjectRepository(ApplicantJob)
     repository: Repository<ApplicantJob>,
-    filterData: FilterDataProvider<ApplicantJob>,
-    usersService: UserService,
+    protected readonly apiService: APIFeaturesService,
   ) {
-    super(repository, filterData, usersService);
-  }
-
-  async front(filter: FilterQueryDto) {
-    const entity = await this.filtersFront(filter, "applicantjob").execute();
-    return {
-      data: entity,
-    };
-  }
-
-  async findAll(filter: FilterQueryDto) {
-    const entity = await this.filters(filter, "applicantjob")
-      .joinRelations("job", ["title_en", "title_ar"])
-      .execute();
-    const result = await this.filters(filter, "applicantjob").count();
-
-    return {
-      data: entity,
-      recordsFiltered: entity.length,
-      totalRecords: +result,
-    };
+    super(repository, apiService);
   }
 }
