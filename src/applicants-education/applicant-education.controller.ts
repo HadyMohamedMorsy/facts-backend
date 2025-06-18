@@ -1,25 +1,70 @@
-import { Body, Controller, HttpCode, Post } from "@nestjs/common";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
+import { Body, Controller, Post, Put } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { RelationOptions, SelectOptions } from "src/shared/interface/query.interface";
+import { ApplicantEducation } from "./applicant-education.entity";
 import { CreateApplicantEducationtDto } from "./dtos/create-applicants-education";
+import { PatchApplicantEducationDto } from "./dtos/patch-applicants-education.dto";
 import { ApplicantEducationService } from "./providers/applicants-education.service";
 
 @Controller("applicant-education")
-export class ApplicantEducationController {
-  constructor(private readonly applicantEducationService: ApplicantEducationService) {}
+export class ApplicantEducationController
+  extends BaseController<
+    ApplicantEducation,
+    CreateApplicantEducationtDto,
+    PatchApplicantEducationDto
+  >
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: ApplicantEducationService) {
+    super(service);
+  }
 
-  @Post("/index")
-  @HttpCode(200)
-  public index(@Body() filterQueryDto: FilterQueryDto) {
-    return this.applicantEducationService.findAll(filterQueryDto);
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      is_active: true,
+      created_at: true,
+      updated_at: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      created_by: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
+      education: {
+        id: true,
+        title_en: true,
+        title_ar: true,
+      },
+    };
   }
 
   @Post("/store")
-  public async create(@Body() createDto: CreateApplicantEducationtDto) {
-    return this.applicantEducationService.create(createDto);
+  public create(@Body() create: CreateApplicantEducationtDto) {
+    return this.service.create(
+      {
+        education: create.education,
+        created_by: create.created_by,
+        is_active: create.is_active,
+      } as CreateApplicantEducationtDto,
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
-  @Post("/delete")
-  public delete(@Body() id: number) {
-    return this.applicantEducationService.delete(id);
+  @Put("/update")
+  public update(@Body() update: PatchApplicantEducationDto) {
+    const updateData: PatchApplicantEducationDto = {
+      id: update.id,
+      education: update.education,
+      is_active: update.is_active,
+    };
+
+    return this.service.update(updateData, this.selectOptions(), this.getRelationOptions());
   }
 }
