@@ -1,3 +1,5 @@
+import { BannerPage } from "../shared/enum/banner-page.enum";
+
 /**
  * Banner interfaces – for use in the frontend.
  */
@@ -11,7 +13,7 @@ export interface BannerContentItem {
 export interface Banner {
   id: number;
   content: BannerContentItem[];
-  page: string;
+  page: BannerPage;
   featuredImage: string;
   createdAt?: string;
   updatedAt?: string;
@@ -19,7 +21,7 @@ export interface Banner {
 
 export interface CreateBannerDto {
   content: BannerContentItem[];
-  page: string;
+  page: BannerPage;
   featuredImage: string;
 }
 

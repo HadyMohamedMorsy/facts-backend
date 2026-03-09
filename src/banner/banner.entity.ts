@@ -1,4 +1,5 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { BannerPage } from "src/shared/enum/banner-page.enum";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -14,7 +15,7 @@ export class Banner extends BaseMemberEntity {
   }>;
 
   @Column({ length: 256, unique: true })
-  page: string;
+  page: BannerPage;
 
   @Column({ type: "text" })
   featuredImage: string;

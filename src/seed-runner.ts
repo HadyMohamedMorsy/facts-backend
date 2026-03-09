@@ -26,8 +26,12 @@ import { seedEducations } from "./educations/education.seeder";
 import { seedEmployer } from "./employer/employer.seeder";
 import { seedGallary } from "./gallary/gallary.seeder";
 import { seedGraduates } from "./graduates/graduates.seeder";
+import { seedApplicantJobs } from "./applicants-job/applicant-job.seeder";
+import { seedApplicantEducations } from "./applicants-education/applicant-education.seeder";
+import { seedApplicantGraduates } from "./applicants-graduates/applicant-graduates.seeder";
 import { seedGeneralSettings } from "./general-settings/general-settings.seeder";
 import { seedBlogs } from "./blogs/blog.seeder";
+import { seedAdvertisements } from "./advertisements/advertisement.seeder";
 
 const seeders: Array<{ name: string; fn: (ds: any) => Promise<any> }> = [
   { name: "users", fn: seedUsers },
@@ -52,8 +56,12 @@ const seeders: Array<{ name: string; fn: (ds: any) => Promise<any> }> = [
   { name: "employer", fn: seedEmployer },
   { name: "gallary", fn: seedGallary },
   { name: "graduates", fn: seedGraduates },
+  { name: "applicant-jobs", fn: seedApplicantJobs },
+  { name: "applicant-educations", fn: seedApplicantEducations },
+  { name: "applicant-graduates", fn: seedApplicantGraduates },
   { name: "general-settings", fn: seedGeneralSettings },
   { name: "blogs", fn: seedBlogs },
+  { name: "advertisements", fn: seedAdvertisements },
 ];
 
 async function run() {
@@ -71,4 +79,9 @@ async function run() {
   console.log("\n✅ All seeders completed.");
 }
 
-run().then(() => process.exit(0)).catch(() => process.exit(1));
+run()
+  .then(() => process.exit(0))
+  .catch(err => {
+    console.error("❌ Seed runner failed:", err);
+    process.exit(1);
+  });

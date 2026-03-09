@@ -1,0 +1,15 @@
+export enum BannerPage {
+  About = "About",
+  Blogs = "Blogs",
+  Consultancy = "Consultancy",
+  ConsultancyDetails = "ConsultancyDetails",
+  Contact = "Contact",
+  Education = "Education",
+  EducationDetails = "EducationDetails",
+  Gallary = "Gallary",
+  Job = "Job",
+  JoinPage = "JoinPage",
+  Magazine = "Magazine",
+  Team = "Team",
+  Home = "Home",
+}
