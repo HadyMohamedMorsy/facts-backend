@@ -1,45 +1,68 @@
-/* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
-import { SoicalLinkDto } from "./social-links.dto";
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 
-export class CreateTeamDto extends BaseDto {
+class TeamContentItem {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
+  @MinLength(1)
   @MaxLength(256)
-  name_en: string;
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(256)
+  position?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+class TeamSocialItemDto {
+  @IsString()
+  @MinLength(3)
+  @MaxLength(256)
+  icon: string;
 
   @IsString()
-  @IsNotEmpty()
+  @MinLength(3)
   @MaxLength(256)
-  name_ar: string;
+  link: string;
+}
+
+export class CreateTeamDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TeamContentItem)
+  content: Array<{ name?: string; description?: string; position?: string; language_id: number }>;
 
   @IsArray()
-  @IsNotEmpty()
-  phone_number: string[];
+  @IsString({ each: true })
+  phoneNumber: string[];
 
-  @IsNotEmpty()
   @IsString()
-  description_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  description_ar: string;
-
-  @IsNotEmpty()
-  @IsString()
-  position_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  position_ar: string;
+  @MaxLength(1024)
+  featuredImage: string;
 
   @IsOptional()
   @IsArray()
-  @Type(() => SoicalLinkDto)
-  social_links?: SoicalLinkDto[];
+  @ValidateNested({ each: true })
+  @Type(() => TeamSocialItemDto)
+  socialLinks?: Array<{ icon: string; link: string }>;
 
-  @MaxLength(1024)
-  featuredImage: string;
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  orderIndex?: number;
 }

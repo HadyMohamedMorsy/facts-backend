@@ -1,42 +1,22 @@
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Subscribe {
+export class Subscribe extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
   @JoinColumn({ name: "created_by" })
-  created_by: User;
+  createdBy: User;
 
-  @Column({ type: "text", unique: true })
-  email_subscribe: string;
+  @Column({ name: "email_subscribe", type: "text", unique: true })
+  emailSubscribe: string;
 
   @Column({ type: "text" })
   type: string;
 
-  @Column({
-    type: "boolean",
-    default: false,
-  })
-  is_active: boolean;
-
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
+  @Column({ name: "is_active", type: "boolean", default: false })
+  isActive: boolean;
 }

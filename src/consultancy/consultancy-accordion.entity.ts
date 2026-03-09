@@ -1,32 +1,18 @@
-import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Consultancy } from "./consultancy.entity";
 
 @Entity()
-export class ConsultancyAccordion extends BaseTime {
-  @Column({
-    type: "varchar",
-    length: 256,
-  })
-  accordion_title_en: string;
+export class ConsultancyAccordion extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({
-    type: "varchar",
-    length: 256,
-  })
-  accordion_title_ar: string;
-
-  @Column({
-    type: "varchar",
-    length: 256,
-  })
-  description_en: string;
-
-  @Column({
-    type: "varchar",
-    length: 256,
-  })
-  description_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    accordion_title: string;
+    description: string;
+    language_id: number;
+  }>;
 
   @ManyToOne(() => Consultancy, consultancy => consultancy.consultancy_accordion, {
     onDelete: "CASCADE",

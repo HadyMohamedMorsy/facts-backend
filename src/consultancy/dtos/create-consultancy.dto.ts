@@ -1,8 +1,7 @@
-/* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
 import {
   IsArray,
-  IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -10,23 +9,48 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
-import { ConsultancyAccordienDto } from "./consultancy-accordien.dto";
-export class CreateConsultancyDto extends BaseDto {
+
+class ConsultancyContentItem {
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
   @MaxLength(256)
-  title_en: string;
+  title: string;
+
+  @IsOptional()
+  @IsString()
+  short_description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+class AccordionContentItem {
+  @IsString()
+  @MaxLength(256)
+  accordion_title: string;
 
   @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
+  @MaxLength(1024)
+  description: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+class ConsultancyAccordionItemDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AccordionContentItem)
+  content: Array<{ accordion_title: string; description: string; language_id: number }>;
+}
+
+export class CreateConsultancyDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ConsultancyContentItem)
+  content: Array<{ title: string; short_description?: string; language_id: number }>;
 
   @IsString()
-  @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message:
       'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
@@ -34,20 +58,13 @@ export class CreateConsultancyDto extends BaseDto {
   @MaxLength(512)
   slug: string;
 
-  @IsOptional()
   @IsString()
-  short_description_en?: string;
-
-  @IsOptional()
-  @IsString()
-  short_description_ar?: string;
-  
-  @IsString()
-  @IsNotEmpty()
   featuredImage: string;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ConsultancyAccordienDto)
-  consultancy_accordion: ConsultancyAccordienDto[];
+  @Type(() => ConsultancyAccordionItemDto)
+  consultancy_accordion: Array<{
+    content: Array<{ accordion_title: string; description: string; language_id: number }>;
+  }>;
 }

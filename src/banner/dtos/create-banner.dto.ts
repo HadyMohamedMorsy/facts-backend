@@ -1,31 +1,39 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
 
-export class CreateBannerDto extends BaseDto {
+class BannerContentItem {
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
   @MaxLength(256)
-  title_en: string;
+  title: string;
 
+  @IsOptional()
   @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
+  short_description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreateBannerDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BannerContentItem)
+  content: Array<{ title: string; short_description?: string; language_id: number }>;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(256)
   page: string;
-
-  @IsOptional()
-  @IsString()
-  short_description_en?: string;
-
-  @IsOptional()
-  @IsString()
-  short_description_ar?: string;
 
   @IsString()
   featuredImage: string;

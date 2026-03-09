@@ -1,9 +1,9 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateProfiletDto } from "./create-profile";
+import { CreateProfileDto } from "./create-profile.dto";
 
-export class PatchProfileDto extends PartialType(CreateProfiletDto) {
+export class PatchProfileDto extends PartialType(CreateProfileDto) {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()

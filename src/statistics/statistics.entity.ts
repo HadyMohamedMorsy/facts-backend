@@ -1,30 +1,31 @@
-import { IsString, MaxLength } from "class-validator";
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Statistics extends Base {
-  @Column({
-    unique: true,
-    type: "int",
-    nullable: true,
-  })
-  order: number;
+export class Statistics extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ length: 256 })
-  title_en: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
 
-  @Column({ length: 256 })
-  title_ar: string;
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
+  @Column({ name: "order", type: "int", nullable: true, unique: true })
+  orderIndex: number;
+
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title?: string;
+    language_id: number;
+  }>;
 
   @Column({ type: "int" })
-  value: string;
+  value: number;
 
-  @IsString()
-  @MaxLength(1024)
-  @Column({
-    type: "varchar",
-    length: 1024,
-  })
+  @Column({ type: "varchar", length: 1024 })
   icon: string;
 }

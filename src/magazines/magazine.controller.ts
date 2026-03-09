@@ -1,73 +1,98 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  Post,
-  Req,
-  UploadedFiles,
-  UseInterceptors,
-} from "@nestjs/common";
-import { AnyFilesInterceptor, NoFilesInterceptor } from "@nestjs/platform-express";
-import { Request } from "express";
-import { Auth } from "src/auth/decorators/auth.decorator";
-import { AuthType } from "src/auth/enums/auth-type.enum";
-import { CategoryService } from "src/categories/providers/category.service";
-import { BaseController } from "src/shared/common/base/base.controller";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
-import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
-import { HeaderToBodyInterceptor } from "src/shared/common/interceptor/transfrom-request.interceptor";
-import multerOptions from "src/shared/config/multer-options";
+import { Body, Controller, Get, Param, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
+import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType } from "src/shared/enum/global-enum";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Magazine } from "./magazine.entity";
+import { MagazineService } from "./magazine.service";
 import { CreateMagazineDto } from "./dto/create-magazine.dto";
-import { MagazineCategoriesDto } from "./dto/magazine-categories.dto";
-import { MagazineService } from "./providers/magazine.service";
+import { PatchMagazineDto } from "./dto/patch-magazine.dto";
 
 @Controller("magazine")
-export class MagazineController extends BaseController<CreateMagazineDto> {
-  constructor(
-    private readonly magazineService: MagazineService,
-    private readonly TransformRequest: TransformRequest,
-    private readonly categoryService: CategoryService,
-  ) {
-    super(magazineService, TransformRequest);
-    this.propertiesRel = ["created_by", "categories"];
+export class MagazineController
+  extends BaseController<Magazine, CreateMagazineDto, PatchMagazineDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: MagazineService) {
+    super(service);
+  }
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      content: true,
+      slug: true,
+      featuredImage: true,
+      publicationDate: true,
+      orderIndex: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: { id: true, firstName: true, lastName: true, email: true },
+      categories: { id: true, content: true, slug: true },
+    };
   }
 
   @Post("/store")
-  @UseInterceptors(HeaderToBodyInterceptor)
-  @UseInterceptors(AnyFilesInterceptor(multerOptions))
-  public async create(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body() createDto: CreateMagazineDto,
-    @Req() request: Request,
-  ) {
-    const categoryIds = createDto.selectedCategories.map(
-      (item: MagazineCategoriesDto) => item.value,
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async create(@Body() create: CreateMagazineDto, @Req() req: Request) {
+    return await this.service.create(
+      {
+        createdBy: req["createdBy"],
+        categories: req["categories"],
+        content: create.content,
+        slug: create.slug,
+        featuredImage: create.featuredImage,
+        publicationDate: create.publicationDate,
+        orderIndex: create.orderIndex,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
     );
-    const categories = await this.categoryService.findMultipleCategories(categoryIds);
-    const updateDto = { ...createDto, categories };
-    return await super.create(files, updateDto, request);
   }
 
-  @Delete("/delete")
-  @UseInterceptors(NoFilesInterceptor())
-  public async delete(@Body() body: { id: string }, @Req() request: Request) {
-    const entity = await this.magazineService.findOne(+body.id, ["categories"]);
-    await this.magazineService.deleteMagazineRelations(entity, request);
-    return await super.delete(body, request);
+  @Put("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async update(@Body() update: PatchMagazineDto, @Req() req: Request) {
+    return await this.service.update(
+      {
+        id: update.id,
+        createdBy: req["createdBy"],
+        categories: req["categories"],
+        content: update.content,
+        slug: update.slug,
+        featuredImage: update.featuredImage,
+        publicationDate: update.publicationDate,
+        orderIndex: update.orderIndex,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
+  }
+
+  @Get(":slug")
+  @Auth(AuthType.None)
+  async findBySlug(@Param("slug") slug: string) {
+    return this.service.findBySlug(slug);
   }
 
   @Post("front/index")
-  @HttpCode(200)
   @Auth(AuthType.None)
-  public front(@Body() filterQueryDto: FilterQueryDto) {
-    return this.magazineService.front(filterQueryDto);
+  async frontIndex(@Body() query: { query?: any }) {
+    return this.service.findFront(query);
   }
 
   @Post("magazines/blogs")
-  @HttpCode(200)
   @Auth(AuthType.None)
-  public slug(@Body() filterQueryDto: FilterQueryDto) {
-    return this.magazineService.findBySlugWithPaginatedBlogs(filterQueryDto);
+  async slugWithBlogs(
+    @Body() filter: { filters?: { slug?: string }; length?: number; start?: number },
+  ) {
+    return this.service.findBySlugWithPaginatedBlogs(filter);
   }
 }

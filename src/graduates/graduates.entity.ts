@@ -1,40 +1,29 @@
 import { ApplicantGraduates } from "src/applicants-graduates/applicant-graduates.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { createUserGraduatesDto } from "./dtos/create-graduates-users.dto";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Graduates {
+export class Graduates extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: "boolean",
-    default: true,
-  })
-  is_active: boolean;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
 
-  @Column("json", { nullable: true })
-  selectUser: createUserGraduatesDto;
-
-  @OneToMany(() => ApplicantGraduates, application => application.graduate, {
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  applications: ApplicantGraduates[];
-
-  @ManyToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "user_id" })
   user: User;
+
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    description: string;
+    language_id: number;
+  }>;
 
   @Column({ length: 256 })
   type: string;
@@ -42,23 +31,17 @@ export class Graduates {
   @Column({ length: 512, unique: true })
   slug: string;
 
-  @Column({ type: "varchar" })
-  description_en: string;
-
-  @Column({ type: "varchar" })
-  description_ar: string;
-
   @Column("simple-array")
   courses: string[];
 
-  @Column({ type: "varchar" })
-  course_name: string;
+  @Column({ name: "course_name", type: "varchar" })
+  courseName: string;
 
-  @Column({ type: "varchar" })
-  code_certification: string;
+  @Column({ name: "code_certification", type: "varchar" })
+  codeCertification: string;
 
-  @Column({ type: "date", nullable: true })
-  date_course?: string;
+  @Column({ name: "date_course", type: "date", nullable: true })
+  dateCourse?: string;
 
   @Column({ type: "varchar" })
   featuredImage: string;
@@ -66,20 +49,12 @@ export class Graduates {
   @Column({ type: "varchar" })
   attachment: string;
 
-  @Column({ type: "varchar" })
-  image_certification: string;
+  @Column({ name: "image_certification", type: "varchar" })
+  imageCertification: string;
 
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
+  @OneToMany(() => ApplicantGraduates, application => application.graduate, {
+    cascade: true,
+    onDelete: "CASCADE",
   })
-  updated_at: Date;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "created_by" })
-  created_by: User;
+  applications: ApplicantGraduates[];
 }

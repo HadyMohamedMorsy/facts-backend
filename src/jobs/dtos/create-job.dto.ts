@@ -1,60 +1,58 @@
-/* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
 import {
+  IsArray,
   IsEnum,
-  IsInt,
-  IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from "class-validator";
-import { TYPE } from "../enum/enum";
+import { TYPE } from "src/shared/enum/global-enum";
+import { User } from "src/users/user.entity";
+
+class JobContentItem {
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(256)
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  short_description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(1024)
+  description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
 
 export class CreateJobDto {
-  @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_en: string;
-
-  @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => JobContentItem)
+  content: Array<{
+    title?: string;
+    short_description?: string;
+    description?: string;
+    language_id: number;
+  }>;
 
   @IsEnum(TYPE, { message: "Type must be either parttime or fulltime" })
-  @IsNotEmpty()
   type: TYPE;
 
   @IsNumber()
   @Type(() => Number)
-  @IsNotEmpty()
-  sallary: number;
+  salary: number;
 
-  @IsNotEmpty()
   @IsString()
-  short_description_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  short_description_ar: string;
-
-  @IsNotEmpty()
   @MaxLength(1024)
   featuredImage: string;
 
-  @IsNotEmpty()
-  @IsString()
-  description_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  description_ar: string;
-
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty()
-  created_by: number;
+  createdBy: User;
 }

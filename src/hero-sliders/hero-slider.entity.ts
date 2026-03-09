@@ -1,20 +1,29 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class HeroSlider extends Base {
-  @Column({ length: 256 })
-  title_en: string;
+@Entity("hero_slider")
+export class HeroSlider extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ length: 256 })
-  title_ar: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
+
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
+  @Column({ name: "order", type: "int", nullable: true })
+  orderIndex: number;
+
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title?: string;
+    short_description?: string;
+    language_id: number;
+  }>;
 
   @Column({ type: "text" })
-  short_description_en?: string;
-
-  @Column({ type: "text" })
-  short_description_ar?: string;
-
-  @Column({ type: "text" })
-  featuredImage?: string;
+  featuredImage: string;
 }

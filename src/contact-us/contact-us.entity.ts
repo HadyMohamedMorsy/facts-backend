@@ -1,52 +1,23 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Contact {
+export class Contact extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: "text",
-    unique: true,
-  })
+  @Column({ type: "text", unique: true })
   email: string;
 
-  @Column({
-    type: "varchar",
-    length: 512,
-  })
-  full_name: string;
+  @Column({ name: "full_name", length: 512 })
+  fullName: string;
 
-  @Column({
-    type: "varchar",
-    length: 256,
-  })
+  @Column({ length: 256 })
   subject: string;
 
-  @Column({
-    type: "varchar",
-    unique: true,
-  })
-  phone_number: string;
+  @Column({ name: "phone_number", type: "varchar", unique: true })
+  phoneNumber: string;
 
-  @Column({
-    type: "text",
-  })
-  message: string;
-
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
+  @Column({ type: "text", nullable: true })
+  message?: string;
 }

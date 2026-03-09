@@ -1,13 +1,13 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Advertisement extends Base {
-  @Column({ length: 256 })
-  company_name_en: string;
-
-  @Column({ length: 256 })
-  company_name_ar: string;
+export class Advertisement extends BaseMemberEntity {
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    company_name: string;
+    language_id: number;
+  }>;
 
   @Column({ length: 256 })
   page: string;

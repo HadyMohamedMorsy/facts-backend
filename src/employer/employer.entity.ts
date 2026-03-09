@@ -1,57 +1,37 @@
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Employer {
+export class Employer extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "text" })
-  company_name: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
 
-  @Column({ type: "text" })
-  business_type: string;
+  @Column({ name: "company_name", type: "text" })
+  companyName: string;
+
+  @Column({ name: "business_type", type: "text" })
+  businessType: string;
 
   @Column({ type: "text" })
   industry: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "created_by" })
-  created_by: User;
+  @Column({ name: "is_active", type: "boolean", default: false })
+  isActive: boolean;
 
-  @Column({
-    type: "boolean",
-    default: false,
-  })
-  is_active: boolean;
+  @Column({ name: "company_address", type: "text" })
+  companyAddress: string;
 
-  @Column({ type: "text" })
-  company_address: string;
+  @Column({ name: "company_phone", type: "text" })
+  companyPhone: string;
 
-  @Column({ type: "text" })
-  company_phone: string;
+  @Column({ name: "company_email", type: "text" })
+  companyEmail: string;
 
-  @Column({ type: "text" })
-  company_email: string;
-
-  @Column({ type: "text", nullable: true })
-  website_url: string;
-
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updatedAt: Date;
+  @Column({ name: "website_url", type: "text", nullable: true })
+  websiteUrl?: string;
 }

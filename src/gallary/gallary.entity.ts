@@ -1,13 +1,32 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Tab } from "src/tab/tab.entity";
+import { User } from "src/users/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class Gallary extends Base {
-  @Column({ type: "varchar", length: 256 })
-  accordion_title_en: string;
+@Entity("gallary")
+export class Gallary extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ type: "varchar", length: 256 })
-  accordion_title_ar: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
+
+  @ManyToOne(() => Tab, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "tab_id" })
+  tab: Tab;
+
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
+  @Column({ name: "order", type: "int", nullable: true, unique: true })
+  orderIndex: number;
+
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    accordion_title?: string;
+    language_id: number;
+  }>;
 
   @Column("text", { array: true })
   files: string[];

@@ -1,16 +1,67 @@
-import { Controller } from "@nestjs/common";
-import { BaseController } from "src/shared/common/base/base.controller";
-import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { HeroSlider } from "./hero-slider.entity";
+import { HeroSliderService } from "./hero-slider.service";
 import { CreateHeroSliderDto } from "./dtos/create-hero-slider.dto";
-import { HeroSliderService } from "./providers/hero-slider.service";
+import { PatchHeroSliderDto } from "./dtos/patch-hero-slider.dto";
 
 @Controller("slider")
-export class HeroSliderController extends BaseController<CreateHeroSliderDto> {
-  constructor(
-    private readonly heroSliderService: HeroSliderService,
-    private readonly TransformRequest: TransformRequest,
-  ) {
-    super(heroSliderService, TransformRequest);
-    this.duplicatedPropertirs = ["order"];
+export class HeroSliderController
+  extends BaseController<HeroSlider, CreateHeroSliderDto, PatchHeroSliderDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: HeroSliderService) {
+    super(service);
+  }
+
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      content: true,
+      featuredImage: true,
+      orderIndex: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: { id: true, firstName: true, lastName: true, email: true },
+    };
+  }
+
+  @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async create(@Body() create: CreateHeroSliderDto, @Req() req: Request) {
+    return await this.service.create(
+      {
+        createdBy: req["createdBy"],
+        content: create.content,
+        featuredImage: create.featuredImage,
+        orderIndex: create.orderIndex,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
+  }
+
+  @Put("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async update(@Body() update: PatchHeroSliderDto, @Req() req: Request) {
+    return await this.service.update(
+      {
+        id: update.id,
+        createdBy: req["createdBy"],
+        content: update.content,
+        featuredImage: update.featuredImage,
+        orderIndex: update.orderIndex,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 }

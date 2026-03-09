@@ -1,22 +1,20 @@
-import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Education } from "./education.entity";
 
 @Entity()
-export class EducationDetails extends BaseTime {
-  @Column("text")
-  name_en: string;
+export class EducationDetails extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column("text")
-  name_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    name: string;
+    value: string;
+    language_id: number;
+  }>;
 
-  @Column("text")
-  value_en: string;
-
-  @Column("text")
-  value_ar: string;
-
-  @ManyToOne(() => Education, education => education.education_accordion, {
+  @ManyToOne(() => Education, education => education.education_details, {
     onDelete: "CASCADE",
   })
   @JoinColumn()

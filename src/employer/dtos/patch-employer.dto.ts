@@ -1,11 +1,15 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateEmployertDto } from "./create-employer";
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional } from "class-validator";
+import { CreateEmployerDto } from "./create-employer.dto";
 
-export class PatchEmployerDto extends PartialType(CreateEmployertDto) {
+export class PatchEmployerDto extends PartialType(CreateEmployerDto) {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()
   id: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }

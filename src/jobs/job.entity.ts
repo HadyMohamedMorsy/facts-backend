@@ -1,45 +1,34 @@
 import { ApplicantJob } from "src/applicants-job/applicant-job.entity";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { TYPE } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { TYPE } from "./enum/enum";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Job {
+export class Job extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 256 })
-  title_en: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
 
-  @Column({ length: 256 })
-  title_ar: string;
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
 
-  @Column({ type: "text", nullable: true })
-  short_description_en: string;
-
-  @Column({ type: "text", nullable: true })
-  short_description_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title?: string;
+    short_description?: string;
+    description?: string;
+    language_id: number;
+  }>;
 
   @Column({ type: "enum", enum: TYPE })
   type: TYPE;
 
-  @Column({ type: "numeric" })
-  sallary: number;
-
-  @Column({ type: "text" })
-  description_en: string;
-
-  @Column({ type: "text" })
-  description_ar: string;
+  @Column({ name: "sallary", type: "numeric" })
+  salary: number;
 
   @Column({ type: "text" })
   featuredImage: string;
@@ -49,24 +38,4 @@ export class Job {
     onDelete: "CASCADE",
   })
   applications: ApplicantJob[];
-
-  @Column({
-    type: "boolean",
-    default: true,
-  })
-  is_active: boolean;
-
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  created_at: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updated_at: Date;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "created_by" })
-  created_by: User;
 }

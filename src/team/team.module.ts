@@ -1,15 +1,15 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { UsersModule } from "src/users/users.module";
-import { TeamService } from "./providers/team.service";
-import { TeamSocial } from "./team-social.entity";
+import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { TeamController } from "./team.controller";
 import { Team } from "./team.entity";
+import { TeamSocial } from "./team-social.entity";
+import { TeamService } from "./team.service";
 
 @Module({
-  imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([Team, TeamSocial])],
+  imports: [FilterDateModule, TypeOrmModule.forFeature([Team, TeamSocial])],
   controllers: [TeamController],
   providers: [TeamService],
+  exports: [TeamService],
 })
 export class TeamModule {}

@@ -5,10 +5,11 @@ import {
   UnauthorizedException,
   forwardRef,
 } from "@nestjs/common";
-import { UserService } from "src/users/providers/user.service";
+import { UserService } from "src/users/user.service";
 import { SignInDto } from "../dtos/signin.dto";
 import { GenerateTokensProvider } from "./generate-tokens.provider";
 import { HashingProvider } from "./hashing.provider";
+import { RefreshTokensProvider } from "./refresh-tokens.provider";
 
 @Injectable()
 export class SignInProvider {
@@ -26,18 +27,14 @@ export class SignInProvider {
      * Inject generateTokensProvider
      */
     private readonly generateTokensProvider: GenerateTokensProvider,
+    private readonly refreshTokensProvider: RefreshTokensProvider,
   ) {}
 
   public async signIn(signInDto: SignInDto) {
-    // find user by email ID
     const user = await this.usersService.findOneByEmail(signInDto.email);
-    // Throw exception if user is not found
-    // Above | Taken care by the findInByEmail method
-
-    let isEqual: boolean = false;
+    let isEqual = false;
 
     try {
-      // Compare the password to hash
       isEqual = await this.hashingProvider.comparePassword(signInDto.password, user.password);
     } catch (error) {
       throw new RequestTimeoutException(error, {
@@ -51,5 +48,14 @@ export class SignInProvider {
 
     // Generate access token
     return await this.generateTokensProvider.generateTokens(user);
+  }
+
+  public async refreshToken(refreshToken: { refreshToken: string }) {
+    try {
+      const newTokens = await this.refreshTokensProvider.refreshTokens(refreshToken);
+      return newTokens;
+    } catch (err) {
+      throw new UnauthorizedException(err.message);
+    }
   }
 }

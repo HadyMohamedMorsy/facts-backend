@@ -1,16 +1,12 @@
-import { Graduates } from "src/graduates/graduates.entity";
-import { Role } from "src/roles/role.entity";
+import { Role, UserStatus } from "src/shared/enum/global-enum";
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
-import { Gender } from "./enum/enum";
 
 @Entity()
 export class User {
@@ -20,7 +16,8 @@ export class User {
   @Column({
     type: "varchar",
     length: 96,
-    nullable: false,
+    nullable: true,
+    name: "first_name",
   })
   firstName: string;
 
@@ -28,6 +25,7 @@ export class User {
     type: "varchar",
     length: 96,
     nullable: true,
+    name: "last_name",
   })
   lastName: string;
 
@@ -35,60 +33,74 @@ export class User {
     type: "varchar",
     length: 96,
     nullable: true,
+    unique: true,
   })
   username: string;
 
-  @Column({
-    nullable: true,
-  })
-  phone_number: string;
+  @Column({ type: "enum", enum: Role, default: Role.SUPER_ADMIN })
+  role: Role;
+
+  @Column({ unique: true, length: 11, name: "phone_number" })
+  phoneNumber: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ type: "date", name: "birth_of_date" })
+  birthOfDate: Date;
 
   @Column({
     type: "varchar",
     length: 96,
     nullable: true,
-  })
-  country: string;
-
-  @Column({
-    type: "varchar",
-    length: 96,
-    nullable: false,
+    unique: true,
   })
   email: string;
 
   @Column({
-    type: "enum",
-    enum: Gender,
+    type: "varchar",
+    length: 96,
+    nullable: true,
   })
-  gender: Gender;
-
-  @Column({ type: "text", nullable: true })
-  address?: string;
+  password: string;
 
   @Column({
     type: "varchar",
     length: 96,
     nullable: true,
+    name: "google_id",
   })
-  password?: string;
+  googleId: string;
 
   @Column({
-    type: "boolean",
-    default: true,
+    type: "varchar",
+    length: 96,
+    nullable: true,
+    name: "facebook_id",
   })
-  is_active: boolean;
+  facebookId: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @Column({ type: "enum", enum: UserStatus, nullable: true })
+  type: UserStatus;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @ManyToOne(() => User)
+  createdBy: User;
 
-  @ManyToOne(() => Role)
-  @JoinColumn({ name: "role_id" })
-  role: Role;
+  @Column({ type: "boolean", default: true })
+  isActive: boolean;
 
-  @OneToOne(() => Graduates, graduate => graduate.user)
-  graduate: Graduates;
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    name: "created_at",
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+    name: "updated_at",
+  })
+  updatedAt: Date;
 }

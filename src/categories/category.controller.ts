@@ -1,32 +1,100 @@
-import { Body, Controller, Delete, HttpCode, Post, Req, UseInterceptors } from "@nestjs/common";
-import { NoFilesInterceptor } from "@nestjs/platform-express";
-import { BaseController } from "src/shared/common/base/base.controller";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
-import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
-import { CreateCategoryDto } from "./dto/create-category.dto";
-import { CategoryService } from "./providers/category.service";
-import { Request } from "express";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
+import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType, CategoryType } from "src/shared/enum/global-enum";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Category } from "./category.entity";
+import { CategoryDto } from "./dtos/create.dto";
+import { PatchCategoryDto } from "./dtos/patch.dto";
+import { CategoryService } from "./category.service";
 
 @Controller("category")
-export class CategoryController extends BaseController<CreateCategoryDto> {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly TransformRequest: TransformRequest,
-  ) {
-    super(categoryService, TransformRequest);
+export class CategoryController
+  extends BaseController<Category, CategoryDto, PatchCategoryDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: CategoryService) {
+    super(service);
   }
 
-  @Post("autocomplete/index")
-  @HttpCode(200)
-  public autoComplete(@Body() filterQueryDto: FilterQueryDto) {
-    return this.categoryService.autoComplete(filterQueryDto);
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      created_at: true,
+      updated_at: true,
+      content: true,
+      categoryType: true,
+      image: true,
+      slug: true,
+    };
   }
 
-  @Delete("/delete")
-  @UseInterceptors(NoFilesInterceptor())
-  public async delete(@Body() body: { id: string }, @Req() request: Request) {
-    const entity = await this.categoryService.findOne(+body.id, ["magazines"]);
-    await this.categoryService.deleteCategoriesRelations(entity, request);
-    return await super.delete(body, request);
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
+  }
+
+  @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async create(@Body() create: CategoryDto, @Req() req: Request) {
+    const category = await this.service.create(
+      {
+        content: create.content,
+        categoryType: create.categoryType,
+        image: create.image,
+        slug: create.slug,
+        createdBy: req["createdBy"],
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
+
+    return category;
+  }
+
+  @Put("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async update(@Body() update: PatchCategoryDto, @Req() req: Request) {
+    const category = await this.service.update(
+      {
+        id: update.id,
+        content: update.content,
+        categoryType: update.categoryType,
+        image: update.image,
+        slug: update.slug,
+        createdBy: req["updatedBy"],
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
+    return category;
+  }
+
+  @Get("/blog")
+  @Auth(AuthType.None)
+  public async getBlogCategories() {
+    return await this.service.findFront({
+      query: {
+        filters: { categoryType: CategoryType.BLOG },
+        relations: {
+          subCategories: {
+            select: ["id", "name", "slug", "image", "description"],
+          },
+        },
+        isPagination: "false",
+      },
+    });
+  }
+
+  @Get("/parent")
+  @Auth(AuthType.None)
+  public async getParentCategories() {
+    return await this.service.getParentCategories();
   }
 }

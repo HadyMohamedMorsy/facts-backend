@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { UsersModule } from "src/users/users.module";
+import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { HeroSliderController } from "./hero-slider.controller";
 import { HeroSlider } from "./hero-slider.entity";
-import { HeroSliderService } from "./providers/hero-slider.service";
+import { HeroSliderService } from "./hero-slider.service";
 
 @Module({
-  imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([HeroSlider])],
+  imports: [FilterDateModule, TypeOrmModule.forFeature([HeroSlider])],
   controllers: [HeroSliderController],
   providers: [HeroSliderService],
+  exports: [HeroSliderService],
 })
 export class HeroSliderModule {}

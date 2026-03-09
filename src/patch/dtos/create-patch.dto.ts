@@ -1,31 +1,46 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+import { User } from "src/users/user.entity";
 
-export class CreatePatchDto extends BaseDto {
+class PatchContentItem {
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(256)
-  name_en: string;
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreatePatchDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PatchContentItem)
+  content: Array<{ name?: string; description?: string; language_id: number }>;
 
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(256)
-  name_ar: string;
-
-  @IsString()
-  @IsNotEmpty()
   @MaxLength(5)
   year: string;
-
-  @IsOptional()
-  @IsString()
-  description_en?: string;
-
-  @IsOptional()
-  @IsString()
-  description_ar?: string;
 
   @IsArray()
   @IsString({ each: true })
   files: string[];
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  orderIndex?: number;
+
+  createdBy: User;
 }

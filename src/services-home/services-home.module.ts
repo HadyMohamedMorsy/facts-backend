@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { UsersModule } from "src/users/users.module";
-import { ServiceService } from "./providers/service.service";
+import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { ServiceController } from "./service.controller";
 import { Service } from "./service.entity";
+import { ServiceHomeService } from "./service-home.service";
 
 @Module({
-  imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([Service])],
+  imports: [FilterDateModule, TypeOrmModule.forFeature([Service])],
   controllers: [ServiceController],
-  providers: [ServiceService],
+  providers: [ServiceHomeService],
+  exports: [ServiceHomeService],
 })
 export class ServicesHomeModule {}

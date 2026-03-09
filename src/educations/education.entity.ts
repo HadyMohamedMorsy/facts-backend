@@ -1,42 +1,24 @@
 import { ApplicantEducation } from "src/applicants-education/applicant-education.entity";
-import { ApplicantGraduates } from "src/applicants-graduates/applicant-graduates.entity";
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { EducationAccordion } from "./education-accordion.entity";
 import { EducationDetails } from "./education-details.entity";
 
 @Entity()
-export class Education extends Base {
-  @Column({ length: 256 })
-  title_en: string;
+export class Education extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ length: 256 })
-  title_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title: string;
+    intro_description?: string;
+    short_description?: string;
+    language_id: number;
+  }>;
 
-  @Column({
-    type: "varchar",
-    length: 256,
-    unique: true,
-  })
+  @Column({ type: "varchar", length: 256, unique: true })
   slug: string;
-
-  @OneToMany(() => ApplicantEducation, application => application.education, {
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  applications: ApplicantGraduates[];
-
-  @Column({ type: "text" })
-  intro_description_ar?: string;
-
-  @Column({ type: "text" })
-  intro_description_en?: string;
-
-  @Column({ type: "text" })
-  short_description_en?: string;
-
-  @Column({ type: "text" })
-  short_description_ar?: string;
 
   @Column({ type: "text" })
   featuredImage: string;
@@ -44,15 +26,19 @@ export class Education extends Base {
   @Column({ type: "text" })
   thumbnail: string;
 
-  @OneToMany(() => EducationAccordion, education => education.education, {
+  @OneToMany(() => ApplicantEducation, application => application.education, {
     cascade: true,
-    eager: true,
+    onDelete: "CASCADE",
   })
-  education_accordion?: EducationAccordion[];
+  applications: ApplicantEducation[];
 
-  @OneToMany(() => EducationDetails, education => education.education, {
+  @OneToMany(() => EducationAccordion, accordion => accordion.education, {
     cascade: true,
-    eager: true,
   })
-  education_details?: EducationDetails[];
+  education_accordion: EducationAccordion[];
+
+  @OneToMany(() => EducationDetails, detail => detail.education, {
+    cascade: true,
+  })
+  education_details: EducationDetails[];
 }

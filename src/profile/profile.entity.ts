@@ -1,29 +1,21 @@
-import { Gender } from "src/users/enum/enum";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Gender } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Profile {
+export class Profile extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: "created_by" })
-  created_by: User;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  createdBy: User;
 
-  @Column({ type: "varchar", length: 256 })
-  first_name: string;
+  @Column({ name: "first_name", type: "varchar", length: 256 })
+  firstName: string;
 
-  @Column({ type: "varchar", length: 256 })
-  last_name: string;
+  @Column({ name: "last_name", type: "varchar", length: 256 })
+  lastName: string;
 
   @Column({ type: "varchar", length: 3 })
   age: string;
@@ -38,8 +30,8 @@ export class Profile {
   @Column({ nullable: true })
   country?: string;
 
-  @Column({ type: "varchar", length: 12 })
-  phone_number: string;
+  @Column({ name: "phone_number", type: "varchar", length: 12 })
+  phoneNumber: string;
 
   @Column({ type: "varchar", length: 12 })
   experience: string;
@@ -55,14 +47,4 @@ export class Profile {
 
   @Column({ nullable: true })
   attachment?: string;
-
-  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
-  })
-  updatedAt: Date;
 }

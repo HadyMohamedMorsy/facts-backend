@@ -1,19 +1,18 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { UsersModule } from "src/users/users.module";
+import { FilterDateModule } from "src/shared/filters/filter-date.module";
 import { ConsultancyAccordion } from "./consultancy-accordion.entity";
 import { ConsultancyController } from "./consultancy.controller";
 import { Consultancy } from "./consultancy.entity";
-import { ConsultancyService } from "./providers/consultancy.service";
+import { ConsultancyService } from "./consultancy.service";
 
 @Module({
   imports: [
-    UsersModule,
     FilterDateModule,
     TypeOrmModule.forFeature([Consultancy, ConsultancyAccordion]),
   ],
   controllers: [ConsultancyController],
   providers: [ConsultancyService],
+  exports: [ConsultancyService],
 })
 export class ConsultancyModule {}

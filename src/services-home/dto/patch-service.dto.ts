@@ -1,7 +1,7 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateServiceDto } from "./service.dto";
+import { CreateServiceDto } from "./create-service.dto";
 
 export class PatchServiceDto extends PartialType(CreateServiceDto) {
   @IsInt()

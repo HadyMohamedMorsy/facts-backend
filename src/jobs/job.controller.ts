@@ -1,33 +1,72 @@
-import { Body, Controller, Post, Req, UploadedFiles, UseInterceptors } from "@nestjs/common";
-import { AnyFilesInterceptor } from "@nestjs/platform-express";
-import { Request } from "express";
-import { Auth } from "src/auth/decorators/auth.decorator";
-import { AuthType } from "src/auth/enums/auth-type.enum";
-import { BaseController } from "src/shared/common/base/base.controller";
-import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
-import { HeaderToBodyInterceptor } from "src/shared/common/interceptor/transfrom-request.interceptor";
-import multerOptions from "src/shared/config/multer-options";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Auth } from "src/shared/decorators/auth.decorator";
+import { Roles } from "src/shared/decorators/roles.decorator";
+import { AuthType } from "src/shared/enum/global-enum";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { Job } from "./job.entity";
+import { JobService } from "./job.service";
 import { CreateJobDto } from "./dtos/create-job.dto";
-import { JobService } from "./providers/job.service";
+import { PatchJobDto } from "./dtos/patch-job.dto";
 
 @Controller("job")
-export class JobController extends BaseController<CreateJobDto> {
-  constructor(
-    private readonly jobService: JobService,
-    private readonly TransformRequest: TransformRequest,
-  ) {
-    super(jobService, TransformRequest);
+export class JobController
+  extends BaseController<Job, CreateJobDto, PatchJobDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: JobService) {
+    super(service);
   }
 
-  @Post("/store/front")
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      content: true,
+      type: true,
+      salary: true,
+      featuredImage: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    };
+  }
+
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: { id: true, firstName: true, lastName: true, email: true },
+    };
+  }
+
+  @Post("/store")
   @Auth(AuthType.None)
-  @UseInterceptors(HeaderToBodyInterceptor)
-  @UseInterceptors(AnyFilesInterceptor(multerOptions))
-  public async create(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body() createDto: any,
-    @Req() request: Request,
-  ) {
-    super.create(files, createDto, request);
+  public async create(@Body() create: CreateJobDto, @Req() req: Request) {
+    return await this.service.create(
+      {
+        createdBy: req["createdBy"],
+        content: create.content,
+        type: create.type,
+        salary: create.salary,
+        featuredImage: create.featuredImage,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
+  }
+
+  @Put("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async update(@Body() update: PatchJobDto, @Req() req: Request) {
+    return await this.service.update(
+      {
+        id: update.id,
+        createdBy: req["createdBy"],
+        content: update.content,
+        type: update.type,
+        salary: update.salary,
+        featuredImage: update.featuredImage,
+      },
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 }

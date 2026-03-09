@@ -1,34 +1,18 @@
-import { BaseTime } from "src/shared/common/base/entity/base-time.entity";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Education } from "./education.entity";
 
 @Entity()
-export class EducationAccordion extends BaseTime {
-  @Column({
-    type: "varchar",
-    length: 512,
-    nullable: false,
-  })
-  accordion_title_en: string;
+export class EducationAccordion extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({
-    type: "varchar",
-    length: 512,
-    nullable: false,
-  })
-  accordion_title_ar: string;
-
-  @Column({
-    type: "text",
-    nullable: false,
-  })
-  description_en: string;
-
-  @Column({
-    type: "text",
-    nullable: false,
-  })
-  description_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    accordion_title: string;
+    description: string;
+    language_id: number;
+  }>;
 
   @ManyToOne(() => Education, education => education.education_accordion, {
     onDelete: "CASCADE",

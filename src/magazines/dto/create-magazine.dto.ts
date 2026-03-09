@@ -1,9 +1,8 @@
-/* eslint-disable prettier/prettier */
 import { Type } from "class-transformer";
 import {
   IsArray,
   IsDateString,
-  IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -12,23 +11,31 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Category } from "src/categories/category.entity";
-import { BaseDto } from "src/shared/common/base/base.dto";
-import { MagazineCategoriesDto } from "./magazine-categories.dto";
-export class CreateMagazineDto extends BaseDto {
+import { User } from "src/users/user.entity";
+
+class MagazineContentItem {
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
   @MaxLength(256)
-  title_en: string;
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(1024)
+  short_description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreateMagazineDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MagazineContentItem)
+  content: Array<{ title?: string; short_description?: string; language_id: number }>;
 
   @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
-
-  @IsString()
-  @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message:
       'A slug should be all small letters and uses only "-" and without spaces. For example "my-url"',
@@ -37,25 +44,17 @@ export class CreateMagazineDto extends BaseDto {
   slug: string;
 
   @IsString()
-  @IsOptional()
-  short_description_en?: string;
-
-  @IsString()
-  short_description_ar?: string;
-
-  @IsString()
-  @IsOptional()
   featuredImage: string;
 
+  @IsOptional()
   @IsDateString()
-  publication_date?: Date;
+  publicationDate?: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => MagazineCategoriesDto)
-  selectedCategories: MagazineCategoriesDto[];
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  orderIndex?: number;
 
-  @IsArray()
-  @Type(() => Category)
+  createdBy: User;
   categories: Category[];
 }

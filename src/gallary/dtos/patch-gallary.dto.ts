@@ -1,9 +1,9 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateGallarysDto } from "./create-gallary.dto";
+import { CreateGallaryDto } from "./create-gallary.dto";
 
-export class PatchGallaryDto extends PartialType(CreateGallarysDto) {
+export class PatchGallaryDto extends PartialType(CreateGallaryDto) {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()

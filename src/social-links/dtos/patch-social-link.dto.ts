@@ -1,7 +1,7 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateSocialLinkDto } from "./create-social-link";
+import { CreateSocialLinkDto } from "./create-social-link.dto";
 
 export class PatchSocialLinkDto extends PartialType(CreateSocialLinkDto) {
   @IsInt()

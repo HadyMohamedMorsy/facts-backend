@@ -1,14 +1,28 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, RequestMethod } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilterDateModule } from "src/shared/common/filter/filter-date.module";
-import { UsersModule } from "src/users/users.module";
+import { Tab } from "src/tab/tab.entity";
+import { FilterDateModule } from "src/shared/filters/filter-date.module";
+import { GallaryTabRelationMiddleware } from "./gallary-tab.middleware";
 import { GallaryController } from "./gallary.controller";
 import { Gallary } from "./gallary.entity";
-import { GallaryService } from "./providers/gallary.service";
+import { GallaryService } from "./gallary.service";
 
 @Module({
-  imports: [UsersModule, FilterDateModule, TypeOrmModule.forFeature([Gallary])],
+  imports: [
+    FilterDateModule,
+    TypeOrmModule.forFeature([Gallary, Tab]),
+  ],
   controllers: [GallaryController],
-  providers: [GallaryService],
+  providers: [GallaryService, GallaryTabRelationMiddleware],
+  exports: [GallaryService],
 })
-export class GallaryModule {}
+export class GallaryModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(GallaryTabRelationMiddleware)
+      .forRoutes(
+        { path: "gallary/store", method: RequestMethod.POST },
+        { path: "gallary/update", method: RequestMethod.PUT },
+      );
+  }
+}

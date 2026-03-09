@@ -1,36 +1,40 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamSocial } from "./team-social.entity";
 
-@Entity()
-export class Team extends Base {
-  @Column({ type: "varchar", length: 256 })
-  name_en: string;
+@Entity("team")
+export class Team extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ type: "varchar", length: 256 })
-  name_ar: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
 
-  @Column("text", { array: true })
-  phone_number: string[];
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
 
-  @Column("text")
-  description_en: string;
+  @Column({ name: "order", type: "int", nullable: true, unique: true })
+  orderIndex: number;
 
-  @Column("text")
-  description_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    name?: string;
+    description?: string;
+    position?: string;
+    language_id: number;
+  }>;
 
-  @Column({ type: "text", nullable: true })
-  position_en: string;
-
-  @Column({ type: "text", nullable: true })
-  position_ar: string;
-
-  @OneToMany(() => TeamSocial, social => social.team, {
-    cascade: true,
-    eager: true,
-  })
-  social_links: TeamSocial[];
+  @Column({ name: "phone_number", type: "text", array: true })
+  phoneNumber: string[];
 
   @Column({ type: "varchar", length: 1024 })
   featuredImage: string;
+
+  @OneToMany(() => TeamSocial, social => social.team, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  socialLinks: TeamSocial[];
 }

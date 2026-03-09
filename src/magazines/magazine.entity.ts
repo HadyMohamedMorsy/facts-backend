@@ -1,44 +1,53 @@
 import { Blog } from "src/blogs/blog.entity";
 import { Category } from "src/categories/category.entity";
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
-import { MagazineCategoriesDto } from "./dto/magazine-categories.dto";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { User } from "src/users/user.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity()
-export class Magazine extends Base {
-  @Column({ length: 256 })
-  title_ar: string;
+export class Magazine extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ length: 256 })
-  title_en: string;
+  @ManyToOne(() => User, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "created_by" })
+  createdBy: User;
+
+  @Column({ name: "is_active", type: "boolean", default: true })
+  isActive: boolean;
+
+  @Column({ name: "order", type: "int", nullable: true })
+  orderIndex: number;
+
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title?: string;
+    short_description?: string;
+    language_id: number;
+  }>;
 
   @Column({ length: 512, unique: true })
   slug: string;
 
-  @Column({ length: 1024 })
-  short_description_ar: string;
-
-  @Column({ length: 1024 })
-  short_description_en: string;
-
   @Column({ type: "text" })
   featuredImage: string;
 
-  @Column({ type: "date", nullable: true })
-  publication_date?: string;
+  @Column({ name: "publication_date", type: "date", nullable: true })
+  publicationDate?: string;
 
-  @Column("json", { nullable: true })
-  selectedCategories: MagazineCategoriesDto[];
-
-  @ManyToMany(() => Category, category => category.magazines, {
-    eager: true,
-  })
+  @ManyToMany(() => Category)
   @JoinTable()
   categories: Category[];
 
-  @OneToMany(() => Blog, blog => blog.magazine, {
-    eager: true,
-  })
-  @JoinTable()
+  @OneToMany(() => Blog, blog => blog.magazine)
   blogs: Blog[];
 }

@@ -1,12 +1,19 @@
-import { IsString } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import { Type } from "class-transformer";
+import { IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
 
-export class CreatAdvertisementDto extends BaseDto {
+class AdvertisementContentItem {
   @IsString()
-  company_name_en: string;
+  company_name: string;
 
-  @IsString()
-  company_name_ar: string;
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreatAdvertisementDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AdvertisementContentItem)
+  content: Array<{ company_name: string; language_id: number }>;
 
   @IsString()
   page: string;

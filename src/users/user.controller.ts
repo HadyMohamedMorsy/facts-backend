@@ -1,74 +1,101 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Post,
-  Query,
-  Req,
-  UseInterceptors,
-} from "@nestjs/common";
-import { NoFilesInterceptor } from "@nestjs/platform-express";
-import { Request } from "express";
-import { Auth } from "src/auth/decorators/auth.decorator";
-import { AuthType } from "src/auth/enums/auth-type.enum";
-import { FilterQueryDto } from "src/shared/common/filter/dtos/filter.dto";
-import { TransformRequest } from "src/shared/common/filter/providers/transform-request.entity.provider";
-import { CreateUserDto } from "./dtos/create-user.dto";
-import { PatchUserDto } from "./dtos/patch-user.dto";
-import { UserService } from "./providers/user.service";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { BaseController } from "src/shared/base/base.controller";
+import { Roles } from "src/shared/decorators/roles.decorator";
+import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
+import { UserDto } from "./dtos/create.dto";
+import { PatchUserDto } from "./dtos/patch.dto";
+import { UpdatePasswordDto } from "./dtos/update-password.dto";
+import { User } from "./user.entity";
+import { UserService } from "./user.service";
 
 @Controller("user")
-export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly transform: TransformRequest,
-  ) {}
-
-  @Post("front/index")
-  @HttpCode(200)
-  @Auth(AuthType.None)
-  public front(@Body() filterQueryDto: FilterQueryDto) {
-    return this.userService.front(filterQueryDto);
+export class UserController
+  extends BaseController<User, UserDto, PatchUserDto>
+  implements SelectOptions, RelationOptions
+{
+  constructor(protected readonly service: UserService) {
+    super(service);
   }
 
-  @Get("user")
-  @HttpCode(200)
-  @Auth(AuthType.None)
-  public getUser(@Query("email") email: string) {
-    return this.userService.findOneByEmail(email);
+  public selectOptions(): Record<string, boolean> {
+    return {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      username: true,
+      birthOfDate: true,
+      type: true,
+      role: true,
+      phoneNumber: true,
+      createdAt: true,
+      updatedAt: true,
+    };
   }
 
-  @Post("/index")
-  @HttpCode(200)
-  public index(@Body() filterQueryDto: FilterQueryDto) {
-    return this.userService.findAll(filterQueryDto);
+  public getRelationOptions(): Record<string, any> {
+    return {
+      createdBy: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    };
   }
 
-  @Post("/signup")
-  @UseInterceptors(NoFilesInterceptor())
-  @Auth(AuthType.None)
-  public createUsers(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+  @Post("/store")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public create(@Body() create: UserDto, @Req() req: Request) {
+    return this.service.create(
+      {
+        firstName: create.firstName,
+        lastName: create.lastName,
+        email: create.email,
+        username: create.username,
+        birthOfDate: create.birthOfDate,
+        type: create.type,
+        role: create.role,
+        phoneNumber: create.phoneNumber,
+        password: req["password"],
+        createdBy: req["createdBy"],
+      } as UserDto,
+      this.selectOptions(),
+      this.getRelationOptions(),
+    );
   }
 
-  @Post("/update")
-  @UseInterceptors(NoFilesInterceptor())
-  public async updateUsers(@Body() updateUserDto: PatchUserDto, @Req() request: Request) {
-    const entity = await this.userService.findOneByEmail(updateUserDto.email);
-    const updatedDto = this.transform
-      .initEntity(request, updateUserDto, entity)
-      .updateEntity()
-      .checkDuplicate(["username", "email", "phone_number"])
-      .getUpdatedEntity();
-    if (!updateUserDto.password) delete updatedDto["password"];
-    return this.userService.updateUser(updatedDto);
+  @Put("/update")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async update(@Body() update: PatchUserDto, @Req() req: Request) {
+    const updateData: PatchUserDto = {
+      id: update.id,
+      firstName: update.firstName,
+      lastName: update.lastName,
+      email: update.email,
+      username: update.username,
+      birthOfDate: update.birthOfDate,
+      type: update.type,
+      role: update.role,
+      phoneNumber: update.phoneNumber,
+      createdBy: req["createdBy"],
+    };
+    if (req["password"]) updateData.password = req["password"];
+
+    return await this.service.update(updateData, this.selectOptions(), this.getRelationOptions());
   }
 
-  @Delete("/delete")
-  @UseInterceptors(NoFilesInterceptor())
-  public delete(@Body() id: number) {
-    return this.userService.delete(id);
+  @Put("/change-status")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public changeStatus(@Body() update: { id: number; isActive: boolean }) {
+    return this.service.changeStatus(update.id, update.isActive, "isActive", {
+      id: true,
+      isActive: true,
+    });
+  }
+
+  @Put("/update-password")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto, @Req() req: Request) {
+    return await this.service.updatePassword(updatePasswordDto.id, req["password"]);
   }
 }

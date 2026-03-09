@@ -1,7 +1,7 @@
 import { PartialType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty } from "class-validator";
-import { CreateSubscribeDto } from "./create-subscribe";
+import { CreateSubscribeDto } from "./create-subscribe.dto";
 
 export class PatchSubscribeDto extends PartialType(CreateSubscribeDto) {
   @IsInt()

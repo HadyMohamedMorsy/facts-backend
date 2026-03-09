@@ -1,26 +1,45 @@
 import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import {
+  IsArray,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import { User } from "src/users/user.entity";
 
-export class CreateStatisticsDto extends BaseDto {
+class StatisticsContentItem {
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
   @MaxLength(256)
-  title_en: string;
+  title?: string;
 
-  @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreateStatisticsDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => StatisticsContentItem)
+  content: Array<{ title?: string; language_id: number }>;
 
   @IsInt()
-  @IsNotEmpty()
   @Type(() => Number)
-  value: string;
+  value: number;
 
+  @IsString()
   @MaxLength(1024)
-  @IsNotEmpty()
   icon: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  orderIndex?: number;
+
+  createdBy: User;
 }

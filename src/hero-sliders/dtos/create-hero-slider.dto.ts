@@ -1,25 +1,43 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
-import { BaseDto } from "src/shared/common/base/base.dto";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+import { User } from "src/users/user.entity";
 
-export class CreateHeroSliderDto extends BaseDto {
+class HeroSliderContentItem {
+  @IsOptional()
   @IsString()
   @MinLength(3)
-  @IsNotEmpty()
   @MaxLength(256)
-  title_en: string;
-  @IsString()
-  @MinLength(3)
-  @IsNotEmpty()
-  @MaxLength(256)
-  title_ar: string;
+  title?: string;
 
   @IsOptional()
   @IsString()
-  short_description_en?: string;
-  @IsOptional()
-  @IsString()
-  short_description_ar?: string;
+  short_description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
+export class CreateHeroSliderDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => HeroSliderContentItem)
+  content: Array<{ title?: string; short_description?: string; language_id: number }>;
 
   @IsString()
   featuredImage: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  orderIndex?: number;
+
+  createdBy: User;
 }

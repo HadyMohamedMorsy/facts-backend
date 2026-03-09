@@ -1,23 +1,21 @@
-import { Base } from "src/shared/common/base/entity/base.entity";
-import { Column, Entity } from "typeorm";
+import { BaseMemberEntity } from "src/shared/entities/base.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Banner extends Base {
-  @Column({ length: 256 })
-  title_en: string;
+export class Banner extends BaseMemberEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ length: 256 })
-  title_ar: string;
+  @Column({ name: "content", type: "json", nullable: true })
+  content: Array<{
+    title: string;
+    short_description?: string;
+    language_id: number;
+  }>;
 
   @Column({ length: 256, unique: true })
   page: string;
 
-  @Column({ type: "text", nullable: true })
-  short_description_en?: string;
-
-  @Column({ type: "text", nullable: true })
-  short_description_ar?: string;
-
   @Column({ type: "text" })
-  featuredImage?: string;
+  featuredImage: string;
 }
