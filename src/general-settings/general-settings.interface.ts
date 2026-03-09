@@ -6,6 +6,8 @@ export interface GeneralSettingsContentItem {
   store_name: string;
   maintenance_message: string;
   store_address: string;
+  marker?: string;
+  marker_link?: string;
   meta_title: string;
   meta_favicon: string;
   logo: string;
@@ -23,6 +25,12 @@ export interface GeneralSettingsContentItem {
   meta_og_locale: string;
   meta_og_site_name: string;
   language_id: number;
+  vission?: string;
+  vission_image?: string;
+  mission?: string;
+  mission_image?: string;
+  about_facts?: string;
+  about_facts_image?: string;
 }
 
 export interface GeneralSettings {

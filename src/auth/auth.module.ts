@@ -1,6 +1,5 @@
 import { Global, Module, forwardRef } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { JwtModule } from "@nestjs/jwt";
@@ -19,8 +18,6 @@ import { HashingProvider } from "./providers/hashing.provider";
 import { PasswordResetProvider } from "./providers/password-reset.provider";
 import { RefreshTokensProvider } from "./providers/refresh-tokens.provider";
 import { SignInProvider } from "./providers/sign-in.provider";
-import { FacebookOAuthStrategy } from "./strategies/facebook-oauth.strategy";
-import { GoogleOAuthStrategy } from "./strategies/google-oauth.strategy";
 
 @Global()
 @Module({
@@ -37,15 +34,12 @@ import { GoogleOAuthStrategy } from "./strategies/google-oauth.strategy";
     PasswordResetProvider,
     GoogleOAuthProvider,
     FacebookOAuthProvider,
-    GoogleOAuthStrategy,
-    FacebookOAuthStrategy,
   ],
   imports: [
     forwardRef(() => UserModule),
     forwardRef(() => EmailModule),
     GeneralSettingsModule,
     ConfigModule.forFeature(jwtConfig),
-    PassportModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forFeature([PasswordResetToken]),
   ],

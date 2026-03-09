@@ -24,6 +24,14 @@ export class ContentDto {
 
   @IsString()
   @IsOptional()
+  marker?: string;
+
+  @IsString()
+  @IsOptional()
+  marker_link?: string;
+
+  @IsString()
+  @IsOptional()
   meta_title?: string;
 
   @IsString()
@@ -85,6 +93,30 @@ export class ContentDto {
   @IsString()
   @IsOptional()
   meta_og_site_name?: string;
+
+  @IsString()
+  @IsOptional()
+  vission?: string;
+
+  @IsString()
+  @IsOptional()
+  vission_image?: string;
+
+  @IsString()
+  @IsOptional()
+  mission?: string;
+
+  @IsString()
+  @IsOptional()
+  mission_image?: string;
+
+  @IsString()
+  @IsOptional()
+  about_facts?: string;
+
+  @IsString()
+  @IsOptional()
+  about_facts_image?: string;
 
   @IsNumber()
   @Type(() => Number)

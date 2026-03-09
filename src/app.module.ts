@@ -8,16 +8,38 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { join } from "path";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { AdvertisementModule } from "./advertisements/advertisement.module";
 import { AuthModule } from "./auth/auth.module";
 import jwtConfig from "./auth/config/jwt.config";
 import { AccessTokenGuard } from "./auth/guards/access-token/access-token.guard";
 import { AuthenticationGuard } from "./auth/guards/authentication/authentication.guard";
 import { RolesGuard } from "./auth/guards/roles/roles.guard";
+import { ApplicantEducationModule } from "./applicants-education/applicant-education.module";
+import { ApplicantGraduatesModule } from "./applicants-graduates/applicant-graduates.module";
+import { ApplicantJobModule } from "./applicants-job/applicant-job.module";
+import { BannerModule } from "./banner/banner.module";
 import { BlogModule } from "./blogs/blog.module";
 import { CategoryModule } from "./categories/category.module";
+import { ContactUsModule } from "./contact-us/contact-us.module";
+import { ConsultancyModule } from "./consultancy/consultancy.module";
+import { EducationModule } from "./educations/education.module";
+import { EmployerModule } from "./employer/employer.module";
 import { GallaryModule } from "./gallary/gallary.module";
+import { GeneralSettingsModule } from "./general-settings/settings.module";
+import { GraduatesModule } from "./graduates/graduates.module";
+import { HeroSliderModule } from "./hero-sliders/hero-slider.module";
+import { JobsModule } from "./jobs/jobs.module";
+import { LanguageModule } from "./language/language.module";
+import { MagazinesModule } from "./magazines/magazines.module";
 import { PartnersModule } from "./partners/partners.module";
+import { PatchModule } from "./patch/patch.module";
+import { ProfileModule } from "./profile/profile.module";
+import { ServicesHomeModule } from "./services-home/services-home.module";
+import { SocialLinksModule } from "./social-links/social-links.module";
+import { StatisticsModule } from "./statistics/statistics.module";
+import { SubscribtionModule } from "./subscribtion/subscribtion.module";
 import { TabModule } from "./tab/tab.module";
+import { TeamModule } from "./team/team.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
 import { FilterDateModule } from "./shared/filters/filter-date.module";
@@ -38,14 +60,36 @@ const ENV = process.env.NODE_ENV;
     EmailModule,
     UploadsModule,
     FilterDateModule,
+    LanguageModule,
     UserModule,
     BlogModule,
     ListModule,
+    MagazinesModule,
     PartnersModule,
     CategoryModule,
     TabModule,
     GallaryModule,
     AuthModule,
+    AdvertisementModule,
+    ApplicantEducationModule,
+    ApplicantGraduatesModule,
+    ApplicantJobModule,
+    BannerModule,
+    ContactUsModule,
+    ConsultancyModule,
+    EducationModule,
+    EmployerModule,
+    GeneralSettingsModule,
+    GraduatesModule,
+    HeroSliderModule,
+    JobsModule,
+    PatchModule,
+    ProfileModule,
+    ServicesHomeModule,
+    SocialLinksModule,
+    StatisticsModule,
+    SubscribtionModule,
+    TeamModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "uploads"),
       serveRoot: "/uploads",
