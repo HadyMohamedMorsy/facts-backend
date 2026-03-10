@@ -4,11 +4,11 @@ import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
+import { CreateEducationDto } from "./dtos/create-education.dto";
+import { PatchEducationDto } from "./dtos/patch-education.dto";
 import { EducationAccordion } from "./education-accordion.entity";
 import { EducationDetails } from "./education-details.entity";
 import { Education } from "./education.entity";
-import { CreateEducationDto } from "./dtos/create-education.dto";
-import { PatchEducationDto } from "./dtos/patch-education.dto";
 
 @Injectable()
 export class EducationService
