@@ -6,6 +6,8 @@ const defaultContentItem = (lang: number, name: string, title: string) => ({
   store_name: name,
   maintenance_message: "We are back soon.",
   store_address: "Riyadh, Saudi Arabia",
+  marker: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+  marker_link: "https://maps.google.com/?q=Riyadh,Saudi+Arabia",
   meta_title: title,
   meta_favicon: "https://picsum.photos/seed/fav/32/32",
   logo: "https://picsum.photos/seed/logo/200/60",
@@ -23,6 +25,25 @@ const defaultContentItem = (lang: number, name: string, title: string) => ({
   meta_og_locale: lang === 1 ? "en_US" : "ar_SA",
   meta_og_site_name: name,
   language_id: lang,
+  vission:
+    lang === 1
+      ? "To be the leading partner in providing innovative solutions and consulting services."
+      : "أن نكون الشريك الرائد في تقديم الحلول المبتكرة وخدمات الاستشارات.",
+  vission_image: "https://picsum.photos/seed/vision/800/500",
+  mission:
+    lang === 1
+      ? "To empower our clients with strategic insights and excellence in execution."
+      : "تمكين عملائنا بالرؤى الاستراتيجية والتميز في التنفيذ.",
+  mission_image: "https://picsum.photos/seed/mission/800/500",
+  about_facts:
+    lang === 1
+      ? "Facts is your trusted partner for innovative solutions and consulting services."
+      : "فاكتس شريكك الموثوق للحلول المبتكرة وخدمات الاستشارات.",
+  about_facts_image: "https://picsum.photos/seed/about/800/500",
+  facts_slider_content:
+    lang === 1
+      ? "Welcome to Facts - Your trusted partner for innovative solutions."
+      : "مرحباً بكم في فاكتس - شريككم الموثوق للحلول المبتكرة.",
 });
 
 export async function seedGeneralSettings(dataSource: DataSource): Promise<void> {
@@ -34,20 +55,64 @@ export async function seedGeneralSettings(dataSource: DataSource): Promise<void>
     return;
   }
 
-  const count = await repo.count();
-  if (count >= 1) {
-    console.log("ℹ️  General settings already seeded.");
-    return;
+  const existing = await repo.find({ take: 1 });
+  if (existing.length === 0) {
+    const entity = repo.create({
+      content: [
+        defaultContentItem(1, "Facts", "Facts | Home"),
+        defaultContentItem(2, "فاكتس", "فاكتس | الرئيسية"),
+      ],
+      store_email: "info@facts.com",
+      store_phone: "0501234567",
+      createdBy: users[0],
+    });
+    await repo.save(entity);
+    console.log("✅ Seeded general settings.");
+  } else {
+    // Update existing record if content items lack vission/mission/about_facts
+    const settings = existing[0];
+    const content = JSON.parse(JSON.stringify(settings.content || []));
+    const defaultEn = defaultContentItem(1, "Facts", "Facts | Home");
+    const defaultAr = defaultContentItem(2, "فاكتس", "فاكتس | الرئيسية");
+    const defaults: Record<number, typeof defaultEn> = { 1: defaultEn, 2: defaultAr };
+    let updated = false;
+    for (let i = 0; i < content.length; i++) {
+      const item = content[i];
+      const def = defaults[item.language_id] || defaultEn;
+      const needsUpdate =
+        item.vission == null ||
+        item.vission_image == null ||
+        item.mission == null ||
+        item.mission_image == null ||
+        item.about_facts == null ||
+        item.about_facts_image == null ||
+        item.marker == null ||
+        item.marker_link == null ||
+        item.facts_slider_content == null;
+      if (needsUpdate) {
+        content[i] = {
+          ...item,
+          vission: item.vission ?? def.vission,
+          vission_image: item.vission_image ?? def.vission_image,
+          mission: item.mission ?? def.mission,
+          mission_image: item.mission_image ?? def.mission_image,
+          about_facts: item.about_facts ?? def.about_facts ?? "",
+          about_facts_image: item.about_facts_image ?? def.about_facts_image ?? "",
+          marker: item.marker ?? def.marker ?? "",
+          marker_link: item.marker_link ?? def.marker_link ?? "",
+          facts_slider_content: item.facts_slider_content ?? def.facts_slider_content ?? "",
+        };
+        updated = true;
+      }
+    }
+    if (updated) {
+      settings.content = content;
+      await repo.save(settings);
+      console.log("✅ Updated general settings with vission/mission/about_facts fields.");
+    } else {
+      console.log("ℹ️  General settings already up to date.");
+    }
   }
-
-  const entity = repo.create({
-    content: [defaultContentItem(1, "Facts", "Facts | Home"), defaultContentItem(2, "فاكتس", "فاكتس | الرئيسية")],
-    store_email: "info@facts.com",
-    store_phone: "0501234567",
-    createdBy: users[0],
-  });
-  await repo.save(entity);
-  console.log("✅ Seeded general settings.");
 }
 
 if (require.main === module) {

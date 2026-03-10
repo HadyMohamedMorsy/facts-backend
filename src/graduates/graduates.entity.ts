@@ -1,4 +1,5 @@
 import { ApplicantGraduates } from "src/applicants-graduates/applicant-graduates.entity";
+import { Tab } from "src/tab/tab.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -15,6 +16,10 @@ export class Graduates extends BaseMemberEntity {
   @ManyToOne(() => User, { onDelete: "SET NULL" })
   @JoinColumn({ name: "user_id" })
   user: User;
+
+  @ManyToOne(() => Tab, { onDelete: "SET NULL" })
+  @JoinColumn({ name: "tab_id" })
+  tab?: Tab;
 
   @Column({ name: "is_active", type: "boolean", default: true })
   isActive: boolean;

@@ -1,3 +1,4 @@
+import { SocialPlatform } from "src/shared/enum/social-platform.enum";
 import { User } from "src/users/user.entity";
 import { DataSource } from "typeorm";
 import { SocialLink } from "./social-link.entity";
@@ -18,10 +19,10 @@ export async function seedSocialLinks(dataSource: DataSource): Promise<void> {
   }
 
   const data = [
-    { orderIndex: 1, icon: "facebook", link: "https://facebook.com/facts" },
-    { orderIndex: 2, icon: "twitter", link: "https://twitter.com/facts" },
-    { orderIndex: 3, icon: "instagram", link: "https://instagram.com/facts" },
-    { orderIndex: 4, icon: "linkedin", link: "https://linkedin.com/company/facts" },
+    { orderIndex: 1, icon: SocialPlatform.FACEBOOK, link: "https://facebook.com/facts" },
+    { orderIndex: 2, icon: SocialPlatform.TWITTER, link: "https://twitter.com/facts" },
+    { orderIndex: 3, icon: SocialPlatform.INSTAGRAM, link: "https://instagram.com/facts" },
+    { orderIndex: 4, icon: SocialPlatform.LINKEDIN, link: "https://linkedin.com/company/facts" },
   ].slice(0, 4 - count);
 
   const entities = repo.create(data.map(d => ({ ...d, createdBy: users[0] })));

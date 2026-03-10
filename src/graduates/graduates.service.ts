@@ -4,9 +4,9 @@ import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
 import { Repository } from "typeorm";
-import { Graduates } from "./graduates.entity";
 import { CreateGraduateDto } from "./dtos/create-graduate.dto";
 import { PatchGraduateDto } from "./dtos/patch-graduate.dto";
+import { Graduates } from "./graduates.entity";
 
 @Injectable()
 export class GraduatesService

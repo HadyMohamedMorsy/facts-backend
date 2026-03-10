@@ -8,6 +8,7 @@ import {
   MaxLength,
   ValidateNested,
 } from "class-validator";
+import { Tab } from "src/tab/tab.entity";
 import { User } from "src/users/user.entity";
 
 class GraduateContentItem {
@@ -67,4 +68,5 @@ export class CreateGraduateDto {
 
   createdBy: User;
   user: User;
+  tab: Tab;
 }

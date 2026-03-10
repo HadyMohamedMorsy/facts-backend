@@ -58,7 +58,7 @@ export class EmailConfigService {
           },
         },
         defaults: {
-          from: process.env.EMAIL_FROM || "Azalove <noreply@azalove.com>",
+          from: process.env.EMAIL_FROM || "Facts <noreply@optisystem.com>",
         },
       };
     } catch (error) {
@@ -75,7 +75,7 @@ export class EmailConfigService {
           },
         },
         defaults: {
-          from: process.env.EMAIL_FROM || "Azalove <noreply@azalove.com>",
+          from: process.env.EMAIL_FROM || "Facts <noreply@optisystem.com>",
         },
       };
     }

@@ -21,17 +21,43 @@ export class GallaryService
     super(repository, apiFeaturesService);
   }
 
-  override async findFront(query: { query?: { filters?: Record<string, any>; [k: string]: any } }) {
+  override async findFront(query: {
+    query?: {
+      filters?: Record<string, any>;
+      page?: number;
+      limit?: number;
+      [k: string]: any;
+    };
+  }) {
     const queryParams = query?.query;
-    const tabId = queryParams?.filters?.tabId;
-    let qb = this.repository.createQueryBuilder("e");
-    qb = qb.andWhere("e.isActive = :isActive", { isActive: true });
+    const filters = queryParams?.filters ?? {};
+    const page = Number(queryParams?.page) || 1;
+    const limit = Number(queryParams?.limit) || 10;
+    const tabId = filters.tabId;
+
+    let qb = this.repository
+      .createQueryBuilder("e")
+      .leftJoinAndSelect("e.tab", "tab")
+      .andWhere("e.isActive = :isActive", { isActive: true });
+
     if (tabId != null) {
-      qb = qb.innerJoin("e.tab", "tab").andWhere("tab.id = :tabId", { tabId: +tabId });
+      qb = qb.andWhere("tab.id = :tabId", { tabId: +tabId });
     }
-    const [data, total] = await qb
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (key !== "tabId" && value != null && value !== "") {
+        qb = qb.andWhere(`e.${key} = :${key}`, { [key]: value });
+      }
+    });
+
+    const total = await qb.getCount();
+    const skip = limit > 0 ? (page - 1) * limit : 0;
+    const data = await qb
       .orderBy("e.orderIndex", "ASC")
-      .getManyAndCount();
+      .skip(skip)
+      .take(limit > 0 ? limit : undefined)
+      .getMany();
+
     return { data, totalRecords: total };
   }
 }

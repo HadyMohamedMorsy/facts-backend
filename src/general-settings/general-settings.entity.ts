@@ -38,6 +38,7 @@ export class GeneralSettings extends BaseMemberEntity {
     mission_image?: string;
     about_facts?: string;
     about_facts_image?: string;
+    facts_slider_content?: string;
   }>;
 
   @Column({ nullable: true })

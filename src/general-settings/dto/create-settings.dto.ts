@@ -118,6 +118,10 @@ export class ContentDto {
   @IsOptional()
   about_facts_image?: string;
 
+  @IsString()
+  @IsOptional()
+  facts_slider_content?: string;
+
   @IsNumber()
   @Type(() => Number)
   language_id: number;

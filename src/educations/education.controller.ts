@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Put } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
@@ -76,5 +76,37 @@ export class EducationController
   @Auth(AuthType.None)
   async findBySlug(@Param("slug") slug: string) {
     return this.service.findBySlug(slug);
+  }
+
+  @Post("front/index")
+  @HttpCode(200)
+  @Auth(AuthType.None)
+  async frontIndex(
+    @Body()
+    body: { query?: any } | { start?: number; length?: number; [k: string]: any },
+  ) {
+    // Supports DataView-style {start,length,...} payloads and forces pagination metadata
+    if (body && typeof body === "object" && "query" in body) {
+      const q = (body as any).query ?? {};
+      return this.service.findFront({ query: { ...q, isPagination: "true" } });
+    }
+
+    const start = Number((body as any).start ?? 0);
+    const length = Number((body as any).length ?? 10);
+    const page = Number.isFinite(length) && length > 0 ? Math.floor(start / length) + 1 : 1;
+
+    return this.service.findFront({
+      query: {
+        filters: (body as any).filters,
+        select: (body as any).select,
+        relations: (body as any).relations,
+        sort: (body as any).sort?.field
+          ? { field: (body as any).sort.field, order: (body as any).sort.order ?? "ASC" }
+          : undefined,
+        page,
+        limit: Number.isFinite(length) ? length : 10,
+        isPagination: "true",
+      },
+    });
   }
 }
