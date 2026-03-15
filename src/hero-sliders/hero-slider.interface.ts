@@ -11,7 +11,9 @@ export interface HeroSliderContentItem {
 export interface HeroSlider {
   id: number;
   content: HeroSliderContentItem[];
-  featuredImage: string;
+  featuredImage?: string;
+  video?: string;
+  type?: "image" | "video";
   orderIndex?: number;
   isActive: boolean;
   createdAt?: string;
@@ -21,7 +23,9 @@ export interface HeroSlider {
 
 export interface CreateHeroSliderDto {
   content: HeroSliderContentItem[];
-  featuredImage: string;
+  featuredImage?: string;
+  video?: string;
+  type?: "image" | "video";
   orderIndex?: number;
 }
 

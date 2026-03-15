@@ -18,10 +18,10 @@ export async function seedStatistics(dataSource: DataSource): Promise<void> {
   }
 
   const data = [
-    { orderIndex: 1, value: 150, icon: "users", content: [{ title: "Happy Clients", language_id: 1 }, { title: "عميل سعيد", language_id: 2 }] },
-    { orderIndex: 2, value: 50, icon: "projects", content: [{ title: "Projects Done", language_id: 1 }, { title: "مشروع منجز", language_id: 2 }] },
-    { orderIndex: 3, value: 10, icon: "years", content: [{ title: "Years Experience", language_id: 1 }, { title: "سنوات خبرة", language_id: 2 }] },
-    { orderIndex: 4, value: 25, icon: "awards", content: [{ title: "Awards Won", language_id: 1 }, { title: "جائزة", language_id: 2 }] },
+    { orderIndex: 1, value: 150, content: [{ title: "Happy Clients", language_id: 1 }, { title: "عميل سعيد", language_id: 2 }] },
+    { orderIndex: 2, value: 50, content: [{ title: "Projects Done", language_id: 1 }, { title: "مشروع منجز", language_id: 2 }] },
+    { orderIndex: 3, value: 10, content: [{ title: "Years Experience", language_id: 1 }, { title: "سنوات خبرة", language_id: 2 }] },
+    { orderIndex: 4, value: 25, content: [{ title: "Awards Won", language_id: 1 }, { title: "جائزة", language_id: 2 }] },
   ].slice(0, 4 - count);
 
   const entities = repo.create(data.map(d => ({ ...d, createdBy: users[0] })));

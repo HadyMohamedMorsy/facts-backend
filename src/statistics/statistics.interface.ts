@@ -11,7 +11,6 @@ export interface Statistics {
   id: number;
   content: StatisticsContentItem[];
   value: number;
-  icon: string;
   orderIndex?: number;
   isActive: boolean;
   createdAt?: string;
@@ -22,7 +21,6 @@ export interface Statistics {
 export interface CreateStatisticsDto {
   content: StatisticsContentItem[];
   value: number;
-  icon: string;
   orderIndex?: number;
 }
 

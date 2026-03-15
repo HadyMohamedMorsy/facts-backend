@@ -21,9 +21,9 @@ export async function seedHeroSliders(dataSource: DataSource): Promise<void> {
   }
 
   const data = [
-    { orderIndex: 1, content: [{ title: "Welcome to Facts", short_description: "Your trusted partner", language_id: 1 }, { title: "مرحباً بكم في فاكتس", short_description: "شريككم الموثوق", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 10) },
-    { orderIndex: 2, content: [{ title: "Quality Services", short_description: "We deliver excellence", language_id: 1 }, { title: "خدمات متميزة", short_description: "نقدم التميز", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 11) },
-    { orderIndex: 3, content: [{ title: "Get Started Today", short_description: "Contact us now", language_id: 1 }, { title: "ابدأ اليوم", short_description: "تواصل معنا", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 12) },
+    { orderIndex: 1, content: [{ title: "Welcome to Facts", short_description: "Your trusted partner", language_id: 1 }, { title: "مرحباً بكم في فاكتس", short_description: "شريككم الموثوق", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 10), video: null, type: "image" as const },
+    { orderIndex: 2, content: [{ title: "Quality Services", short_description: "We deliver excellence", language_id: 1 }, { title: "خدمات متميزة", short_description: "نقدم التميز", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 11), video: null, type: "image" as const },
+    { orderIndex: 3, content: [{ title: "Get Started Today", short_description: "Contact us now", language_id: 1 }, { title: "ابدأ اليوم", short_description: "تواصل معنا", language_id: 2 }], featuredImage: getRandomImage(1200, 500, 12), video: null, type: "image" as const },
   ].slice(0, 3 - count);
 
   const entities = repo.create(data.map(d => ({ ...d, createdBy: users[0] })));

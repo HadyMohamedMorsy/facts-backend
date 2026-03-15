@@ -32,10 +32,6 @@ export class CreateStatisticsDto {
   @Type(() => Number)
   value: number;
 
-  @IsString()
-  @MaxLength(1024)
-  icon: string;
-
   @IsOptional()
   @IsNumber()
   @Type(() => Number)

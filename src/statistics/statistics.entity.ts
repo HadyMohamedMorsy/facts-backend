@@ -25,7 +25,4 @@ export class Statistics extends BaseMemberEntity {
 
   @Column({ type: "int" })
   value: number;
-
-  @Column({ type: "varchar", length: 1024 })
-  icon: string;
 }

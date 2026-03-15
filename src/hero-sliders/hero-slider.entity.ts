@@ -24,6 +24,12 @@ export class HeroSlider extends BaseMemberEntity {
     language_id: number;
   }>;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", nullable: true })
   featuredImage: string;
+
+  @Column({ type: "text", nullable: true })
+  video: string;
+
+  @Column({ type: "varchar", length: 20, default: "image" })
+  type: "image" | "video";
 }

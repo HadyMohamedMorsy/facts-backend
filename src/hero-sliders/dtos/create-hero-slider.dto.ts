@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import {
   IsArray,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString,
@@ -31,8 +32,18 @@ export class CreateHeroSliderDto {
   @Type(() => HeroSliderContentItem)
   content: Array<{ title?: string; short_description?: string; language_id: number }>;
 
+  @IsOptional()
   @IsString()
-  featuredImage: string;
+  featuredImage?: string;
+
+  @IsOptional()
+  @IsString()
+  video?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(["image", "video"])
+  type?: "image" | "video";
 
   @IsOptional()
   @IsNumber()
