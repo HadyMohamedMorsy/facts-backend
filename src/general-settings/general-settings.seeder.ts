@@ -44,6 +44,10 @@ const defaultContentItem = (lang: number, name: string, title: string) => ({
     lang === 1
       ? "Welcome to Facts - Your trusted partner for innovative solutions."
       : "مرحباً بكم في فاكتس - شريككم الموثوق للحلول المبتكرة.",
+  statistics_eyebrow: "",
+  statistics_title: "",
+  statistics_subtitle: "",
+  statistics_kicker: "",
 });
 
 export async function seedGeneralSettings(dataSource: DataSource): Promise<void> {
@@ -88,7 +92,11 @@ export async function seedGeneralSettings(dataSource: DataSource): Promise<void>
         item.about_facts_image == null ||
         item.marker == null ||
         item.marker_link == null ||
-        item.facts_slider_content == null;
+        item.facts_slider_content == null ||
+        item.statistics_eyebrow == null ||
+        item.statistics_title == null ||
+        item.statistics_subtitle == null ||
+        item.statistics_kicker == null;
       if (needsUpdate) {
         content[i] = {
           ...item,
@@ -101,6 +109,10 @@ export async function seedGeneralSettings(dataSource: DataSource): Promise<void>
           marker: item.marker ?? def.marker ?? "",
           marker_link: item.marker_link ?? def.marker_link ?? "",
           facts_slider_content: item.facts_slider_content ?? def.facts_slider_content ?? "",
+          statistics_eyebrow: item.statistics_eyebrow ?? def.statistics_eyebrow ?? "",
+          statistics_title: item.statistics_title ?? def.statistics_title ?? "",
+          statistics_subtitle: item.statistics_subtitle ?? def.statistics_subtitle ?? "",
+          statistics_kicker: item.statistics_kicker ?? def.statistics_kicker ?? "",
         };
         updated = true;
       }

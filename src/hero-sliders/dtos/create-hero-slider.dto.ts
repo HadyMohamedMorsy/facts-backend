@@ -22,6 +22,37 @@ class HeroSliderContentItem {
   @IsString()
   short_description?: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(512)
+  kicker?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(512)
+  eyebrow?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(512)
+  accent?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(1024)
+  standards?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(256)
+  cta_label?: string;
+
+  /** Route path without locale prefix, e.g. /educations */
+  @IsOptional()
+  @IsString()
+  @MaxLength(512)
+  cta_link?: string;
+
   @IsNumber()
   language_id: number;
 }
@@ -30,7 +61,7 @@ export class CreateHeroSliderDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => HeroSliderContentItem)
-  content: Array<{ title?: string; short_description?: string; language_id: number }>;
+  content: HeroSliderContentItem[];
 
   @IsOptional()
   @IsString()

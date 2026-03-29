@@ -5,6 +5,12 @@
 export interface HeroSliderContentItem {
   title?: string;
   short_description?: string;
+  kicker?: string;
+  eyebrow?: string;
+  accent?: string;
+  standards?: string;
+  cta_label?: string;
+  cta_link?: string;
   language_id: number;
 }
 

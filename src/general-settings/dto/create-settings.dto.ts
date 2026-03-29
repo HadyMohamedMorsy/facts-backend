@@ -122,6 +122,22 @@ export class ContentDto {
   @IsOptional()
   facts_slider_content?: string;
 
+  @IsString()
+  @IsOptional()
+  statistics_eyebrow?: string;
+
+  @IsString()
+  @IsOptional()
+  statistics_title?: string;
+
+  @IsString()
+  @IsOptional()
+  statistics_subtitle?: string;
+
+  @IsString()
+  @IsOptional()
+  statistics_kicker?: string;
+
   @IsNumber()
   @Type(() => Number)
   language_id: number;

@@ -39,6 +39,10 @@ export class GeneralSettings extends BaseMemberEntity {
     about_facts?: string;
     about_facts_image?: string;
     facts_slider_content?: string;
+    statistics_eyebrow?: string;
+    statistics_title?: string;
+    statistics_subtitle?: string;
+    statistics_kicker?: string;
   }>;
 
   @Column({ nullable: true })
