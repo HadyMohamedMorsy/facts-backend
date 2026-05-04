@@ -1,10 +1,9 @@
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
 import { User } from "src/users/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { TeamSocial } from "./team-social.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("team")
-export class Team extends BaseMemberEntity {
+@Entity("testimonial")
+export class Testimonial extends BaseMemberEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,22 +15,19 @@ export class Team extends BaseMemberEntity {
   isActive: boolean;
 
   @Column({ name: "order", type: "int", nullable: true, unique: true })
-  orderIndex: number;
+  orderIndex?: number;
+
+  @Column({ name: "rating", type: "int", default: 5 })
+  rating: number;
 
   @Column({ name: "content", type: "json", nullable: true })
   content: Array<{
     name?: string;
-    description?: string;
     position?: string;
+    quote?: string;
     language_id: number;
   }>;
 
   @Column({ type: "varchar", length: 1024, nullable: true, default: "" })
   featuredImage: string;
-
-  @OneToMany(() => TeamSocial, social => social.team, {
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  socialLinks: TeamSocial[];
 }

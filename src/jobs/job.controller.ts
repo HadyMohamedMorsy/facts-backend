@@ -2,7 +2,7 @@ import { Body, Controller, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Auth } from "src/shared/decorators/auth.decorator";
 import { Roles } from "src/shared/decorators/roles.decorator";
-import { AuthType } from "src/shared/enum/global-enum";
+import { AuthType, LOCATION } from "src/shared/enum/global-enum";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
 import { Job } from "./job.entity";
 import { JobService } from "./job.service";
@@ -23,6 +23,7 @@ export class JobController
       id: true,
       content: true,
       type: true,
+      location: true,
       salary: true,
       featuredImage: true,
       isActive: true,
@@ -45,6 +46,7 @@ export class JobController
         createdBy: req["createdBy"],
         content: create.content,
         type: create.type,
+        location: create.location ?? LOCATION.CAIRO,
         salary: create.salary,
         featuredImage: create.featuredImage,
       },
@@ -62,6 +64,7 @@ export class JobController
         createdBy: req["createdBy"],
         content: update.content,
         type: update.type,
+        location: update.location,
         salary: update.salary,
         featuredImage: update.featuredImage,
       },

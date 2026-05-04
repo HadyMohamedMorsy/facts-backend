@@ -21,6 +21,23 @@ export class GallaryService
     super(repository, apiFeaturesService);
   }
 
+  public override async findAll(filterData: any) {
+    const queryBuilder = this.apiService
+      .setRepository(this.repository.target)
+      .buildQuery(filterData);
+
+    this.queryRelationIndex(queryBuilder, filterData);
+
+    queryBuilder
+      .leftJoin("e.tab", "tab")
+      .addSelect(["tab.id", "tab.content", "tab.slug", "tab.orderIndex"]);
+
+    const filteredRecord = await queryBuilder.getMany();
+    const totalRecords = await queryBuilder.getCount();
+
+    return this.response(filteredRecord, totalRecords);
+  }
+
   override async findFront(query: {
     query?: {
       filters?: Record<string, any>;
@@ -50,14 +67,26 @@ export class GallaryService
       }
     });
 
+    qb = qb.orderBy("e.orderIndex", "ASC");
+
+    // Gallery page consumes files grouped by selected tab.
+    // Returning file-level pagination avoids losing records when multiple
+    // gallery rows exist under the same tab.
+    if (tabId != null) {
+      const rows = await qb.getMany();
+      const allFiles = rows.flatMap(row => row.files ?? []).filter(Boolean);
+      const totalFiles = allFiles.length;
+      const skip = limit > 0 ? (page - 1) * limit : 0;
+      const paginatedFiles = limit > 0 ? allFiles.slice(skip, skip + limit) : allFiles;
+      return { data: paginatedFiles, totalRecords: totalFiles };
+    }
+
     const total = await qb.getCount();
     const skip = limit > 0 ? (page - 1) * limit : 0;
     const data = await qb
-      .orderBy("e.orderIndex", "ASC")
       .skip(skip)
       .take(limit > 0 ? limit : undefined)
       .getMany();
-
     return { data, totalRecords: total };
   }
 }

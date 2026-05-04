@@ -123,7 +123,9 @@ export class GraduatesController
         select: (body as any).select,
         relations: {
           ...(body as any).relations,
-          ...this.getRelationOptions(),
+          user: {
+            select: ["id", "username", "firstName", "lastName", "email"],
+          },
         },
         sort: (body as any).sort?.field
           ? { field: (body as any).sort.field, order: (body as any).sort.order ?? "ASC" }

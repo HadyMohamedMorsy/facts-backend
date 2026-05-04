@@ -1,6 +1,6 @@
 import { ApplicantJob } from "src/applicants-job/applicant-job.entity";
 import { BaseMemberEntity } from "src/shared/entities/base.entity";
-import { TYPE } from "src/shared/enum/global-enum";
+import { LOCATION, TYPE } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -26,6 +26,9 @@ export class Job extends BaseMemberEntity {
 
   @Column({ type: "enum", enum: TYPE })
   type: TYPE;
+
+  @Column({ type: "enum", enum: LOCATION, default: LOCATION.CAIRO })
+  location: LOCATION;
 
   @Column({ name: "sallary", type: "numeric" })
   salary: number;

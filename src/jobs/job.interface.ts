@@ -3,6 +3,7 @@
  */
 
 export type JobType = "part_time" | "full_time";
+export type JobLocation = "cairo" | "giza";
 
 export interface JobContentItem {
   title?: string;
@@ -15,6 +16,7 @@ export interface Job {
   id: number;
   content: JobContentItem[];
   type: JobType;
+  location: JobLocation;
   salary: number;
   featuredImage: string;
   isActive: boolean;
@@ -26,6 +28,7 @@ export interface Job {
 export interface CreateJobDto {
   content: JobContentItem[];
   type: JobType;
+  location: JobLocation;
   salary: number;
   featuredImage: string;
 }

@@ -138,6 +138,138 @@ export class ContentDto {
   @IsOptional()
   statistics_kicker?: string;
 
+  @IsString()
+  @IsOptional()
+  team_intro?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_1_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_1_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_1_body?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_1_image?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_2_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_2_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_2_body?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_2_image?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_3_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_3_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_3_body?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_3_image?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_4_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_4_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_4_body?: string;
+
+  @IsString()
+  @IsOptional()
+  about_feat_4_image?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_1_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_1_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_1_body?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_1_image?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_2_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_2_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_2_body?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_2_image?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_3_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_3_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_3_body?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_3_image?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_4_l1?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_4_l2?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_4_body?: string;
+
+  @IsString()
+  @IsOptional()
+  management_feat_4_image?: string;
+
   @IsNumber()
   @Type(() => Number)
   language_id: number;

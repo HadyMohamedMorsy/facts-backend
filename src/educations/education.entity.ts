@@ -26,6 +26,21 @@ export class Education extends BaseMemberEntity {
   @Column({ type: "text" })
   thumbnail: string;
 
+  @Column({ type: "text", nullable: true })
+  courseFile?: string;
+
+  @Column({ type: "text", nullable: true })
+  advisorContactLink?: string;
+
+  @Column({ name: "education_topics", type: "json", nullable: true })
+  education_topics?: Array<{
+    content: Array<{
+      topic_title: string;
+      description?: string;
+      language_id: number;
+    }>;
+  }>;
+
   @OneToMany(() => ApplicantEducation, application => application.education, {
     cascade: true,
     onDelete: "CASCADE",

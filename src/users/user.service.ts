@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LanguageService } from "src/language/language.service";
+import { Role, UserStatus } from "src/shared/enum/global-enum";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
@@ -80,5 +81,28 @@ export class UserService
 
   public async findByFacebookId(facebookId: string): Promise<User | null> {
     return await this.repository.findOne({ where: { facebookId } });
+  }
+
+  public async listCustomers() {
+    return this.repository
+      .createQueryBuilder("u")
+      .select([
+        "u.id",
+        "u.firstName",
+        "u.lastName",
+        "u.username",
+        "u.email",
+        "u.phoneNumber",
+        "u.avatar",
+        "u.birthOfDate",
+        "u.role",
+        "u.type",
+        "u.isActive",
+      ])
+      .where("u.type = :type", { type: UserStatus.CUSTOMER })
+      .andWhere("u.role = :role", { role: Role.CUSTOMER })
+      .andWhere("u.isActive = :isActive", { isActive: true })
+      .orderBy("u.createdAt", "DESC")
+      .getMany();
   }
 }

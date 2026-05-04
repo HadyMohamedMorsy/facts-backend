@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { ConsultancyAccordion } from "./consultancy-accordion.entity";
 import { Consultancy } from "./consultancy.entity";
 import { CreateConsultancyDto } from "./dtos/create-consultancy.dto";
@@ -22,6 +22,18 @@ export class ConsultancyService
     private readonly accordionRepository: Repository<ConsultancyAccordion>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  protected override queryRelationIndex(
+    queryBuilder?: SelectQueryBuilder<Consultancy>,
+    filteredRecord?: any,
+  ) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
+    if (!queryBuilder) return;
+
+    queryBuilder
+      .leftJoin("e.consultancy_accordion", "consultancyAccordion")
+      .addSelect(["consultancyAccordion.id", "consultancyAccordion.content"]);
   }
 
   override async create(

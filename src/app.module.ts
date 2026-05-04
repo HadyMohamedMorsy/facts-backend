@@ -40,6 +40,7 @@ import { StatisticsModule } from "./statistics/statistics.module";
 import { SubscribtionModule } from "./subscribtion/subscribtion.module";
 import { TabModule } from "./tab/tab.module";
 import { TeamModule } from "./team/team.module";
+import { TestimonialModule } from "./testimonials/testimonial.module";
 import appConfig from "./shared/config/app.config";
 import databaseConfig from "./shared/config/database.config";
 import { FilterDateModule } from "./shared/filters/filter-date.module";
@@ -90,6 +91,7 @@ const ENV = process.env.NODE_ENV;
     StatisticsModule,
     SubscribtionModule,
     TeamModule,
+    TestimonialModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "uploads"),
       serveRoot: "/uploads",

@@ -2,17 +2,17 @@ import { Body, Controller, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
-import { Tab } from "./tab.entity";
-import { TabService } from "./tab.service";
-import { CreateTabDto } from "./dtos/create-tab.dto";
-import { PatchTabDto } from "./dtos/patch-tab.dto";
+import { CreateTestimonialDto } from "./dtos/create-testimonial.dto";
+import { PatchTestimonialDto } from "./dtos/patch-testimonial.dto";
+import { Testimonial } from "./testimonial.entity";
+import { TestimonialService } from "./testimonial.service";
 
-@Controller("tab")
-export class TabController
-  extends BaseController<Tab, CreateTabDto, PatchTabDto>
+@Controller("testimonial")
+export class TestimonialController
+  extends BaseController<Testimonial, CreateTestimonialDto, PatchTestimonialDto>
   implements SelectOptions, RelationOptions
 {
-  constructor(protected readonly service: TabService) {
+  constructor(protected readonly service: TestimonialService) {
     super(service);
   }
 
@@ -20,7 +20,8 @@ export class TabController
     return {
       id: true,
       content: true,
-      slug: true,
+      featuredImage: true,
+      rating: true,
       orderIndex: true,
       isActive: true,
       createdAt: true,
@@ -36,15 +37,16 @@ export class TabController
 
   @Post("/store")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async create(@Body() create: CreateTabDto, @Req() req: Request) {
+  public async create(@Body() create: CreateTestimonialDto, @Req() req: Request) {
     return await this.service.create(
       {
         createdBy: req["createdBy"],
         content: create.content,
-        slug: create.slug,
+        featuredImage: create.featuredImage,
+        rating: create.rating,
         orderIndex: create.orderIndex,
-        isActive: create.isActive ?? true,
-      },
+        isActive: create.isActive,
+      } as any,
       this.selectOptions(),
       this.getRelationOptions(),
     );
@@ -52,16 +54,17 @@ export class TabController
 
   @Put("/update")
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
-  public async update(@Body() update: PatchTabDto, @Req() req: Request) {
+  public async update(@Body() update: PatchTestimonialDto, @Req() req: Request) {
     return await this.service.update(
       {
         id: update.id,
         createdBy: req["createdBy"],
         content: update.content,
-        slug: update.slug,
+        featuredImage: update.featuredImage,
+        rating: update.rating,
         orderIndex: update.orderIndex,
         isActive: update.isActive,
-      },
+      } as any,
       this.selectOptions(),
       this.getRelationOptions(),
     );

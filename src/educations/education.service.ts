@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { CreateEducationDto } from "./dtos/create-education.dto";
 import { PatchEducationDto } from "./dtos/patch-education.dto";
 import { EducationAccordion } from "./education-accordion.entity";
@@ -27,6 +27,20 @@ export class EducationService
     super(repository, apiFeaturesService);
   }
 
+  protected override queryRelationIndex(
+    queryBuilder?: SelectQueryBuilder<Education>,
+    filteredRecord?: any,
+  ) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
+    if (!queryBuilder) return;
+
+    queryBuilder
+      .leftJoin("e.education_accordion", "educationAccordion")
+      .addSelect(["educationAccordion.id", "educationAccordion.content"])
+      .leftJoin("e.education_details", "educationDetails")
+      .addSelect(["educationDetails.id", "educationDetails.content"]);
+  }
+
   override async create(
     createDto: CreateEducationDto,
     selectOptions?: Record<string, boolean>,
@@ -39,6 +53,9 @@ export class EducationService
         slug: educationData.slug,
         featuredImage: educationData.featuredImage,
         thumbnail: educationData.thumbnail,
+        courseFile: educationData.courseFile,
+        advisorContactLink: educationData.advisorContactLink,
+        education_topics: educationData.education_topics,
       }),
     );
     if (education_accordion?.length) {

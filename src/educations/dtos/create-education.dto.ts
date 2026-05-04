@@ -51,6 +51,19 @@ class DetailsContentItem {
   language_id: number;
 }
 
+class TopicContentItem {
+  @IsString()
+  @MaxLength(256)
+  topic_title: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsNumber()
+  language_id: number;
+}
+
 class EducationAccordionItemDto {
   @IsArray()
   @ValidateNested({ each: true })
@@ -63,6 +76,13 @@ class EducationDetailsItemDto {
   @ValidateNested({ each: true })
   @Type(() => DetailsContentItem)
   content: Array<{ name: string; value: string; language_id: number }>;
+}
+
+class EducationTopicItemDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TopicContentItem)
+  content: Array<{ topic_title: string; description?: string; language_id: number }>;
 }
 
 export class CreateEducationDto {
@@ -89,6 +109,22 @@ export class CreateEducationDto {
 
   @IsString()
   thumbnail: string;
+
+  @IsOptional()
+  @IsString()
+  courseFile?: string;
+
+  @IsOptional()
+  @IsString()
+  advisorContactLink?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EducationTopicItemDto)
+  education_topics?: Array<{
+    content: Array<{ topic_title: string; description?: string; language_id: number }>;
+  }>;
 
   @IsArray()
   @ValidateNested({ each: true })

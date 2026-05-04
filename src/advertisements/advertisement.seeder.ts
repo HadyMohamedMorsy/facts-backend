@@ -4,7 +4,7 @@ import { Advertisement } from "./advertisement.entity";
 const getRandomImage = (w = 600, h = 400, seed?: number) =>
   `https://picsum.photos/seed/${seed ?? Math.floor(Math.random() * 1000) + 1}/${w}/${h}`;
 
-type SeedAdvertisement = Pick<Advertisement, "page" | "featuredImage" | "content">;
+type SeedAdvertisement = Pick<Advertisement, "page" | "featuredImage" | "content" | "link">;
 
 export async function seedAdvertisements(dataSource: DataSource): Promise<void> {
   const repo = dataSource.getRepository(Advertisement);
@@ -16,6 +16,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
   const data: SeedAdvertisement[] = [
     {
       page: "Job",
+      link: "https://example.com/jobs",
       featuredImage: getRandomImage(900, 600, 201),
       content: [
         { company_name: "ACME Hiring", language_id: 1 },
@@ -24,6 +25,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "Job",
+      link: "https://example.com/careers",
       featuredImage: getRandomImage(900, 600, 202),
       content: [
         { company_name: "CareerBoost", language_id: 1 },
@@ -32,6 +34,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "Magazine",
+      link: "https://example.com/magazine",
       featuredImage: getRandomImage(900, 600, 211),
       content: [
         { company_name: "Readers Club", language_id: 1 },
@@ -40,6 +43,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "Magazine",
+      link: "https://example.com/insights",
       featuredImage: getRandomImage(900, 600, 212),
       content: [
         { company_name: "Insight Media", language_id: 1 },
@@ -48,6 +52,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "ConsultancyDetails",
+      link: "https://example.com/consultancy",
       featuredImage: getRandomImage(900, 600, 221),
       content: [
         { company_name: "ProConsult", language_id: 1 },
@@ -56,6 +61,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "EducationDetails",
+      link: "https://example.com/education",
       featuredImage: getRandomImage(900, 600, 231),
       content: [
         { company_name: "LearnHub", language_id: 1 },
@@ -64,6 +70,7 @@ export async function seedAdvertisements(dataSource: DataSource): Promise<void> 
     },
     {
       page: "BlogDetails",
+      link: "https://example.com/blog",
       featuredImage: getRandomImage(900, 600, 241),
       content: [
         { company_name: "Tech Digest", language_id: 1 },

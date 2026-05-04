@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BaseService } from "src/shared/base/base";
 import { APIFeaturesService } from "src/shared/filters/filter.service";
 import { ICrudService } from "src/shared/interfaces/crud-service.interface";
-import { Repository } from "typeorm";
+import { Repository, SelectQueryBuilder } from "typeorm";
 import { ApplicantEducation } from "./applicant-education.entity";
 import { CreateApplicantEducationDto } from "./dtos/create-applicant-education.dto";
 import { PatchApplicantEducationDto } from "./dtos/patch-applicant-education.dto";
@@ -28,5 +28,17 @@ export class ApplicantEducationService
     repository: Repository<ApplicantEducation>,
   ) {
     super(repository, apiFeaturesService);
+  }
+
+  protected override queryRelationIndex(
+    queryBuilder?: SelectQueryBuilder<ApplicantEducation>,
+    filteredRecord?: any,
+  ) {
+    super.queryRelationIndex(queryBuilder, filteredRecord);
+    if (!queryBuilder) return;
+
+    queryBuilder
+      .leftJoin("e.education", "education")
+      .addSelect(["education.id", "education.content", "education.slug"]);
   }
 }

@@ -13,6 +13,7 @@ export interface Advertisement {
   id: number;
   content: AdvertisementContentItem[];
   page: string;
+  link?: string;
   featuredImage: string;
   createdAt?: string;
   updatedAt?: string;
@@ -22,6 +23,7 @@ export interface Advertisement {
 export interface CreateAdvertisementDto {
   content: AdvertisementContentItem[];
   page: string;
+  link?: string;
   featuredImage: string;
 }
 

@@ -9,7 +9,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { TYPE } from "src/shared/enum/global-enum";
+import { LOCATION, TYPE } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 
 class JobContentItem {
@@ -45,6 +45,10 @@ export class CreateJobDto {
 
   @IsEnum(TYPE, { message: "Type must be either parttime or fulltime" })
   type: TYPE;
+
+  @IsOptional()
+  @IsEnum(LOCATION, { message: "Location must be either cairo or giza" })
+  location?: LOCATION;
 
   @IsNumber()
   @Type(() => Number)

@@ -20,6 +20,11 @@ export enum TYPE {
   FULLTIME = "full_time",
 }
 
+export enum LOCATION {
+  CAIRO = "cairo",
+  GIZA = "giza",
+}
+
 export enum Role {
   CEO = "CEO",
   ANALYST = "ANALYST",

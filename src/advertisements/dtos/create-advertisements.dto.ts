@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
 
 class AdvertisementContentItem {
   @IsString()
@@ -17,6 +17,11 @@ export class CreatAdvertisementDto {
 
   @IsString()
   page: string;
+
+  @IsOptional()
+  @IsString()
+  @IsUrl({ require_tld: false }, { message: "link must be a valid URL" })
+  link?: string;
 
   @IsString()
   featuredImage: string;

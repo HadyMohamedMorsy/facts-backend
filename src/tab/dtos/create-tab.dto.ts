@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import {
   IsArray,
+  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -40,6 +41,10 @@ export class CreateTabDto {
   @IsNumber()
   @Type(() => Number)
   orderIndex?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 
   createdBy: User;
 }

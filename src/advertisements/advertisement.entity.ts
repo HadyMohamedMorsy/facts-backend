@@ -15,6 +15,9 @@ export class Advertisement extends BaseMemberEntity {
   @Column({ length: 256 })
   page: string;
 
+  @Column({ type: "varchar", length: 1024, nullable: true })
+  link?: string;
+
   @Column({ type: "text" })
   featuredImage: string;
 }

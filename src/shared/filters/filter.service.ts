@@ -40,7 +40,8 @@ export class APIFeaturesService {
             typeof field.name === "string" &&
             !field.name.includes(".") &&
             field.name !== "id" &&
-            field.name !== "created_at",
+            field.name !== "created_at" &&
+            field.name !== "createdAt",
         )
         .map(field => `e.${field.name}`);
     };
@@ -48,7 +49,7 @@ export class APIFeaturesService {
     if (filterData.columns && Array.isArray(filterData.columns)) {
       const validColumns = filterValidColumns(filterData.columns);
       if (validColumns.length > 0) {
-        queryBuilder.select([...validColumns, "e.id", "e.created_at"]);
+        queryBuilder.select([...validColumns, "e.id", "e.createdAt"]);
       }
     }
 
@@ -100,7 +101,7 @@ export class APIFeaturesService {
         }
       });
     } else {
-      queryBuilder.addOrderBy("e.created_at", "DESC");
+      queryBuilder.addOrderBy("e.createdAt", "DESC");
     }
   }
 

@@ -20,7 +20,6 @@ export class TeamController
     return {
       id: true,
       content: true,
-      phoneNumber: true,
       featuredImage: true,
       orderIndex: true,
       isActive: true,
@@ -32,7 +31,6 @@ export class TeamController
   public getRelationOptions(): Record<string, any> {
     return {
       createdBy: { id: true, firstName: true, lastName: true, email: true },
-      socialLinks: { id: true, icon: true, link: true },
     };
   }
 
@@ -43,9 +41,7 @@ export class TeamController
       {
         createdBy: req["createdBy"],
         content: create.content,
-        phoneNumber: create.phoneNumber,
         featuredImage: create.featuredImage,
-        socialLinks: create.socialLinks,
         orderIndex: create.orderIndex,
       },
       this.selectOptions(),
@@ -61,9 +57,7 @@ export class TeamController
         id: update.id,
         createdBy: req["createdBy"],
         content: update.content,
-        phoneNumber: update.phoneNumber,
         featuredImage: update.featuredImage,
-        socialLinks: update.socialLinks,
         orderIndex: update.orderIndex,
       },
       this.selectOptions(),

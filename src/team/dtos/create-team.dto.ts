@@ -47,11 +47,6 @@ export class CreateTeamDto {
   @Type(() => TeamContentItem)
   content: Array<{ name?: string; description?: string; position?: string; language_id: number }>;
 
-  @IsArray()
-  @IsString({ each: true })
-  phoneNumber: string[];
-
-  @IsString()
   @MaxLength(1024)
   featuredImage: string;
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Req } from "@nestjs/common";
 import { BaseController } from "src/shared/base/base.controller";
 import { Roles } from "src/shared/decorators/roles.decorator";
 import { RelationOptions, SelectOptions } from "src/shared/interfaces/query.interface";
@@ -28,6 +28,7 @@ export class UserController
       type: true,
       role: true,
       phoneNumber: true,
+      avatar: true,
       createdAt: true,
       updatedAt: true,
     };
@@ -56,6 +57,7 @@ export class UserController
         type: create.type,
         role: create.role,
         phoneNumber: create.phoneNumber,
+        avatar: create.avatar,
         password: req["password"],
         createdBy: req["createdBy"],
       } as UserDto,
@@ -77,6 +79,7 @@ export class UserController
       type: update.type,
       role: update.role,
       phoneNumber: update.phoneNumber,
+      avatar: update.avatar,
       createdBy: req["createdBy"],
     };
     if (req["password"]) updateData.password = req["password"];
@@ -97,5 +100,12 @@ export class UserController
   @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
   public async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto, @Req() req: Request) {
     return await this.service.updatePassword(updatePasswordDto.id, req["password"]);
+  }
+
+  @Get("/customers")
+  @Roles("CEO", "TECH_SUPPORT", "STORE_MANAGER", "SUPER_ADMIN", "CONTENT_MANAGER", "SYSTEM_ADMIN")
+  public async getCustomers() {
+    const data = await this.service.listCustomers();
+    return { data };
   }
 }

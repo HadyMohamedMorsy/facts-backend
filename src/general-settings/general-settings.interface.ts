@@ -31,6 +31,39 @@ export interface GeneralSettingsContentItem {
   mission_image?: string;
   about_facts?: string;
   about_facts_image?: string;
+  about_feat_1_l1?: string;
+  about_feat_1_l2?: string;
+  about_feat_1_body?: string;
+  about_feat_1_image?: string;
+  about_feat_2_l1?: string;
+  about_feat_2_l2?: string;
+  about_feat_2_body?: string;
+  about_feat_2_image?: string;
+  about_feat_3_l1?: string;
+  about_feat_3_l2?: string;
+  about_feat_3_body?: string;
+  about_feat_3_image?: string;
+  about_feat_4_l1?: string;
+  about_feat_4_l2?: string;
+  about_feat_4_body?: string;
+  about_feat_4_image?: string;
+  management_feat_1_l1?: string;
+  management_feat_1_l2?: string;
+  management_feat_1_body?: string;
+  management_feat_1_image?: string;
+  management_feat_2_l1?: string;
+  management_feat_2_l2?: string;
+  management_feat_2_body?: string;
+  management_feat_2_image?: string;
+  management_feat_3_l1?: string;
+  management_feat_3_l2?: string;
+  management_feat_3_body?: string;
+  management_feat_3_image?: string;
+  management_feat_4_l1?: string;
+  management_feat_4_l2?: string;
+  management_feat_4_body?: string;
+  management_feat_4_image?: string;
+  team_intro?: string;
 }
 
 export interface GeneralSettings {

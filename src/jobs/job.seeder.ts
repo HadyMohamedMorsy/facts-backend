@@ -1,4 +1,4 @@
-import { TYPE } from "src/shared/enum/global-enum";
+import { LOCATION, TYPE } from "src/shared/enum/global-enum";
 import { User } from "src/users/user.entity";
 import { DataSource } from "typeorm";
 import { Job } from "./job.entity";
@@ -24,6 +24,7 @@ export async function seedJobs(dataSource: DataSource): Promise<void> {
   const data = [
     {
       type: TYPE.FULLTIME,
+      location: LOCATION.CAIRO,
       salary: 8000,
       featuredImage: getRandomImage(800, 500, 20),
       content: [
@@ -33,6 +34,7 @@ export async function seedJobs(dataSource: DataSource): Promise<void> {
     },
     {
       type: TYPE.PARTTIME,
+      location: LOCATION.GIZA,
       salary: 4000,
       featuredImage: getRandomImage(800, 500, 21),
       content: [
@@ -42,6 +44,7 @@ export async function seedJobs(dataSource: DataSource): Promise<void> {
     },
     {
       type: TYPE.FULLTIME,
+      location: LOCATION.GIZA,
       salary: 6000,
       featuredImage: getRandomImage(800, 500, 22),
       content: [
@@ -51,6 +54,7 @@ export async function seedJobs(dataSource: DataSource): Promise<void> {
     },
     {
       type: TYPE.PARTTIME,
+      location: LOCATION.CAIRO,
       salary: 3500,
       featuredImage: getRandomImage(800, 500, 23),
       content: [

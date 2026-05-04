@@ -53,6 +53,10 @@ export class UserDto {
   @IsString()
   phoneNumber: string;
 
+  @IsOptional()
+  @IsString()
+  avatar?: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(8)

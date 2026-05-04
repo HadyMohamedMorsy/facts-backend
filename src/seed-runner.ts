@@ -32,6 +32,7 @@ import { seedApplicantGraduates } from "./applicants-graduates/applicant-graduat
 import { seedGeneralSettings } from "./general-settings/general-settings.seeder";
 import { seedBlogs } from "./blogs/blog.seeder";
 import { seedAdvertisements } from "./advertisements/advertisement.seeder";
+import { seedTestimonials } from "./testimonials/testimonial.seeder";
 
 const seeders: Array<{ name: string; fn: (ds: any) => Promise<any> }> = [
   { name: "users", fn: seedUsers },
@@ -62,6 +63,7 @@ const seeders: Array<{ name: string; fn: (ds: any) => Promise<any> }> = [
   { name: "general-settings", fn: seedGeneralSettings },
   { name: "blogs", fn: seedBlogs },
   { name: "advertisements", fn: seedAdvertisements },
+  { name: "testimonials", fn: seedTestimonials },
 ];
 
 async function run() {

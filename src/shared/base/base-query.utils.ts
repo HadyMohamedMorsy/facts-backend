@@ -39,6 +39,11 @@ export abstract class BaseQueryUtils<T> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected queryRelationIndex(queryBuilder?: SelectQueryBuilder<T>, filteredRecord?: any) {
+    if (!queryBuilder) return;
+    const mainMeta = queryBuilder.expressionMap.mainAlias?.metadata;
+    const hasCreatedByRelation = !!mainMeta?.findRelationWithPropertyPath("createdBy");
+    if (!hasCreatedByRelation) return;
+
     queryBuilder.leftJoin("e.createdBy", "ec").addSelect(["ec.id", "ec.firstName", "ec.lastName"]);
   }
 

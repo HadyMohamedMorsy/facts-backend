@@ -21,6 +21,7 @@ export class AdvertisementController
       id: true,
       content: true,
       page: true,
+      link: true,
       featuredImage: true,
     };
   }
@@ -36,6 +37,7 @@ export class AdvertisementController
       {
         content: create.content,
         page: create.page,
+        link: create.link,
         featuredImage: create.featuredImage,
       },
       this.selectOptions(),
@@ -51,6 +53,7 @@ export class AdvertisementController
         id: update.id,
         content: update.content,
         page: update.page,
+        link: update.link,
         featuredImage: update.featuredImage,
       },
       this.selectOptions(),

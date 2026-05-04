@@ -41,7 +41,7 @@ export class GallaryController
     return await this.service.create(
       {
         createdBy: req["createdBy"],
-        tab: req["tab"],
+        tab: create.tabId ? ({ id: create.tabId } as any) : undefined,
         content: create.content,
         files: create.files,
         orderIndex: create.orderIndex,
@@ -58,7 +58,7 @@ export class GallaryController
       {
         id: update.id,
         createdBy: req["createdBy"],
-        tab: req["tab"],
+        tab: update.tabId ? ({ id: update.tabId } as any) : undefined,
         content: update.content,
         files: update.files,
         orderIndex: update.orderIndex,

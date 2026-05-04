@@ -39,8 +39,7 @@ export class ApplicantEducationController
       },
       education: {
         id: true,
-        title_en: true,
-        title_ar: true,
+        content: true,
         slug: true,
       },
     };
