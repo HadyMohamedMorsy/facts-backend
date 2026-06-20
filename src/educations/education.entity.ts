@@ -23,6 +23,9 @@ export class Education extends BaseMemberEntity {
   @Column({ type: "text" })
   featuredImage: string;
 
+  @Column({ type: "text", nullable: true })
+  cardLogo?: string;
+
   @Column({ type: "text" })
   thumbnail: string;
 

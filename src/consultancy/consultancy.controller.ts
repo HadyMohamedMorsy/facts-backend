@@ -24,6 +24,7 @@ export class ConsultancyController
       content: true,
       slug: true,
       featuredImage: true,
+      cardLogo: true,
       createdAt: true,
       updatedAt: true,
     };
@@ -46,6 +47,7 @@ export class ConsultancyController
         content: create.content,
         slug: create.slug,
         featuredImage: create.featuredImage,
+        cardLogo: create.cardLogo,
         consultancy_accordion: create.consultancy_accordion,
       },
       this.selectOptions(),
@@ -62,6 +64,7 @@ export class ConsultancyController
         content: update.content,
         slug: update.slug,
         featuredImage: update.featuredImage,
+        cardLogo: update.cardLogo,
         consultancy_accordion: update.consultancy_accordion,
       },
       this.selectOptions(),

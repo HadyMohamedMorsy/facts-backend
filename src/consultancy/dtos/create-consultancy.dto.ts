@@ -61,6 +61,10 @@ export class CreateConsultancyDto {
   @IsString()
   featuredImage: string;
 
+  @IsOptional()
+  @IsString()
+  cardLogo?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ConsultancyAccordionItemDto)

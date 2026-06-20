@@ -20,6 +20,9 @@ export class Consultancy extends BaseMemberEntity {
   @Column({ type: "text" })
   featuredImage: string;
 
+  @Column({ type: "text", nullable: true })
+  cardLogo?: string;
+
   @OneToMany(() => ConsultancyAccordion, accordion => accordion.consultancy, {
     cascade: true,
   })

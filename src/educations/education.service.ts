@@ -52,6 +52,7 @@ export class EducationService
         content: educationData.content,
         slug: educationData.slug,
         featuredImage: educationData.featuredImage,
+        cardLogo: educationData.cardLogo,
         thumbnail: educationData.thumbnail,
         courseFile: educationData.courseFile,
         advisorContactLink: educationData.advisorContactLink,

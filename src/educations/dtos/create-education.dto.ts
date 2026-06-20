@@ -107,6 +107,10 @@ export class CreateEducationDto {
   @IsString()
   featuredImage: string;
 
+  @IsOptional()
+  @IsString()
+  cardLogo?: string;
+
   @IsString()
   thumbnail: string;
 

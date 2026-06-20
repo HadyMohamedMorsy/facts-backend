@@ -47,6 +47,7 @@ export class ConsultancyService
         content: consultancyData.content,
         slug: consultancyData.slug,
         featuredImage: consultancyData.featuredImage,
+        cardLogo: consultancyData.cardLogo,
       }),
     );
     if (consultancy_accordion?.length) {

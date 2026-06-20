@@ -22,6 +22,7 @@ export interface Consultancy {
   content: ConsultancyContentItem[];
   slug: string;
   featuredImage: string;
+  cardLogo?: string;
   createdAt?: string;
   updatedAt?: string;
   consultancy_accordion?: ConsultancyAccordionItem[];
@@ -31,6 +32,7 @@ export interface CreateConsultancyDto {
   content: ConsultancyContentItem[];
   slug: string;
   featuredImage: string;
+  cardLogo?: string;
   consultancy_accordion?: Array<{
     content: Array<{ accordion_title: string; description: string; language_id: number }>;
   }>;
